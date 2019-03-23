@@ -1,0 +1,5 @@
+--title ActiveInteractor
+--readme README.md
+--no-private
+--files lib/**/*.rb
+

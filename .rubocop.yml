@@ -1,0 +1,12 @@
+AllCops:
+  Exclude:
+    - bin/**/*
+  TargetRubyVersion: 2.5
+Metrics/BlockLength:
+  Exclude:
+    - '*.gemspec'
+    - spec/**/*_spec.rb
+Metrics/LineLength:
+  Max: 120
+Style/Documentation:
+  Enabled: false
