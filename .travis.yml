@@ -5,6 +5,12 @@ cache: bundler
 rvm:
   - 2.5
   - 2.6
+branches:
+  only:
+    - master
+    - /.*-alpha/
+    - /.*-beta/
+    - /.*-stable/
 before_install:
   - gem install bundler -v 1.17.3
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
