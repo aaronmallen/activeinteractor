@@ -20,4 +20,4 @@ YARD::Rake::YardocTask.new(:doc) do |t|
   t.stats_options = ['--list-undoc']
 end
 
-task default: %i[mdl rubocop spec doc]
+task default: %i[mdl rubocop spec doc build]

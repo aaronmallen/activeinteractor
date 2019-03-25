@@ -1,4 +1,4 @@
-# Activeinteractor
+# ActiveInteractor
 
 [![License](https://img.shields.io/github/license/aaronmallen/activeinteractor.svg?maxAge=300&style=for-the-badge)](https://github.com/aaronmallen/activeinteractor/blob/master/LICENSE)
 [![Dependencies](https://img.shields.io/depfu/aaronmallen/activeinteractor.svg?maxAge=300&style=for-the-badge)](https://depfu.com/github/aaronmallen/activeinteractor)
@@ -7,7 +7,8 @@
 [![Maintainability](https://img.shields.io/codeclimate/maintainability/aaronmallen/activeinteractor.svg?maxAge=300&style=for-the-badge)](https://codeclimate.com/github/aaronmallen/activeinteractor/maintainability)
 [![Test Coverage](https://img.shields.io/codeclimate/coverage/aaronmallen/activeinteractor.svg?maxAge=300&style=for-the-badge)](https://codeclimate.com/github/aaronmallen/activeinteractor/test_coverage)
 
-Ruby interactors based on [ActiveModel](https://github.com/rails/rails/blob/master/activemodel).
+Ruby interactors based on [ActiveModel](https://github.com/rails/rails/blob/master/activemodel) inspired by
+[interactors](https://github.com/collectiveidea/interactor).
 
 ## Installation
 

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'spec_helper'
+
 RSpec.describe ActiveInteractor do
   describe 'VERSION' do
     subject { described_class::VERSION }

@@ -1,5 +1,8 @@
 --title ActiveInteractor
 --readme README.md
+--protected
 --no-private
 --files lib/**/*.rb
-
+-
+CHANGELOG.md
+LICENSE
