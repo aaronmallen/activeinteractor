@@ -10,8 +10,10 @@ module ActiveInteractor
         include Callbacks
         include Context
 
+        attr_reader :context
+
         def initialize(context = {})
-          @context = self.class.context_class.new(context)
+          @context = self.class.context_class.new(self, context)
         end
       end
     end
