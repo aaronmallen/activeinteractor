@@ -2,12 +2,7 @@
 
 require 'rails/generators/named_base'
 
-module ActiveInteractor
-  class Generator < ::Rails::Generators::NamedBase
-    source_root File.expand_path('templates', __dir__)
+Dir[File.expand_path('active_interactor/*.rb', __dir__)].each { |file| require file }
+Dir[File.expand_path('interactor/*.rb', __dir__)].each { |file| require file }
 
-    def generate
-      template "#{self.class.generator_name}.erb", File.join('app', 'interactors', class_path, "#{file_name}.rb")
-    end
-  end
-end
+require 'active_interactor/rails/generators/interactor_generator'

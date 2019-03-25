@@ -1,12 +1,15 @@
 # frozen_string_literal: true
 
-require 'active_interactor/rails/generators/active_interactor'
+require 'rails/generators/base'
 
 module ActiveInteractor
   module Generators
-    class ApplicationInteractorGenerator < ActiveInteractor::Generator
-      def self.file_name
-        'application_interactor.rb'
+    class ApplicationInteractorGenerator < ::Rails::Generators::Base
+      hide!
+      source_root File.expand_path('../templates', __dir__)
+
+      def create_application_interactor
+        template 'application_interactor.erb', File.join('app', 'interactors', 'application_interactor.rb')
       end
     end
   end
