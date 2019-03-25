@@ -1,10 +1,15 @@
 # frozen_string_literal: true
 
-require 'bundler/setup'
-require 'active_interactor'
 require 'simplecov'
 
-SimpleCov.start
+SimpleCov.start do
+  track_files 'lib/**/*.rb'
+  add_filter 'lib/rails/generators'
+  add_filter '/spec/'
+end
+
+require 'bundler/setup'
+require 'active_interactor'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
