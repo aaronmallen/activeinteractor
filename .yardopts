@@ -2,7 +2,7 @@
 --readme README.md
 --protected
 --no-private
---files lib/**/*.rb
+lib/**/*.rb
 -
 CHANGELOG.md
 LICENSE
