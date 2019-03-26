@@ -10,4 +10,5 @@ Metrics/BlockLength:
 Metrics/LineLength:
   Max: 120
 Style/Documentation:
-  Enabled: false
+  Exclude:
+    - lib/rails/**/*.rb

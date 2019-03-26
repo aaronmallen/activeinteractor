@@ -2,6 +2,12 @@
 
 module ActiveInteractor
   module Interactor
+    # Provides ActiveInteractor::Interactor::Context methods to included classes
+    #
+    # @api private
+    # @author Aaron Allen <hello@aaronmallen.me>
+    # @since 0.0.1
+    # @version 0.1
     module Context
       extend ActiveSupport::Concern
 

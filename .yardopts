@@ -2,6 +2,10 @@
 --readme README.md
 --protected
 --no-private
+--markup-provider redcarpet
+--markup markdown
+--plugin activesupport-concern
+--exclude lib/rails
 lib/**/*.rb
 -
 CHANGELOG.md

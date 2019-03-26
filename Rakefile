@@ -16,8 +16,6 @@ task :mdl do
   system 'mdl *.md' || exit(-1)
 end
 
-YARD::Rake::YardocTask.new(:doc) do |t|
-  t.stats_options = ['--list-undoc']
-end
+YARD::Rake::YardocTask.new(:doc)
 
 task default: %i[mdl rubocop spec doc build]
