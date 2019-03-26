@@ -637,6 +637,13 @@ To install this gem onto your local machine, run `bundle exec rake install`.
 
 Read our guidelines for [Contributing](CONTRIBUTING.md).
 
+## Acknowledgements
+
+* Special thanks to @collectiveidea for their amazing foundational work on
+  the [interactor][collective_idea_interactors] gem.
+* Special thanks to the @rails team for their work on [ActiveModel][active_model_git]
+  and [ActiveSupport][active_support_git] gems.
+
 ## License
 
 The gem is available as open source under the terms of the [MIT License][mit_license].
@@ -646,4 +653,6 @@ The gem is available as open source under the terms of the [MIT License][mit_lic
 [ActiveModel::Validations::Callbacks]: https://api.rubyonrails.org/classes/ActiveModel/Validations/Callbacks.html
 [collective_idea_interactors]: https://github.com/collectiveidea/interactor
 [business_logic_wikipedia]: https://en.wikipedia.org/wiki/Business_logic
+[active_model_git]: https://github.com/rails/rails/tree/master/activemodel
+[active_support_git]: https://github.com/rails/rails/tree/master/activesupport
 [mit_license]: https://opensource.org/licenses/MIT
