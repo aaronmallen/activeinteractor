@@ -1,17 +1,21 @@
 # frozen_string_literal: true
 
 module ActiveInteractor
-  # Loads all dependencies for {ActiveInteractor::Context}
+  # Provides interactor methods to included classes
   #
   # @author Aaron Allen <hello@aaronmallen.me>
   # @since 0.0.1
   # @version 0.1
   module Interactor
-    extend ActiveSupport::Autoload
+    extend ActiveSupport::Concern
 
-    autoload :Action
-    autoload :Callbacks
-    autoload :Context
-    autoload :Core
+    included do
+      extend ClassMethods
+      include Callbacks
+      include Context
+      attr_reader :context
+    end
   end
 end
+
+Dir[File.expand_path('interactor/*.rb', __dir__)].each { |file| require file }

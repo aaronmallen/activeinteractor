@@ -6,9 +6,7 @@ module ActiveInteractor
   # @author Aaron Allen <hello@aaronmallen.me>
   # @since 0.0.1
   # @version 0.1
-  class Organizer
-    include Interactor::Core
-
+  class Organizer < ActiveInteractor::Base
     class << self
       # Declare Interactors to be invoked as part of the
       #  organizer's invocation. These interactors are invoked in
@@ -36,11 +34,14 @@ module ActiveInteractor
     end
 
     # Invoke the organized interactors. An organizer is
-    #  expected not to define its own {Interactor::Action#perform #perform} method
+    #  expected not to define its own {ActiveInteractor::Base#perform #perform} method
     #  in favor of this default implementation.
     def perform
       self.class.organized.each do |interactor|
-        interactor.perform!(context)
+        interactor.new(context)
+                  .tap(&:skip_clean_context!)
+                  .tap(&:call_perform!)
+                  .context
       end
     end
   end

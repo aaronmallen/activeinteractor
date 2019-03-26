@@ -7,6 +7,13 @@ module ActiveInteractor
   # @since 0.0.1
   # @version 0.1
   class Base
-    include Interactor::Core
+    include Interactor
+
+    # A new instance of {Base}
+    # @param context [Hash, nil] the properties of the context
+    # @return [ActiveInteractor::Base] a new instance of {Base}
+    def initialize(context = {})
+      @context = self.class.context_class.new(self, context)
+    end
   end
 end

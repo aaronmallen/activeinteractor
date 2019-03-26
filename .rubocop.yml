@@ -7,8 +7,8 @@ Metrics/BlockLength:
   Exclude:
     - '*.gemspec'
     - spec/**/*_spec.rb
+    - spec/support/**/*.rb
 Metrics/LineLength:
   Max: 120
 Style/Documentation:
-  Exclude:
-    - lib/rails/**/*.rb
+  Enabled: false

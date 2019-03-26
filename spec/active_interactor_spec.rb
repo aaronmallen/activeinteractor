@@ -8,4 +8,11 @@ RSpec.describe ActiveInteractor do
 
     it { should_not be_nil }
   end
+
+  describe '`.configuration`' do
+    subject { described_class.configuration }
+
+    it { should_not be_nil }
+    it { should be_a ActiveInteractor::Configuration }
+  end
 end
