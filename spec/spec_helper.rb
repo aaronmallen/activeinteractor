@@ -25,3 +25,5 @@ RSpec.configure do |config|
   config.order = :random
   Kernel.srand config.seed
 end
+
+Dir[File.expand_path('support/*.rb', __dir__)].each { |f| require f }

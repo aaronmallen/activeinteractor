@@ -20,17 +20,9 @@ module ActiveInteractor
       # @param context [Hash, nil] the properties of the context
       # @return [Context] a new instance of {Base}
       def initialize(interactor, context = {})
+        copy_flags!(context)
+        @interactor = interactor
         super(context)
-        @interactor = interactor
-      end
-
-      # A new instance of {Base}
-      # @param interactor [#perform] an interactor instance
-      # @param context [Hash, nil] the properties of the context
-      # @return [Context] a new instance of {Base}
-      def self.build(interactor, context = {})
-        @interactor = interactor
-        self === context ? context : new(interactor, context)
       end
 
       # Attempt to call the interactor for missing validation callback methods

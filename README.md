@@ -240,6 +240,11 @@ on context validation, `perform`, and `rollback`.  Callbacks can be defined with
 `Proc`, or `Symbol` method name and take the same conditional arguments outlined
 in those two modules.
 
+**NOTE:** When using symbolized method names as arguments the context class
+will first attempt to invoke the method on itself, if it cannot find the defined
+method it will attempt to invoke it on the interactor.  Be concious of scope
+when defining these methods.
+
 #### Validation Callbacks
 
 We can do work before an interactor's context is validated with the `before_context_validation` method:
@@ -248,7 +253,7 @@ We can do work before an interactor's context is validated with the `before_cont
 class MyInteractor < ActiveInteractor::Base
   context_attributes :first_name, :last_name, :email, :user
   context_validates :last_name, presence: true
-  before_context_validation { context.last_name ||= 'Unknown' }
+  before_context_validation { last_name ||= 'Unknown' }
 end
 
 context = MyInteractor.perform(first_name: 'Aaron', email: 'hello@aaronmallen.me')
@@ -263,7 +268,13 @@ class MyInteractor < ActiveInteractor::Base
   context_attributes :first_name, :last_name, :email, :user
   context_validates :email, presence: true,
                             format: { with: URI::MailTo::EMAIL_REGEXP }
-  after_context_validation { context.email&.downcase! }
+  after_context_validation :downcase_email!
+
+  private
+
+  def downcase_email
+    context.email = context.email&.downcase!
+  end
 end
 
 context = MyInteractor.perform(first_name: 'Aaron', email: 'HELLO@aaronmallen.me')
@@ -584,13 +595,16 @@ class OrdersController < ApplicationController
 end
 ```
 
-The organizer passes its context to the interactors that it organizes, one at a time and in order. Each interactor may change that context before it's passed along to the next interactor.
+The organizer passes its context to the interactors that it organizes, one at a time and in order.
+Each interactor may change that context before it's passed along to the next interactor.
 
 #### Rollback
 
-If any one of the organized interactors fails its context, the organizer stops. If the `ChargeCard` interactor fails, `SendThankYou` is never called.
+If any one of the organized interactors fails its context, the organizer stops.
+If the `ChargeCard` interactor fails, `SendThankYou` is never called.
 
-In addition, any interactors that had already run are given the chance to undo themselves, in reverse order. Simply define the rollback method on your interactors:
+In addition, any interactors that had already run are given the chance to undo themselves, in reverse order.
+Simply define the rollback method on your interactors:
 
 ```ruby
 class CreateOrder

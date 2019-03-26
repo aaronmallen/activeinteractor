@@ -91,6 +91,11 @@ module ActiveInteractor
 
       private
 
+      def copy_flags!(context)
+        @_called = context.send(:_called) if context.respond_to?(:_called, true)
+        @_failed = context.failure? if context.respond_to?(:failure?)
+      end
+
       def _called
         @_called ||= []
       end
