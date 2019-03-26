@@ -17,11 +17,20 @@ module ActiveInteractor
 
       # A new instance of {Base}
       # @param interactor [#perform] an interactor instance
-      # @param hash [Hash, nil] the properties of the context
+      # @param context [Hash, nil] the properties of the context
       # @return [Context] a new instance of {Base}
-      def initialize(interactor, hash = nil)
-        super(hash)
+      def initialize(interactor, context = {})
+        super(context)
         @interactor = interactor
+      end
+
+      # A new instance of {Base}
+      # @param interactor [#perform] an interactor instance
+      # @param context [Hash, nil] the properties of the context
+      # @return [Context] a new instance of {Base}
+      def self.build(interactor, context = {})
+        @interactor = interactor
+        self === context ? context : new(interactor, context)
       end
 
       # Attempt to call the interactor for missing validation callback methods

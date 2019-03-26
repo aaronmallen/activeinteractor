@@ -24,7 +24,7 @@ module ActiveInteractor
         # @param context [Hash, nil] the properties of the context
         # @return [Core] a new instance of {Core}
         def initialize(context = {})
-          @context = self.class.context_class.new(self, context)
+          @context = self.class.context_class.build(self, context)
         end
       end
     end
