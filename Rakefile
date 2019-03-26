@@ -5,7 +5,7 @@ require 'rspec/core/rake_task'
 require 'rubocop/rake_task'
 require 'yard'
 
-RSpec::Core::RakeTask.new(:spec)
+RSpec::Core::RakeTask.new(:rspec)
 
 RuboCop::RakeTask.new do |task|
   task.options << '-D'
@@ -18,4 +18,5 @@ end
 
 YARD::Rake::YardocTask.new(:doc)
 
-task default: %i[mdl rubocop spec doc build]
+task spec: %i[mdl rubocop rspec]
+task default: %i[spec doc build]
