@@ -10,6 +10,7 @@ end
 
 require 'bundler/setup'
 require 'active_interactor'
+require 'rspec/collection_matchers'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

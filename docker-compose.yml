@@ -1,0 +1,14 @@
+version: '3.3'
+services:
+  ruby-2.5:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile-ruby-2.5
+    volumes:
+      - .:/src
+  ruby-2.6:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile-ruby-2.6
+    volumes:
+      - .:/src

@@ -8,7 +8,6 @@ module ActiveInteractor
   # @version 0.1
   class Base
     include Interactor
-
     # A new instance of {Base}
     # @param context [Hash, nil] the properties of the context
     # @return [ActiveInteractor::Base] a new instance of {Base}

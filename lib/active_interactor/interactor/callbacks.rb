@@ -109,7 +109,7 @@ module ActiveInteractor
         #  will not invoke {ActiveInteractor::Context::Base#fail!} if the
         #  context is invalid.
         def allow_context_to_be_invalid
-          __fail_on_invalid_context = false
+          self.__fail_on_invalid_context = false
         end
 
         # Define a callback to call around {ActiveInteractor::Base.perform} invokation
@@ -253,7 +253,7 @@ module ActiveInteractor
         #  context instance after {ActiveInteractor::Base.perform}
         #  is invoked.
         def clean_context_on_completion
-          __clean_after_perform = true
+          self.__clean_after_perform = true
         end
 
         private

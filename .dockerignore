@@ -1,0 +1,10 @@
+.github
+.yardoc
+coverage
+doc
+docker
+pkg
+.rspec_status
+.ruby-gemset
+.ruby-version
+.travis.yml

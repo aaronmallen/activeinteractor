@@ -12,7 +12,7 @@ module ActiveInteractor
   class Configuration
     # The default configuration options for {Configuration}
     # @return [Hash{Symbol => *}]
-    CONFIGURATION_DEFAULTS = {
+    DEFAULTS = {
       logger: Logger.new(STDOUT)
     }.freeze
 
@@ -25,8 +25,10 @@ module ActiveInteractor
     #  use for logging
     # @return [ActiveInteractor::Configuration] a new instance of {Configuration}
     def initialize(options = {})
-      options = CONFIGURATION_DEFAULTS.merge(options.dup)
-      @logger = options[:logger]
+      options = DEFAULTS.merge(options.dup || {}).slice(*DEFAULTS.keys)
+      options.each_key do |attribute|
+        instance_variable_set("@#{attribute}", options[attribute])
+      end
     end
   end
 end

@@ -34,13 +34,13 @@ module ActiveInteractor
     end
 
     # Invoke the organized interactors. An organizer is
-    #  expected not to define its own {ActiveInteractor::Base#perform #perform} method
+    #  expected not to define its own {ActiveInteractor::Interactor#perform #perform} method
     #  in favor of this default implementation.
     def perform
       self.class.organized.each do |interactor|
         interactor.new(context)
                   .tap(&:skip_clean_context!)
-                  .tap(&:call_perform!)
+                  .tap(&:execute_perform!)
                   .context
       end
     end

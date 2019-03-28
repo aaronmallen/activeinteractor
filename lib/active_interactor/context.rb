@@ -4,7 +4,7 @@ require 'active_support/core_ext/class/attribute'
 require 'ostruct'
 
 module ActiveInteractor
-  # Loads all dependencies for {ActiveInteractor::Context}
+  # ActiveInteractor::Context module
   #
   # @author Aaron Allen <hello@aaronmallen.me>
   # @since 0.0.1
@@ -60,6 +60,9 @@ module ActiveInteractor
         # @return [Array<Symbol>] the defined attributes
         def attributes
           __default_attributes
+            .concat(_validate_callbacks.map(&:filter).map(&:attributes).flatten)
+            .flatten
+            .uniq
         end
 
         # Set attributes on a context class
@@ -71,7 +74,7 @@ module ActiveInteractor
         #
         # @return [Array<Symbol>] the defined attributes
         def attributes=(*attributes)
-          __default_attributes.concat(attributes.flatten.map(&:to_sym)).flatten.uniq
+          self.__default_attributes = self.attributes.concat(attributes.flatten.map(&:to_sym)).flatten.uniq
         end
       end
 
@@ -228,7 +231,7 @@ module ActiveInteractor
       # Roll back an interactor context. Any interactors to which this
       # context has been passed and which have been successfully called are asked
       # to roll themselves back by invoking their
-      # {ActiveInteractor::Base#rollback #rollback} instance methods.
+      # {ActiveInteractor::Interactor#rollback #rollback} instance methods.
       #
       # @example Rollback an interactor's context
       #  context = MyInteractor.perform(name: 'Aaron')
@@ -245,7 +248,7 @@ module ActiveInteractor
       def rollback!
         return false if @_rolled_back
 
-        _called.reverse_each(&:call_rollback)
+        _called.reverse_each(&:execute_rollback)
         @_rolled_back = true
       end
 
