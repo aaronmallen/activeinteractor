@@ -272,7 +272,7 @@ module ActiveInteractor
       #
       # @return [Boolean] `true` by default or `false` if failed
       def success?
-        !failure
+        !failure?
       end
       alias successful? success?
 

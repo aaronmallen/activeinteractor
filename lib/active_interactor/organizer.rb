@@ -40,8 +40,7 @@ module ActiveInteractor
       self.class.organized.each do |interactor|
         interactor.new(context)
                   .tap(&:skip_clean_context!)
-                  .tap(&:execute_perform!)
-                  .context
+                  .execute_perform!
       end
     end
   end

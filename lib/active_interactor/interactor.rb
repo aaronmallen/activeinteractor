@@ -13,8 +13,11 @@ module ActiveInteractor
       extend ClassMethods
       include Callbacks
       include Context
+      include Execution
 
-      attr_reader :context
+      private
+
+      attr_accessor :context
     end
 
     module ClassMethods
@@ -28,7 +31,7 @@ module ActiveInteractor
       # @param context [Hash] properties to assign to the interactor context
       # @return [ActiveInteractor::Context::Base] an instance of context
       def perform(context = {})
-        new(context).tap(&:execute_perform).context
+        new(context).execute_perform
       end
 
       # Invoke an Interactor. The {.perform!} method behaves identically to
@@ -43,38 +46,7 @@ module ActiveInteractor
       # @param context [Hash] properties to assign to the interactor context
       # @return [ActiveInteractor::Context::Base] an instance of context
       def perform!(context = {})
-        new(context).tap(&:execute_perform!).context
-      end
-    end
-
-    # Calls {#execute_perform!} and rescues {ActiveInteractor::Context::Failure}
-    # @private
-    def execute_perform
-      execute_perform!
-    rescue ActiveInteractor::Context::Failure => exception
-      ActiveInteractor.logger.error("ActiveInteractor: #{exception}")
-    end
-
-    # Calls {#perform} with callbacks and context validation
-    # @private
-    def execute_perform!
-      run_callbacks :perform do
-        fail_on_invalid_context!(:calling)
-        perform
-        fail_on_invalid_context!(:called)
-        context.clean! if should_clean_context?
-        context.called!(self)
-      rescue # rubocop:disable Style/RescueStandardError
-        context.rollback!
-        raise
-      end
-    end
-
-    # Calls {#rollback} with callbacks
-    # @private
-    def execute_rollback
-      run_callbacks :rollback do
-        rollback
+        new(context).execute_perform!
       end
     end
 

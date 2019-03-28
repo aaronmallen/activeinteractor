@@ -54,53 +54,6 @@ module ActiveInteractor
           const_get 'Context'
         end
       end
-
-      # Calls {#validate_context} and invokes
-      #  {ActiveInteractor::Context::Base#fail! #fail!} if the context is invalid
-      def fail_on_invalid_context!(validation_context = nil)
-        context.fail! if should_fail_on_invalid_context?(validation_context)
-      end
-
-      # Whether or not a context should be cleaned after `perform` is
-      #  invoked.
-      #
-      # @private
-      #
-      # @return [Boolean] `true` if the context should be cleaned
-      #  `false` if it should not.
-      def should_clean_context?
-        (@should_clean_context && __clean_after_perform) || false
-      end
-
-      # Skip {ActiveInteractor::Context::Base#clean! #clean! on an interactor
-      #  context that calls the {Callbacks.clean_context_on_completion} class method.
-      #  This method is meant to be invoked by organizer interactors
-      #  to ensure contexts are approriately passed between interactors.
-      #
-      # @private
-      #
-      # @return [Boolean] `true` if the context should be cleaned
-      #  `false` if it should not.
-      def skip_clean_context!
-        @should_clean_context = false
-      end
-
-      # Validate the context given a validation_context with validation callbacks
-      def validate_context(validation_context = nil)
-        run_callbacks :validation do
-          init_validation_context = context.validation_context
-          context.validation_context = validation_context || init_validation_context
-          context.valid?
-        ensure
-          context.validation_context = init_validation_context
-        end
-      end
-
-      private
-
-      def should_fail_on_invalid_context?(validation_context)
-        !validate_context(validation_context) && self.class.__fail_on_invalid_context
-      end
     end
   end
 end
