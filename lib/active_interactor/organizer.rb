@@ -38,9 +38,9 @@ module ActiveInteractor
     #  in favor of this default implementation.
     def perform
       self.class.organized.each do |interactor|
-        interactor.new(context)
-                  .tap(&:skip_clean_context!)
-                  .execute_perform!
+        self.context = context.merge(
+          interactor.new(context).tap(&:skip_clean_context!).execute_perform!
+        )
       end
     end
   end

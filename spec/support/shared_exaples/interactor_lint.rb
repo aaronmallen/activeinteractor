@@ -11,7 +11,6 @@ end
 
 RSpec.shared_examples 'An ActiveInteractor::Base instance' do
   include_examples 'An ActiveInteractor::Base instance respond_to'
-  include_examples 'An ActiveInteractor::Base instance methods'
 end
 
 RSpec.shared_examples 'An ActiveInteractor::Base class respond_to' do
@@ -200,8 +199,11 @@ RSpec.shared_examples 'An ActiveInteractor::Base instance respond_to' do
   it { should respond_to :execute_perform }
   it { should respond_to :execute_perform! }
   it { should respond_to :execute_rollback }
+  it { should respond_to :fail_on_invalid_context? }
   it { should respond_to :perform }
   it { should respond_to :rollback }
+  it { should respond_to :should_clean_context? }
+  it { should respond_to :skip_clean_context! }
 
   ActiveModel::Validations.instance_methods.each do |method|
     it { should respond_to "context_#{method}".to_sym }
@@ -209,27 +211,5 @@ RSpec.shared_examples 'An ActiveInteractor::Base instance respond_to' do
 
   ActiveModel::Validations::HelperMethods.instance_methods.each do |method|
     it { should respond_to "context_#{method}".to_sym }
-  end
-end
-
-RSpec.shared_examples 'An ActiveInteractor::Base instance methods' do
-  describe '`#execute_perform`' do
-    it { expect(subject.execute_perform).to be_a ActiveInteractor::Context::Base }
-    it { expect(subject.execute_perform).to be_a subject.class.context_class }
-
-    it 'should `#execute_perform!`' do
-      expect_any_instance_of(ActiveInteractor::Interactor::Worker).to receive(:execute_perform!)
-      subject.execute_perform
-    end
-
-    context 'when `#execute_perform!` raises `ActiveInteractor::Context::Failure`' do
-      it 'should not raise `ActiveInteractor::Context::Failure` and log error' do
-        error = ActiveInteractor::Context::Failure.new
-        expect(ActiveInteractor.logger).to receive(:error).with("ActiveInteractor: #{error}")
-        expect_any_instance_of(ActiveInteractor::Interactor::Worker).to receive(:execute_perform!)
-          .and_raise(error)
-        expect { subject.execute_perform }.not_to raise_error
-      end
-    end
   end
 end

@@ -9,7 +9,6 @@ module ActiveInteractor
         execute_perform
         execute_perform!
         execute_rollback
-        skip_clean_context!
       ].freeze
 
       included do
@@ -19,14 +18,7 @@ module ActiveInteractor
       private
 
       def worker
-        Worker.new(self, worker_options)
-      end
-
-      def worker_options
-        {
-          fail_on_invalid_context: self.class.__fail_on_invalid_context,
-          clean_after_perform: self.class.__clean_after_perform
-        }
+        Worker.new(self)
       end
     end
   end

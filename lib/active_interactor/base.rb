@@ -13,7 +13,6 @@ module ActiveInteractor
     # @return [ActiveInteractor::Base] a new instance of {Base}
     def initialize(context = {})
       @context = self.class.context_class.new(self, context)
-      @worker = ActiveInteractor::Interactor::Worker.new(self, worker_options)
     end
   end
 end

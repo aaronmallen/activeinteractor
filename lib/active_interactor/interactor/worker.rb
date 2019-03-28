@@ -5,12 +5,15 @@ module ActiveInteractor
     class Worker
       delegate :run_callbacks, to: :interactor
 
-      def initialize(interactor, options = {})
+      # A new instance of {Worker}
+      # @param interactor [ActiveInteractor::Base] an interactor instance
+      # @return [ActiveInteractor::Interactor::Worker] a new instance of {Worker}
+      def initialize(interactor)
         @interactor = clone_interactor(interactor)
-        @options = options
       end
 
       # Calls {#execute_perform!} and rescues {ActiveInteractor::Context::Failure}
+      # @return [ActiveInteractor::Context::Base] an instance of {ActiveInteractor::Context::Base}
       def execute_perform
         execute_perform!
       rescue ActiveInteractor::Context::Failure => exception
@@ -19,6 +22,8 @@ module ActiveInteractor
       end
 
       # Calls {Interactor#perform} with callbacks and context validation
+      # @raise [ActiveInteractor::Context::Failure] if the context fails
+      # @return [ActiveInteractor::Context::Base] an instance of {ActiveInteractor::Context::Base}
       def execute_perform!
         run_callbacks :perform do
           perform!
@@ -30,27 +35,16 @@ module ActiveInteractor
         end
       end
 
-      # Calls {#rollback} with callbacks
+      # Calls {Interactor#rollback} with callbacks
       def execute_rollback
         run_callbacks :rollback do
           interactor.rollback
         end
       end
 
-      # Skip {ActiveInteractor::Context::Base#clean! #clean! on an interactor
-      #  context that calls the {Callbacks.clean_context_on_completion} class method.
-      #  This method is meant to be invoked by organizer interactors
-      #  to ensure contexts are approriately passed between interactors.
-      #
-      # @return [Boolean] `true` if the context should be cleaned
-      #  `false` if it should not.
-      def skip_clean_context!
-        @should_clean_context = false
-      end
-
       private
 
-      attr_reader :interactor, :options
+      attr_reader :interactor
 
       def clone_interactor(interactor)
         cloned = interactor.clone
@@ -67,7 +61,7 @@ module ActiveInteractor
       end
 
       def finalize_context!
-        context.clean! if should_clean_context?
+        context.clean! if interactor.should_clean_context?
         context.called!(interactor)
       end
 
@@ -78,11 +72,7 @@ module ActiveInteractor
       end
 
       def should_fail_on_invalid_context?(validation_context)
-        !validate_context(validation_context) && options[:fail_on_invalid_context]
-      end
-
-      def should_clean_context?
-        (@should_clean_context && options[:clean_after_perform]) || false
+        !validate_context(validation_context) && interactor.fail_on_invalid_context?
       end
 
       def validate_context(validation_context = nil)

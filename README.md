@@ -1,5 +1,6 @@
 # ActiveInteractor
 
+[![Version](https://img.shields.io/gem/v/activeinteractor.svg?logo=ruby&style=for-the-badge)](https://rubygems.org/gems/activeinteractor)
 [![License](https://img.shields.io/github/license/aaronmallen/activeinteractor.svg?maxAge=300&style=for-the-badge)](https://github.com/aaronmallen/activeinteractor/blob/master/LICENSE)
 [![Dependencies](https://img.shields.io/depfu/aaronmallen/activeinteractor.svg?maxAge=300&style=for-the-badge)](https://depfu.com/github/aaronmallen/activeinteractor)
 
