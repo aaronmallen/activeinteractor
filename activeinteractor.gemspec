@@ -10,8 +10,11 @@ Gem::Specification.new do |spec|
   spec.platform      = Gem::Platform::RUBY
   spec.name          = 'activeinteractor'
   spec.version       = version
-  spec.summary       = 'Ruby interactors based on ActiveModel'
-  spec.description   = 'Ruby interactors based on ActiveModel'
+  spec.summary       = 'Ruby interactors with ActiveModel::Validations'
+  spec.description   = <<~DESC
+    Ruby interactors with ActiveModel::Validations based on the interactors gem.
+    Rich support for attributes, callbacks, and validations, and thread safe performance methods.
+  DESC
 
   spec.required_ruby_version = '>= 2.5.0'
 
@@ -25,6 +28,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.metadata = {
+    'bug_tracker_uri' => 'https://github.com/aaronmallen/activeinteractor/issues',
     'hompage_uri' => spec.homepage,
     'source_code_uri' => "https://github.com/aaronmallen/activeinteractor/tree/v#{version}",
     'changelog_uri' => "https://github.com/aaronmallen/activeinteractor/blob/v#{version}/CHANGELOG.md"
