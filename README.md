@@ -64,16 +64,14 @@ Each interactor represents one thing that your application does.
 
 ### Context
 
-Each interactor will have it's own `context` and `context` class.  For example:
+Each interactor will have it's own immutable `context` and `context` class.
+For example:
 
 ```ruby
 class MyInteractor < ActiveInteractor::Base
 end
 
 MyInteractor.context_class #=> MyInteractor::Context
-
-interactor = MyInteractor.new #=> <#MyInteractor>
-interactor.context #=> <#MyInteractor::Context>
 ```
 
 An interactor's context contains everything the interactor needs to do its work.
