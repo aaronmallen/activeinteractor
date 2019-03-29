@@ -1,4 +1,6 @@
-FROM ruby:2.5
+ARG BUILD_FROM
+
+FROM $BUILD_FROM
 LABEL maintainer="hello@aaronmallen.me"
 
 RUN ruby -v

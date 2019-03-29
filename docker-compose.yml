@@ -3,12 +3,14 @@ services:
   ruby-2.5:
     build:
       context: .
-      dockerfile: ./docker/Dockerfile-ruby-2.5
+      args:
+        BUILD_FROM: ruby:2.5
     volumes:
       - .:/src
   ruby-2.6:
     build:
       context: .
-      dockerfile: ./docker/Dockerfile-ruby-2.6
+      args:
+        BUILD_FROM: ruby:2.6
     volumes:
       - .:/src
