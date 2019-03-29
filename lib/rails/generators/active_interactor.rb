@@ -32,12 +32,5 @@ module ActiveInteractor
   end
 end
 
-class ActiveInteractorGenerator < ActiveInteractor::Generators::Base
-  hide!
-  after_bundle do
-    generate 'active_interactor:install'
-  end
-end
-
 Dir[File.expand_path('active_interactor/*.rb', __dir__)].each { |file| require file }
 Dir[File.expand_path('interactor/*.rb', __dir__)].each { |file| require file }

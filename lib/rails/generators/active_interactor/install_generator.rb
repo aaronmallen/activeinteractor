@@ -22,9 +22,8 @@ module ActiveInteractor
       def autoload_interactors
         application do
           <<~CONFIG
-
-          # autoload interactors
-          config.autoload_paths += %w[app/interactors]
+             # autoload interactors
+            config.autoload_paths += %w[app/interactors]
 
           CONFIG
         end
