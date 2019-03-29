@@ -3,7 +3,6 @@
 require 'rails/generators/base'
 require 'rails/generators/named_base'
 
-require_relative 'active_interactor_generator'
 require 'active_interactor'
 
 module ActiveInteractor

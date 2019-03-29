@@ -4,9 +4,7 @@ require_relative '../active_interactor'
 
 module ActiveInteractor
   module Generators
-    class InstallGenerator < ActiveInteractor::Generators::Base
-      hide!
-
+    class InstallGenerator < Base
       def create_initializer
         template 'initializer.rb', File.join('config', 'initializers', 'active_interactor.rb')
       end
