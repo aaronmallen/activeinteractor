@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
+require_relative '../active_interactor'
+
 module Interactor
   module Generators
-    class TestUnitGenerator < ActiveInteractor::Genreators::NamedBase
+    class TestUnitGenerator < ActiveInteractor::Generators::NamedBase
       desc 'Generate an interactor unit test'
 
       def create_test

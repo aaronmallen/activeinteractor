@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-class InteractorGenerator < ActiveInteractor::Genreators::NamedBase
+require_relative '../active_interactor'
+
+class InteractorGenerator < ActiveInteractor::Generators::NamedBase
   desc 'Generate an interactor'
 
   def create_interactor

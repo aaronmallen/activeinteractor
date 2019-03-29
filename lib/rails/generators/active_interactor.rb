@@ -1,33 +1,43 @@
 # frozen_string_literal: true
 
-require 'active_support/concern'
 require 'rails/generators/base'
 require 'rails/generators/named_base'
 
-Dir[File.expand_path('active_interactor/*.rb', __dir__)].each { |file| require file }
-Dir[File.expand_path('interactor/*.rb', __dir__)].each { |file| require file }
+require_relative 'active_interactor_generator'
+require 'active_interactor'
 
 module ActiveInteractor
   module Generators
-    module BasicGenerator
+    module Generator
       extend ActiveSupport::Concern
 
-      included do
-        source_root File.expand_path('../templates', __dir__)
+      class_methods do
+        def self.base_root
+          __dir__
+        end
+
+        def source_root
+          File.expand_path('templates', __dir__)
+        end
       end
     end
 
     class Base < ::Rails::Generators::Base
-      include BasicGenerator
-    end
-
-    class HiddenBase < ::Rails::Generators::Base
-      include BasicGenerator
-      hide!
+      include Generator
     end
 
     class NamedBase < ::Rails::Generators::NamedBase
-      include BasicGenerator
+      include Generator
     end
   end
 end
+
+class ActiveInteractorGenerator < ActiveInteractor::Generators::Base
+  hide!
+  after_bundle do
+    generate 'active_interactor:install'
+  end
+end
+
+Dir[File.expand_path('active_interactor/*.rb', __dir__)].each { |file| require file }
+Dir[File.expand_path('interactor/*.rb', __dir__)].each { |file| require file }

@@ -1,16 +1,16 @@
 PATH
   remote: .
   specs:
-    activeinteractor (0.0.2.alpha2)
+    activeinteractor (0.0.2.alpha4)
       activemodel (>= 4.2, < 6.1)
       activesupport (>= 4.2, < 6.1)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    activemodel (5.2.2.1)
-      activesupport (= 5.2.2.1)
-    activesupport (5.2.2.1)
+    activemodel (5.2.3)
+      activesupport (= 5.2.3)
+    activesupport (5.2.3)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
