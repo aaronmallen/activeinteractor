@@ -1,11 +1,8 @@
 # frozen_string_literal: true
 
-require 'rails/generators/base'
-
 module ActiveInteractor
   module Generators
-    class InstallGenerator < ::Rails::Generators::Base
-      source_root File.expand_path('../templates', __dir__)
+    class InstallGenerator < ActiveInteractor::Generators::Base
       desc 'Installs ActiveInteractor.'
 
       def install
