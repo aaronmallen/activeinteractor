@@ -29,9 +29,11 @@ Gem::Specification.new do |spec|
 
   spec.metadata = {
     'bug_tracker_uri' => 'https://github.com/aaronmallen/activeinteractor/issues',
+    'changelog_uri' => "https://github.com/aaronmallen/activeinteractor/blob/v#{version}/CHANGELOG.md",
+    'documentation_uri' => "https://www.rubydoc.info/gems/activeinteractor/#{version}",
     'hompage_uri' => spec.homepage,
     'source_code_uri' => "https://github.com/aaronmallen/activeinteractor/tree/v#{version}",
-    'changelog_uri' => "https://github.com/aaronmallen/activeinteractor/blob/v#{version}/CHANGELOG.md"
+    'wiki_uri' => 'https://github.com/aaronmallen/activeinteractor/wiki'
   }
 
   spec.add_dependency 'activemodel', '>= 4.2', '< 6.1'
