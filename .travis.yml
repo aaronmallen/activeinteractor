@@ -9,7 +9,7 @@ branches:
   only:
     - master
     - /.*-(alpha|beta|stable)/
-    - /^b\d+\.\d+\.\d+.*
+    - /^v\d+\.\d+\.\d+.*
 before_install:
   - gem install bundler -v 1.17.3
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
