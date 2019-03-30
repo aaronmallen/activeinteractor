@@ -42,12 +42,12 @@ module ActiveInteractor
 
       # A new instance of {Base}
       # @param interactor [ActiveInteractor::Base] an interactor instance
-      # @param context [Hash, nil] the properties of the context
+      # @param attributes [Hash, nil] the attributes of the context
       # @return [ActiveInteractor::Context::Base] a new instance of {Base}
-      def initialize(interactor, context = {})
-        copy_flags!(context)
+      def initialize(interactor, attributes = {})
+        copy_flags!(attributes)
         @interactor = interactor
-        super(context)
+        super(attributes)
       end
 
       class << self
@@ -74,7 +74,7 @@ module ActiveInteractor
         #
         # @return [Array<Symbol>] the defined attributes
         def attributes=(*attributes)
-          self.__default_attributes = self.attributes.concat(attributes.flatten.map(&:to_sym)).flatten.uniq
+          self.__default_attributes = self.attributes.concat(attributes.flatten.map(&:to_sym)).uniq
         end
       end
 
@@ -115,9 +115,8 @@ module ActiveInteractor
       #  interactor is successfully called, the interactor instance is tracked in
       #  the context for the purpose of potential future rollback
       #
-      # @param interactor [ActiveInteractor::Base] an interactor instance
       # @return [Array<ActiveInteractor::Base>] all called interactors
-      def called!(interactor)
+      def called!
         _called << interactor
       end
 
@@ -143,6 +142,8 @@ module ActiveInteractor
       # @return [Hash{Symbol => *}] the deleted attributes
       def clean!
         deleted = {}
+        return deleted if keys.empty?
+
         keys.reject { |key| self.class.attributes.include?(key) }.each do |attribute|
           deleted[attribute] = self[attribute] if self[attribute]
           delete_field(key.to_s)
@@ -208,7 +209,7 @@ module ActiveInteractor
       #
       # @return [Array<Symbol>] keys defined on the instance
       def keys
-        each_pair { |pair| pair[0].to_sym }
+        each_pair.map { |pair| pair[0].to_sym }
       end
 
       # Attempt to call the interactor for missing validation callback methods

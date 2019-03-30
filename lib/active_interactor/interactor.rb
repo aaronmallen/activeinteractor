@@ -78,7 +78,7 @@ module ActiveInteractor
     # @return [Boolean] `true` if the context should be cleaned
     #  `false` if it should not be cleaned.
     def should_clean_context?
-      @should_clean_context && self.class.__clean_after_perform
+      @should_clean_context.nil? && self.class.__clean_after_perform
     end
 
     # Skip {ActiveInteractor::Context::Base#clean! #clean! on an interactor

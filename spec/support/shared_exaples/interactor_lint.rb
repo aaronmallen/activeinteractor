@@ -11,6 +11,7 @@ end
 
 RSpec.shared_examples 'An ActiveInteractor::Base instance' do
   include_examples 'An ActiveInteractor::Base instance respond_to'
+  include_examples 'An ActiveInteractor::Base instance methods'
 end
 
 RSpec.shared_examples 'An ActiveInteractor::Base class respond_to' do
@@ -211,5 +212,39 @@ RSpec.shared_examples 'An ActiveInteractor::Base instance respond_to' do
 
   ActiveModel::Validations::HelperMethods.instance_methods.each do |method|
     it { should respond_to "context_#{method}".to_sym }
+  end
+end
+
+RSpec.shared_examples 'An ActiveInteractor::Base instance methods' do
+  describe '`#fail_on_invalid_context?`' do
+    context 'when `#allow_context_to_be_invalid` is not invoked on the class' do
+      it { expect(subject.fail_on_invalid_context?).to eq true }
+    end
+
+    context 'when `#allow_context_to_be_invalid` is not invoked on the class' do
+      before { subject.class.allow_context_to_be_invalid }
+      it { expect(subject.fail_on_invalid_context?).to eq false }
+    end
+  end
+
+  describe '`#should_clean_context?`' do
+    context 'when `#clean_context_on_completion` is not invoked on the class' do
+      it { expect(subject.should_clean_context?).to eq false }
+    end
+
+    context 'when `#clean_context_on_completion` is invoked on the class' do
+      before { subject.class.clean_context_on_completion }
+      it { expect(subject.should_clean_context?).to eq true }
+
+      context 'after invoking `#skip_clean_context!` on the instance' do
+        before { subject.skip_clean_context! }
+        it { expect(subject.should_clean_context?).to eq false }
+      end
+    end
+  end
+
+  describe '`#skip_clean_context!`' do
+    before { subject.skip_clean_context! }
+    it { expect(subject.instance_variable_get('@should_clean_context')).to eq false }
   end
 end

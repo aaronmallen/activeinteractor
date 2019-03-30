@@ -62,7 +62,7 @@ module ActiveInteractor
 
       def finalize_context!
         context.clean! if interactor.should_clean_context?
-        context.called!(interactor)
+        context.called!
       end
 
       def perform!

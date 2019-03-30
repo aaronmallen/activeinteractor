@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'spec_helper'
+
 RSpec.describe ActiveInteractor::Base do
   describe "A class that inherits #{described_class} called \"TestInteractor\"" do
     subject(:interactor) { build_interactor('TestInteractor') }
