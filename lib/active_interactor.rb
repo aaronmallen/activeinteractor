@@ -34,6 +34,7 @@ module ActiveInteractor
   autoload :Configuration
   autoload :Context
   autoload :Interactor
+  autoload :Organizer
 
   class << self
     # The ActiveInteractor configuration
