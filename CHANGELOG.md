@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [v0.1.2] - 2019-04-01
+
 ### Added
 
 - #22: Allow the directory interactors are generated in to be configurable
@@ -15,8 +17,8 @@ and this project adheres to [Semantic Versioning].
 
 ### Fixed
 
-- #15: NameError (uninitialized constant ActiveInteractor::Organizer)
-- #16: NoMethodError (undefined method `merge' for #<ActiveInteractor::Context::Base>)
+- #15: `NameError` (uninitialized constant `ActiveInteractor::Organizer`)
+- #16: `NoMethodError` (undefined method `merge` for `ActiveInteractor::Context::Base`)
 
 ## v0.1.0 - 2019-03-30
 
@@ -25,5 +27,6 @@ and this project adheres to [Semantic Versioning].
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
-[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.2...HEAD
+[v0.1.2]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.1...v0.1.2
 [v0.1.1]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.0...v0.1.1
