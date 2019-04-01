@@ -11,17 +11,17 @@ module ActiveInteractor
       extend ActiveSupport::Concern
 
       class_methods do
-        def self.base_root
+        def base_root
           __dir__
         end
 
         def source_root
           File.expand_path('templates', __dir__)
         end
+      end
 
-        def interactor_app_dir
-          ActiveInteractor.configuration.dir_name
-        end
+      def app_dir_name
+        ActiveInteractor.configuration.dir_name
       end
     end
 
