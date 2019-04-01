@@ -2,6 +2,11 @@
 
 module ActiveInteractor
   module Interactor
+    # Provides worker methods to included classes
+    #
+    # @author Aaron Allen <hello@aaronmallen.me>
+    # @since 0.0.2
+    # @version 0.2
     module Execution
       extend ActiveSupport::Concern
 

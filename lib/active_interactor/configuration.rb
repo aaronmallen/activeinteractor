@@ -5,15 +5,15 @@ module ActiveInteractor
   #
   # @author Aaron Allen <hello@aaronmallen.me>
   # @since 0.0.1
-  # @version 0.1
+  # @version 0.2
   #
   # @!attribute [rw] logger
   #  @return [Logger] an instance of Logger
+  # @!attribute [rw] dir_name
+  #  @return [String] The directory name interactors are generated in
   class Configuration
     # The default configuration options for {Configuration}
     # @return [Hash{Symbol => *}]
-    #  * :logger - The Logger instance to use for logging
-    #  * :dir_name - The directory interactors are generated in
     DEFAULTS = {
       logger: Logger.new(STDOUT),
       dir_name: 'interactors'
@@ -26,6 +26,7 @@ module ActiveInteractor
     #  configuration with.
     # @option options [Logger] :logger the logger ActiveInteractor should
     #  use for logging
+    # @option options [String] :dir_name he directory name interactors are generated in
     # @return [ActiveInteractor::Configuration] a new instance of {Configuration}
     def initialize(options = {})
       options = DEFAULTS.merge(options.dup || {}).slice(*DEFAULTS.keys)

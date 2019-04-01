@@ -26,7 +26,7 @@ require 'active_interactor/version'
 #
 # @author Aaron Allen <hello@aaronmallen.me>
 # @since 0.0.1
-# @version 0.1
+# @version 0.2
 module ActiveInteractor
   extend ActiveSupport::Autoload
 
