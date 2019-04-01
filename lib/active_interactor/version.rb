@@ -3,5 +3,5 @@
 module ActiveInteractor
   # The ActiveInteractor gem version
   # @return [String] the gem version
-  VERSION = '0.1.2'
+  VERSION = '0.1.3'
 end
