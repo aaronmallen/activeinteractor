@@ -41,13 +41,11 @@ end
 
 RSpec.shared_examples 'An ActiveInteractor::Base class attributes' do
   describe '`.__clean_after_perform`' do
-    subject { interactor.__clean_after_perform }
-    it { should eq false }
+    it { expect(subject.__clean_after_perform).to eq false }
   end
 
   describe '`.__fail_on_invalid_context`' do
-    subject { interactor.__fail_on_invalid_context }
-    it { should eq true }
+    it { expect(subject.__fail_on_invalid_context).to eq true }
   end
 end
 

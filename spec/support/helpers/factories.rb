@@ -24,6 +24,10 @@ module Spec
         interactor = build_interactor(class_name, &block)
         interactor.context_class
       end
+
+      def build_organizer(class_name = 'TestOrganizer', &block)
+        build_class(class_name, ActiveInteractor::Organizer, &block)
+      end
     end
   end
 end
