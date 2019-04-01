@@ -5,14 +5,8 @@ module ActiveInteractor
     module Execution
       extend ActiveSupport::Concern
 
-      DELEGATED_WORKER_METHODS = %i[
-        execute_perform
-        execute_perform!
-        execute_rollback
-      ].freeze
-
       included do
-        delegate(*DELEGATED_WORKER_METHODS, to: :worker)
+        delegate :execute_perform, :execute_perform!, :execute_rollback, to: :worker
       end
 
       private
