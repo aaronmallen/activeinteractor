@@ -47,7 +47,7 @@ module ActiveInteractor
       #  "Done"
       #  "MyInteractor2"
       #  "Done"
-      #  #=> <MyInteractor::Context name='Aaron'>
+      #  #=> <MyOrganizer::Context name='Aaron'>
       def after_each_perform(*filters, &block)
         set_callback(:each_perform, :after, *filters, &block)
       end
@@ -93,7 +93,7 @@ module ActiveInteractor
       #  "2019-04-01 00:00:02 UTC"
       #  "MyInteractor2"
       #  "2019-04-01 00:00:03 UTC"
-      #  #=> <MyInteractor::Context name='Aaron'>
+      #  #=> <MyOrganizer::Context name='Aaron'>
       def around_each_perform(*filters, &block)
         set_callback(:each_perform, :around, *filters, &block)
       end
@@ -135,7 +135,7 @@ module ActiveInteractor
       #  "MyInteractor1"
       #  "Start"
       #  "MyInteractor2"
-      #  #=> <MyInteractor::Context name='Aaron'>
+      #  #=> <MyOrganizer::Context name='Aaron'>
       def before_each_perform(*filters, &block)
         set_callback(:each_perform, :before, *filters, &block)
       end

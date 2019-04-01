@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Added
+
+- #25: Implement `each_perform` callbacks on organizers
+
 ## [v0.1.2] - 2019-04-01
 
 ### Added
