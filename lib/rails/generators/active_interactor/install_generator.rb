@@ -6,22 +6,22 @@ module ActiveInteractor
   module Generators
     class InstallGenerator < Base
       def create_initializer
-        template 'initializer.rb', File.join('config', 'initializers', 'active_interactor.rb')
+        template 'initializer.rb', Rails.root.join('config', 'initializers', 'active_interactor.rb')
       end
 
       def create_application_interactor
-        template 'application_interactor.erb', File.join('app', 'interactors', 'application_interactor.rb')
+        template 'application_interactor.erb', Rails.root.join('app', app_dir_name, 'application_interactor.rb')
       end
 
       def create_interactor_concerns
-        create_file 'app/interactors/concerns/.keep'
+        create_file Rails.root.join('app', app_dir_name, 'concerns', '.keep')
       end
 
       def autoload_interactors
         application do
           <<~CONFIG
              # autoload interactors
-            config.autoload_paths += %w[app/interactors]
+            config.autoload_paths += %w[app/#{app_dir_name}]
 
           CONFIG
         end

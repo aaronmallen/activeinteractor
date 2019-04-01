@@ -8,7 +8,7 @@ module Interactor
       desc 'Generate an interactor unit test'
 
       def create_test
-        template 'test_unit.erb', File.join('test', 'interactors', class_path, "#{file_name}_test.rb")
+        template 'test_unit.erb', Rails.root.join('test', app_dir_name, File.join(class_path), "#{file_name}_test.rb")
       end
     end
   end

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Added
+
+- #22: Allow the directory interactors are generated in to be configurable
+
 ## [v0.1.1] - 2019-03-30
 
 ### Fixed

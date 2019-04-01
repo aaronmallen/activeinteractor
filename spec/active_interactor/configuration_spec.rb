@@ -16,6 +16,13 @@ RSpec.describe ActiveInteractor::Configuration do
       it { should_not be_nil }
       it { should be_a Logger }
     end
+
+    describe '`:dir_name`' do
+      subject { described_class::DEFAULTS[:dir_name] }
+
+      it { should_not be_nil }
+      it { should eq 'interactors' }
+    end
   end
 
   describe '`#new`' do
