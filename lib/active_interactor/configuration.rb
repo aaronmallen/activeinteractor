@@ -12,11 +12,14 @@ module ActiveInteractor
   class Configuration
     # The default configuration options for {Configuration}
     # @return [Hash{Symbol => *}]
+    #  * :logger - The Logger instance to use for logging
+    #  * :dir_name - The directory interactors are generated in
     DEFAULTS = {
-      logger: Logger.new(STDOUT)
+      logger: Logger.new(STDOUT),
+      dir_name: 'interactors'
     }.freeze
 
-    attr_accessor :logger
+    attr_accessor :logger, :dir_name
 
     # A new instance of {Configuration}
     # @param options [Hash{Symbol => *}] the options to initialize the

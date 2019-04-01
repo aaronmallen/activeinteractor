@@ -6,7 +6,7 @@ class InteractorGenerator < ActiveInteractor::Generators::NamedBase
   desc 'Generate an interactor'
 
   def create_interactor
-    template 'interactor.erb', File.join('app', 'interactors', class_path, "#{file_name}.rb")
+    template 'interactor.erb', Rails.root.join('app', interactor_app_dir, class_path, "#{file_name}.rb")
   end
 
   hook_for :test_framework, in: :interactor

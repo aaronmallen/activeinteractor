@@ -18,6 +18,10 @@ module ActiveInteractor
         def source_root
           File.expand_path('templates', __dir__)
         end
+
+        def interactor_app_dir
+          ActiveInteractor.configuration.dir_name
+        end
       end
     end
 

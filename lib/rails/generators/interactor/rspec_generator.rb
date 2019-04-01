@@ -8,7 +8,7 @@ module Interactor
       desc 'Generate an interactor spec'
 
       def create_spec
-        template 'rspec.erb', File.join('spec', 'interactors', class_path, "#{file_name}_spec.rb")
+        template 'rspec.erb', Rails.root.join('spec', interactor_app_dir, class_path, "#{file_name}_spec.rb")
       end
     end
   end
