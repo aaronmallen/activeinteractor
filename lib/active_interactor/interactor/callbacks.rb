@@ -39,7 +39,7 @@ module ActiveInteractor
         #    end
         #  end
         #
-        #  context = MyInteractor.new(name: 'Bob').context
+        #  context = MyInteractor.perform(name: 'Bob')
         #  #=> <MyInteractor::Context name='Bob'>
         #
         #  context.valid?
@@ -186,7 +186,7 @@ module ActiveInteractor
         #    end
         #  end
         #
-        #  context = MyInteractor.new(name: 'Bob').context
+        #  context = MyInteractor.perform(name: 'Bob')
         #  #=> <MyInteractor::Context name='Bob'>
         #
         #  context.valid?

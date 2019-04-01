@@ -2,6 +2,12 @@
 
 module ActiveInteractor
   module Interactor
+    # A worker class responsible for thread safe execution
+    #  of interactor {.perform} methods.
+    #
+    # @author Aaron Allen <hello@aaronmallen.me>
+    # @since 0.0.2
+    # @version 0.1
     class Worker
       delegate :run_callbacks, to: :interactor
 
@@ -36,6 +42,8 @@ module ActiveInteractor
       end
 
       # Calls {Interactor#rollback} with callbacks
+      # @return [Boolean] `true` if rolled back successfully or `false` if already
+      #  rolled back
       def execute_rollback
         run_callbacks :rollback do
           interactor.rollback

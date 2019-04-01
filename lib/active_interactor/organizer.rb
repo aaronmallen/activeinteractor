@@ -5,12 +5,12 @@ module ActiveInteractor
   #
   # @author Aaron Allen <hello@aaronmallen.me>
   # @since 0.0.1
-  # @version 0.1
+  # @version 0.2
   class Organizer < ActiveInteractor::Base
     class << self
       # Declare Interactors to be invoked as part of the
       #  organizer's invocation. These interactors are invoked in
-      #  the order in which they are declared.
+      #  the order in which they are declared
       #
       # @example
       #   class MyFirstOrganizer < ActiveInteractor::Organizer
@@ -26,8 +26,8 @@ module ActiveInteractor
         @organized = interactors.flatten
       end
 
-      # An Array of declared Interactors to be invoked.
-      # @private
+      # An Array of declared Interactors to be invoked
+      # @return [Array<ActiveInteractor::Base] the organized interactors
       def organized
         @organized ||= []
       end
