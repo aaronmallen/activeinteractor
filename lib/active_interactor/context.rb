@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-require 'active_support/core_ext/class/attribute'
 require 'ostruct'
+
+Dir[File.expand_path('context/*.rb', __dir__)].each { |file| require file }
 
 module ActiveInteractor
   # ActiveInteractor::Context module
@@ -10,35 +11,14 @@ module ActiveInteractor
   # @since 0.0.1
   # @version 0.1
   module Context
-    # Raised when an interactor context fails
-    #
-    # @author Aaron Allen <hello@aaronmallen.me>
-    # @since 0.0.1
-    # @version 0.1
-    #
-    # @!attribute [r] context
-    #  @return [Base] an instance of {Base}
-    class Failure < StandardError
-      attr_reader :context
-
-      # A new instance of {Failure}
-      # @param context [Hash] an instance of {Base}
-      # @return [Failure] a new instance of {Failure}
-      def initialize(context = {})
-        @context = context
-        super
-      end
-    end
-
     # The base context class inherited by all {Interactor::Context} classes
     #
     # @author Aaron Allen <hello@aaronmallen.me>
     # @since 0.0.1
-    # @version 0.1
+    # @version 0.2
     class Base < OpenStruct
       include ActiveModel::Validations
-
-      class_attribute :__default_attributes, instance_writer: false, default: []
+      include Attributes
 
       # A new instance of {Base}
       # @param interactor [ActiveInteractor::Base] an interactor instance
@@ -50,66 +30,6 @@ module ActiveInteractor
         super(attributes)
       end
 
-      class << self
-        # Attributes defined on the context class
-        #
-        # @example Get attributes defined on a context class
-        #  MyInteractor::Context.attributes
-        #  #=> [:first_name, :last_name]
-        #
-        # @return [Array<Symbol>] the defined attributes
-        def attributes
-          __default_attributes
-            .concat(_validate_callbacks.map(&:filter).map(&:attributes).flatten)
-            .flatten
-            .uniq
-        end
-
-        # Set attributes on a context class
-        # @param [Array<Symbol, String>] attributes
-        #
-        # @example Define attributes on a context class
-        #  MyInteractor::Context.attributes = :first_name, :last_name
-        #  #=> [:first_name, :last_name]
-        #
-        # @return [Array<Symbol>] the defined attributes
-        def attributes=(*attributes)
-          self.__default_attributes = self.attributes.concat(attributes.flatten.map(&:to_sym)).uniq
-        end
-      end
-
-      # Attributes defined on the instance
-      #
-      # @example Get attributes defined on an instance
-      #  MyInteractor::Context.attributes = :first_name, :last_name
-      #  #=> [:first_name, :last_name]
-      #
-      #  context = MyInteractor::Context.new(first_name: 'Aaron', last_name: 'Allen')
-      #  #=> <#MyInteractor::Context first_name='Aaron', last_name='Allen'>
-      #
-      #  context.attributes
-      #  #=> { first_name: 'Aaron', last_name: 'Allen' }
-      #
-      # @example Get attributes defined on an instance with unknown attribute
-      #  MyInteractor::Context.attributes = :first_name, :last_name
-      #  #=> [:first_name, :last_name]
-      #
-      #  context = MyInteractor::Context.new(first_name: 'Aaron', last_name: 'Allen', unknown: 'unknown')
-      #  #=> <#MyInteractor::Context first_name='Aaron', last_name='Allen', unknown='unknown'>
-      #
-      #  context.attributes
-      #  #=> { first_name: 'Aaron', last_name: 'Allen' }
-      #
-      #  context.unknown
-      #  #=> 'unknown'
-      #
-      # @return [Hash{Symbol => *}] the defined attributes and values
-      def attributes
-        self.class.attributes.each_with_object({}) do |attribute, hash|
-          hash[attribute] = self[attribute] if self[attribute]
-        end
-      end
-
       # Track that an Interactor has been called. The {#called!} method
       #  is used by the interactor being invoked with this context. After an
       #  interactor is successfully called, the interactor instance is tracked in
@@ -118,37 +38,6 @@ module ActiveInteractor
       # @return [Array<ActiveInteractor::Base>] all called interactors
       def called!
         _called << interactor
-      end
-
-      # Removes properties from the instance that are not
-      # explicitly defined in the context instance {#attributes}
-      #
-      # @example Clean an instance of Context with unknown attribute
-      #  MyInteractor::Context.attributes = :first_name, :last_name
-      #  #=> [:first_name, :last_name]
-      #
-      #  context = MyInteractor::Context.new(first_name: 'Aaron', last_name: 'Allen', unknown: 'unknown')
-      #  #=> <#MyInteractor::Context first_name='Aaron', last_name='Allen', unknown='unknown'>
-      #
-      #  context.unknown
-      #  #=> 'unknown'
-      #
-      #  context.clean!
-      #  #=> { unknown: 'unknown' }
-      #
-      #  context.unknown
-      #  #=> nil
-      #
-      # @return [Hash{Symbol => *}] the deleted attributes
-      def clean!
-        deleted = {}
-        return deleted if keys.empty?
-
-        keys.reject { |key| self.class.attributes.include?(key) }.each do |attribute|
-          deleted[attribute] = self[attribute] if self[attribute]
-          delete_field(key.to_s)
-        end
-        deleted
       end
 
       # Fail the context instance. Failing a context raises an error
@@ -194,23 +83,6 @@ module ActiveInteractor
         @_failed || false
       end
       alias fail? failure?
-
-      # All keys of properties currently defined on the instance
-      #
-      # @example An instance of Context with unknown attribute
-      #  MyInteractor::Context.attributes = :first_name, :last_name
-      #  #=> [:first_name, :last_name]
-      #
-      #  context = MyInteractor::Context.new(first_name: 'Aaron', last_name: 'Allen', unknown: 'unknown')
-      #  #=> <#MyInteractor::Context first_name='Aaron', last_name='Allen', unknown='unknown'>
-      #
-      #  context.keys
-      #  #=> [:first_name, :last_name, :unknown]
-      #
-      # @return [Array<Symbol>] keys defined on the instance
-      def keys
-        each_pair.map { |pair| pair[0].to_sym }
-      end
 
       # Attempt to call the interactor for missing validation callback methods
       # @raise [NameError] if the method is not a validation callback or method
@@ -295,6 +167,4 @@ module ActiveInteractor
       end
     end
   end
-
-  Dir[File.expand_path('context/*.rb', __dir__)].each { |file| require file }
 end
