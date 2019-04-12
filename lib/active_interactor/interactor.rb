@@ -81,7 +81,7 @@ module ActiveInteractor
       @should_clean_context.nil? && self.class.__clean_after_perform
     end
 
-    # Skip {ActiveInteractor::Context::Base#clean! #clean! on an interactor
+    # Skip {ActiveInteractor::Context::Attributes#clean! #clean! on an interactor
     #  context that calls the {Callbacks.clean_context_on_completion} class method.
     #  This method is meant to be invoked by organizer interactors
     #  to ensure contexts are approriately passed between interactors.

@@ -26,6 +26,7 @@ RSpec.shared_examples 'An ActiveInteractor::Base class respond_to' do
   it { should respond_to :before_rollback }
   it { should respond_to :clean_context_on_completion }
   it { should respond_to :context_attributes }
+  it { should respond_to :context_attribute_aliases }
   it { should respond_to :context_class }
   it { should respond_to :perform }
   it { should respond_to :perform! }
@@ -132,6 +133,27 @@ RSpec.shared_examples 'An ActiveInteractor::Base class ClassMethods' do
           .and_call_original
         subject.context_attributes :foo, :bar, :baz
         expect(subject.context_class.attributes).to eq %i[foo bar baz]
+      end
+    end
+  end
+
+  describe '`#context_attribute_aliases`' do
+    context 'with attribute aliases `foo: :bar`' do
+      it 'should assign the attribute aliases' do
+        expect(subject.context_class).to receive(:alias_attributes)
+          .with(foo: :bar)
+          .and_call_original
+        subject.context_attribute_aliases foo: :bar
+        expect(subject.context_class.attribute_aliases).to eq(foo: %i[bar])
+      end
+    end
+    context 'with attribute aliases `foo: [:bar, :baz]`' do
+      it 'should assign the attribute aliases' do
+        expect(subject.context_class).to receive(:alias_attributes)
+          .with(foo: %i[bar baz])
+          .and_call_original
+        subject.context_attribute_aliases foo: %i[bar baz]
+        expect(subject.context_class.attribute_aliases).to eq(foo: %i[bar baz])
       end
     end
   end

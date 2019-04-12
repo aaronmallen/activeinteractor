@@ -13,6 +13,8 @@ end
 RSpec.shared_examples 'An ActiveInteractor::Context::Base class respond_to' do
   it { should respond_to :attributes }
   it { should respond_to :attributes= }
+  it { should respond_to :attribute_aliases }
+  it { should respond_to :alias_attributes }
 
   ActiveModel::Validations::ClassMethods.instance_methods.each do |method|
     it { should respond_to method }
@@ -49,6 +51,29 @@ RSpec.shared_examples 'An ActiveInteractor::Context::Base class ClassMethods' do
     context 'with unique values `:foo`, `:foo` `:bar`, `:baz`' do
       before { subject.attributes = :foo, :foo, :bar, :baz }
       it { expect(subject.attributes).to eq %i[foo bar baz] }
+    end
+  end
+
+  describe '`#attribute_aliases`' do
+    context 'with no `attribute_aliases`' do
+      it { expect(subject.attribute_aliases).to be_a Hash }
+      it { expect(subject.attribute_aliases).to be_empty }
+    end
+
+    context 'with `attribute_aliases` `{foo: %i[bar]}`' do
+      before { subject.alias_attributes(foo: :bar) }
+      it { expect(subject.attribute_aliases).to be_a Hash }
+      it { expect(subject.attribute_aliases).to eq(foo: %i[bar]) }
+
+      context 'when creating an instance with bar: "test"' do
+        let(:instance) { subject.new('i', bar: 'test') }
+        it 'should not set `:bar`' do
+          expect(instance.bar).to be_nil
+        end
+        it 'should set `:foo` to "test"' do
+          expect(instance.foo).to eq 'test'
+        end
+      end
     end
   end
 end
