@@ -178,6 +178,38 @@ context.clean! #=> { occupation: 'Software Dude' }
 context.occupation #=> nil
 ```
 
+#### Aliasing Attributes
+
+Some times you may want to use the same interactor functionality with different
+model types having different naming conventions for similar attributes.  We can
+inform the interactors context of these aliases with the `context_attribute_aliases`
+method on our interactors.
+
+```ruby
+class MyInteractor < ActiveInteractor::Base
+  context_attributes :first_name, :last_name
+  context_attribute_aliases last_name: :sir_name
+end
+
+context = MyInteractor.perform(first_name: 'Aaron', sir_name: 'Allen')
+# => <#MyInteractor::Context first_name='Aaron', last_name='Allen'
+```
+
+We can also pass an array of aliases to the attribute like this:
+
+```ruby
+class MyInteractor < ActiveInteractor::Base
+  context_attributes :first_name, :last_name
+  context_attribute_aliases last_name: %i[sir_name sirname]
+end
+
+context = MyInteractor.perform(first_name: 'Aaron', sir_name: 'Allen')
+# => <#MyInteractor::Context first_name='Aaron', last_name='Allen'
+
+context = MyInteractor.perform(first_name: 'Aaron', sirname: 'Allen')
+# => <#MyInteractor::Context first_name='Aaron', last_name='Allen'
+```
+
 #### Validating the Context
 
 `ActiveInteractor` delegates all the validation methods provided by [ActiveModel::Validations]
