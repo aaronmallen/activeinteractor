@@ -11,20 +11,20 @@ and this project adheres to [Semantic Versioning].
 
 ### Added
 
-- [#25]: Implement `each_perform` callbacks on organizers
+- [#25] Implement `each_perform` callbacks on organizers
 
 ## [v0.1.2] - 2019-04-01
 
 ### Added
 
-- [#22]: Allow the directory interactors are generated in to be configurable
+- [#22] Allow the directory interactors are generated in to be configurable
 
 ## [v0.1.1] - 2019-03-30
 
 ### Fixed
 
-- [#15]: `NameError` (uninitialized constant `ActiveInteractor::Organizer`)
-- [#16]: `NoMethodError` (undefined method `merge` for `ActiveInteractor::Context::Base`)
+- [#15] `NameError` (uninitialized constant `ActiveInteractor::Organizer`)
+- [#16] `NoMethodError` (undefined method `merge` for `ActiveInteractor::Context::Base`)
 
 ## v0.1.0 - 2019-03-30
 
