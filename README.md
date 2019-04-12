@@ -8,7 +8,7 @@
 [![Maintainability](https://img.shields.io/codeclimate/maintainability/aaronmallen/activeinteractor.svg?maxAge=300&style=for-the-badge)](https://codeclimate.com/github/aaronmallen/activeinteractor/maintainability)
 [![Test Coverage](https://img.shields.io/codeclimate/coverage/aaronmallen/activeinteractor.svg?maxAge=300&style=for-the-badge)](https://codeclimate.com/github/aaronmallen/activeinteractor/test_coverage)
 
-Ruby interactors with [ActiveModel::Validations] based on the [interactors][collective_idea_interactors] gem.
+Ruby interactors with [ActiveModel::Validations] based on the [interactor][collective_idea_interactors] gem.
 
 ## Getting Started
 
@@ -460,7 +460,10 @@ context.rollback!
 "Done"
 ```
 
-We can do worker before `perform` is invoked on each interactor in an [Organizer](#organizers) with the `before_each_perform` method:
+#### Organizer Callbacks
+
+We can do worker before `perform` is invoked on each interactor in an [Organizer](#organizers)
+with the `before_each_perform` method:
 
 ```ruby
  class MyInteractor1 < ActiveInteractor::Base
@@ -499,7 +502,8 @@ MyOrganizer.perform(name: 'Aaron')
 #=> <MyOrganizer::Context name='Aaron'>
 ```
 
-We can do worker around `perform` is invokation on each interactor in an [Organizer](#organizers) with the `around_each_perform` method:
+We can do worker around `perform` is invokation on each interactor in an [Organizer](#organizers)
+with the `around_each_perform` method:
 
 ```ruby
  class MyInteractor1 < ActiveInteractor::Base
@@ -542,7 +546,8 @@ MyOrganizer.perform(name: 'Aaron')
 #=> <MyOrganizer::Context name='Aaron'>
 ```
 
-We can do worker after `perform` is invoked on each interactor in an [Organizer](#organizers) with the `after_each_perform` method:
+We can do worker after `perform` is invoked on each interactor in an [Organizer](#organizers)
+with the `after_each_perform` method:
 
 ```ruby
 class MyInteractor1 < ActiveInteractor::Base
