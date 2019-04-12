@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [v0.1.4] - 2019-04-12
+
 ### Added
 
 - [#28] The ability to alias attributes on interactor contexts.
@@ -39,7 +41,8 @@ and this project adheres to [Semantic Versioning].
 
 <!-- versions -->
 
-[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.3..HEAD
+[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.4..HEAD
+[v0.1.4]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.3...v0.1.4
 [v0.1.3]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.2...v0.1.3
 [v0.1.2]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.1...v0.1.2
 [v0.1.1]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.0...v0.1.1
