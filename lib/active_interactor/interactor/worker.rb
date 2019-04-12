@@ -22,8 +22,8 @@ module ActiveInteractor
       # @return [ActiveInteractor::Context::Base] an instance of {ActiveInteractor::Context::Base}
       def execute_perform
         execute_perform!
-      rescue ActiveInteractor::Context::Failure => exception
-        ActiveInteractor.logger.error("ActiveInteractor: #{exception}")
+      rescue ActiveInteractor::Context::Failure => e
+        ActiveInteractor.logger.error("ActiveInteractor: #{e}")
         context
       end
 
