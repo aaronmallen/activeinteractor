@@ -180,7 +180,7 @@ context.occupation #=> nil
 
 #### Aliasing Attributes
 
-Some times you may want to use the same interactor functionality with different
+Sometimes you may want to use the same interactor functionality with different
 model types having different naming conventions for similar attributes.  We can
 inform the interactors context of these aliases with the `context_attribute_aliases`
 method on our interactors.
@@ -192,7 +192,7 @@ class MyInteractor < ActiveInteractor::Base
 end
 
 context = MyInteractor.perform(first_name: 'Aaron', sir_name: 'Allen')
-# => <#MyInteractor::Context first_name='Aaron', last_name='Allen'
+# => <#MyInteractor::Context first_name='Aaron', last_name='Allen'>
 ```
 
 We can also pass an array of aliases to the attribute like this:
@@ -204,10 +204,10 @@ class MyInteractor < ActiveInteractor::Base
 end
 
 context = MyInteractor.perform(first_name: 'Aaron', sir_name: 'Allen')
-# => <#MyInteractor::Context first_name='Aaron', last_name='Allen'
+# => <#MyInteractor::Context first_name='Aaron', last_name='Allen'>
 
 context = MyInteractor.perform(first_name: 'Aaron', sirname: 'Allen')
-# => <#MyInteractor::Context first_name='Aaron', last_name='Allen'
+# => <#MyInteractor::Context first_name='Aaron', last_name='Allen'>
 ```
 
 #### Validating the Context
