@@ -4,11 +4,6 @@ require 'active_support/core_ext/array/wrap'
 require 'active_support/core_ext/class/attribute'
 
 module ActiveInteractor
-  # ActiveInteractor::Context module
-  #
-  # @author Aaron Allen <hello@aaronmallen.me>
-  # @since 0.0.1
-  # @version 0.1
   module Context
     # Provides Context Attribute methods to included classes
     #
