@@ -36,7 +36,7 @@ plugins:
   fixme:
     enabled: true
   git-legal:
-    enabled: true
+    enabled: false
   markdownlint:
     enabled: true
   rubocop:
