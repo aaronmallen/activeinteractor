@@ -49,15 +49,15 @@ module ActiveInteractor
       #  #=> <#MyInteractor name='Aaron'>
       #
       #  interactor.context.fail!
-      #  #=> ActiveInteractor::Context::Failure: <#MyInteractor::Context name='Aaron'>
+      #  #=> ActiveInteractor::Error::ContextFailure: <#MyInteractor::Context name='Aaron'>
       #
       # @param errors [ActiveModel::Errors, Hash] errors to add to the context on failure
       # @see https://api.rubyonrails.org/classes/ActiveModel/Errors.html ActiveModel::Errors
-      # @raise [Failure]
+      # @raise [Error::ContextFailure]
       def fail!(errors = {})
         self.errors.merge!(errors) unless errors.empty?
         @_failed = true
-        raise Failure, self
+        raise Error::ContextFailure, self
       end
 
       # Whether the context instance has failed. By default, a new
@@ -73,7 +73,7 @@ module ActiveInteractor
       #  false
       #
       #  context.fail!
-      #  #=> ActiveInteractor::Context::Failure: <#MyInteractor::Context>
+      #  #=> ActiveInteractor::Error::ContextFailure: <#MyInteractor::Context>
       #
       #  context.failure?
       #  #=> true
@@ -138,7 +138,7 @@ module ActiveInteractor
       #  true
       #
       #  context.fail!
-      #  #=> ActiveInteractor::Context::Failure: <#MyInteractor::Context>
+      #  #=> ActiveInteractor::Error::ContextFailure: <#MyInteractor::Context>
       #
       #  context.success?
       #  #=> false

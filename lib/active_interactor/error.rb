@@ -1,24 +1,27 @@
 # frozen_string_literal: true
 
 module ActiveInteractor
-  module Context
+  # ActiveInteractor::Error module
+  #
+  # @author Aaron Allen <hello@aaronmallen.me>
+  # @since 0.1.5
+  # @version 0.1
+  module Error
     # Raised when an interactor context fails
     #
-    # @deprecated Use {#ActiveInteractor::Error::ContextFailure} instead
-    #
     # @author Aaron Allen <hello@aaronmallen.me>
-    # @since 0.0.1
-    # @version 0.2
+    # @since 0.1.5
+    # @version 0.1
     #
     # @!attribute [r] context
     #  @return [Base] an instance of {Base}
-    class Failure < StandardError
+    class ContextFailure < StandardError
       attr_reader :context
 
-      # A new instance of {Failure}
+      # A new instance of {ContextFailure}
       # @param context [ActiveInteractor::Context::Base] an
       #  instance of {ActiveInteractor::Context::Base}
-      # @return [Failure] a new instance of {Failure}
+      # @return [ContextFailure] a new instance of {ContextFailure}
       def initialize(context = nil)
         @context = context
         super

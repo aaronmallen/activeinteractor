@@ -18,17 +18,17 @@ module ActiveInteractor
         @interactor = clone_interactor(interactor)
       end
 
-      # Calls {#execute_perform!} and rescues {ActiveInteractor::Context::Failure}
+      # Calls {#execute_perform!} and rescues {ActiveInteractor::Error::ContextFailure}
       # @return [ActiveInteractor::Context::Base] an instance of {ActiveInteractor::Context::Base}
       def execute_perform
         execute_perform!
-      rescue ActiveInteractor::Context::Failure => e
+      rescue ActiveInteractor::Error::ContextFailure => e
         ActiveInteractor.logger.error("ActiveInteractor: #{e}")
         context
       end
 
       # Calls {Interactor#perform} with callbacks and context validation
-      # @raise [ActiveInteractor::Context::Failure] if the context fails
+      # @raise [ActiveInteractor::Error::ContextFailure] if the context fails
       # @return [ActiveInteractor::Context::Base] an instance of {ActiveInteractor::Context::Base}
       def execute_perform!
         run_callbacks :perform do

@@ -36,6 +36,10 @@ module ActiveInteractor
   autoload :Interactor
   autoload :Organizer
 
+  eager_autoload do
+    autoload :Error
+  end
+
   class << self
     # The ActiveInteractor configuration
     # @return [ActiveInteractor::Configuration] the configuration instance
