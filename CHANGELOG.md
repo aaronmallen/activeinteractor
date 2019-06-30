@@ -19,7 +19,9 @@ and this project adheres to [Semantic Versioning].
 
 ### Security
 
-- Several dependency updates
+- [#33], [#37] Update rubocop: 0.67.2 → 0.72.0 (major)
+- [#34] Various dependency updates
+- [#38] Update yard: 0.9.19 → 0.9.20 (minor)
 
 ## [v0.1.4] - 2019-04-12
 
@@ -69,4 +71,8 @@ and this project adheres to [Semantic Versioning].
 [#22]: https://github.com/aaronmallen/activeinteractor/pull/22
 [#25]: https://github.com/aaronmallen/activeinteractor/pull/25
 [#28]: https://github.com/aaronmallen/activeinteractor/pull/28
+[#33]: https://github.com/aaronmallen/activeinteractor/pull/33
+[#34]: https://github.com/aaronmallen/activeinteractor/pull/34
+[#37]: https://github.com/aaronmallen/activeinteractor/pull/37
+[#38]: https://github.com/aaronmallen/activeinteractor/pull/38
 [#39]: https://github.com/aaronmallen/activeinteractor/pull/39
