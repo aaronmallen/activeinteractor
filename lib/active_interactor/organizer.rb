@@ -170,11 +170,21 @@ module ActiveInteractor
     #  in favor of this default implementation.
     def perform
       self.class.organized.each do |interactor|
-        run_callbacks :each_perform do
-          self.context = interactor.new(context)
-                                   .tap(&:skip_clean_context!)
-                                   .execute_perform!
-        end
+        execute_interactor_perform_with_callbacks!(interactor)
+      end
+    end
+
+    private
+
+    def execute_interactor_perform!(interactor)
+      self.context = interactor.new(context)
+                               .tap(&:skip_clean_context!)
+                               .execute_perform!
+    end
+
+    def execute_interactor_perform_with_callbacks!(interactor)
+      run_callbacks :each_perform do
+        execute_interactor_perform!(interactor)
       end
     end
   end

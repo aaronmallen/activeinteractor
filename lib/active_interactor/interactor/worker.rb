@@ -23,7 +23,7 @@ module ActiveInteractor
       def execute_perform
         execute_perform!
       rescue ActiveInteractor::Error::ContextFailure => e
-        ActiveInteractor.logger.error("ActiveInteractor: #{e}")
+        log_context_failure(e)
         context
       end
 
@@ -32,12 +32,9 @@ module ActiveInteractor
       # @return [ActiveInteractor::Context::Base] an instance of {ActiveInteractor::Context::Base}
       def execute_perform!
         run_callbacks :perform do
-          perform!
-          finalize_context!
-          context
-        rescue # rubocop:disable Style/RescueStandardError
-          context.rollback!
-          raise
+          execute_context!
+        rescue => e # rubocop:disable Style/RescueStandardError
+          rollback_context_and_raise!(e)
         end
       end
 
@@ -64,6 +61,12 @@ module ActiveInteractor
         interactor.send(:context)
       end
 
+      def execute_context!
+        perform!
+        finalize_context!
+        context
+      end
+
       def fail_on_invalid_context!(validation_context = nil)
         context.fail! if should_fail_on_invalid_context?(validation_context)
       end
@@ -73,10 +76,19 @@ module ActiveInteractor
         context.called!
       end
 
+      def log_context_failure(exception)
+        ActiveInteractor.logger.error("ActiveInteractor: #{exception}")
+      end
+
       def perform!
         fail_on_invalid_context!(:calling)
         interactor.perform
         fail_on_invalid_context!(:called)
+      end
+
+      def rollback_context_and_raise!(exception)
+        context.rollback!
+        raise exception
       end
 
       def should_fail_on_invalid_context?(validation_context)
