@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [v0.1.5] - 2019-06-30
+
+### Added
+
+- [#39] `ActiveInteractor::Error` module
+
+### Deprecated
+
+- [#39] `ActiveInteractor::Context::Failure` in favor of `ActiveInteractor::Error::ContextFailure`
+
+### Security
+
+- Several dependency updates
+
 ## [v0.1.4] - 2019-04-12
 
 ### Added
@@ -54,3 +68,4 @@ and this project adheres to [Semantic Versioning].
 [#22]: https://github.com/aaronmallen/activeinteractor/pull/22
 [#25]: https://github.com/aaronmallen/activeinteractor/pull/25
 [#28]: https://github.com/aaronmallen/activeinteractor/pull/28
+[#39]: https://github.com/aaronmallen/activeinteractor/pull/39
