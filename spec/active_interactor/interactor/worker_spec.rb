@@ -17,9 +17,9 @@ RSpec.describe ActiveInteractor::Interactor::Worker do
         subject
       end
 
-      context 'when `#execute_perform!` raises `ActiveInteractor::Context::Failure`' do
+      context 'when `#execute_perform!` raises `ActiveInteractor::Error::ContextFailure`' do
         before do
-          error = ActiveInteractor::Context::Failure.new
+          error = ActiveInteractor::Error::ContextFailure.new
           allow(ActiveInteractor.logger).to receive(:error).and_return(true)
           expect(worker).to receive(:execute_perform!).and_raise(error)
         end

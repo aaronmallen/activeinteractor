@@ -36,7 +36,7 @@ module ActiveInteractor
 
       # Invoke an Interactor. The {.perform!} method behaves identically to
       #  the {.perform} method with one notable exception. If the context is failed
-      #  during invocation of the interactor, the {ActiveInteractor::Context::Failure}
+      #  during invocation of the interactor, the {ActiveInteractor::Error::ContextFailure}
       #  is raised.
       #
       # @example Run an interactor

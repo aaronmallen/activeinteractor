@@ -47,9 +47,9 @@ RSpec.describe ActiveInteractor::Organizer do
           subject
         end
 
-        context 'when `TestInteractor1 `raises `ActiveInteractor::Context::Failure`' do
+        context 'when `TestInteractor1 `raises `ActiveInteractor::Error::ContextFailure`' do
           before do
-            error = ActiveInteractor::Context::Failure.new
+            error = ActiveInteractor::Error::ContextFailure.new
             allow(ActiveInteractor.logger).to receive(:error).and_return(true)
             allow_any_instance_of(TestInteractor1).to receive(:execute_perform!)
               .and_raise(error)

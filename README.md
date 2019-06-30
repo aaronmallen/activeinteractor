@@ -124,7 +124,7 @@ context.success? # => false
 
 #### Dealing with Failure
 
-`context.fail!` always throws an exception of type `ActiveInteractor::Context::Failure`.
+`context.fail!` always throws an exception of type `ActiveInteractor::Error::ContextFailure`.
 
 Normally, however, these exceptions are not seen. In the recommended usage, the consuming
 object invokes the interactor using the class method call, then checks the `success?` method of
