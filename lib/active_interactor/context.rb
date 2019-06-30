@@ -55,9 +55,9 @@ module ActiveInteractor
       # @see https://api.rubyonrails.org/classes/ActiveModel/Errors.html ActiveModel::Errors
       # @raise [Error::ContextFailure]
       def fail!(errors = {})
-        self.errors.merge!(errors) unless errors.empty?
-        @_failed = true
-        raise Error::ContextFailure, self
+        merge_errors(errors)
+        mark_failed!
+        raise_context_failure!
       end
 
       # Whether the context instance has failed. By default, a new
@@ -121,8 +121,8 @@ module ActiveInteractor
       def rollback!
         return false if @_rolled_back
 
-        _called.reverse_each(&:execute_rollback)
-        @_rolled_back = true
+        rollback_called
+        mark_rolledback!
       end
 
       # Whether the context instance is successful. By default, a new
@@ -160,6 +160,26 @@ module ActiveInteractor
 
       def _called
         @_called ||= []
+      end
+
+      def mark_failed!
+        @_failed = true
+      end
+
+      def mark_rolledback!
+        @_rolled_back = true
+      end
+
+      def merge_errors(errors)
+        self.errors.merge!(errors) unless errors.empty?
+      end
+
+      def raise_context_failure!
+        raise Error::ContextFailure, self
+      end
+
+      def rollback_called
+        _called.reverse_each(&:execute_rollback)
       end
 
       def validation_callback?(method_name)

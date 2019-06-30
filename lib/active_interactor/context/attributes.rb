@@ -136,14 +136,9 @@ module ActiveInteractor
       #
       # @return [Hash{Symbol => *}] the deleted attributes
       def clean!
-        deleted = {}
-        return deleted if keys.empty?
+        return {} if keys.empty?
 
-        keys.reject { |key| self.class.attributes.include?(key) }.each do |attribute|
-          deleted[attribute] = self[attribute] if self[attribute]
-          delete_field(key.to_s)
-        end
-        deleted
+        clean_keys!
       end
 
       # All keys of properties currently defined on the instance
@@ -170,6 +165,13 @@ module ActiveInteractor
           key = aliases.any? { |aliased| aliased == key.to_sym } ? attribute : key.to_sym
         end
         key
+      end
+
+      def clean_keys!
+        keys.reject { |key| self.class.attributes.include?(key) }.each_with_object({}) do |attribute, deleted|
+          deleted[attribute] = self[attribute] if self[attribute]
+          delete_field(key.to_s)
+        end
       end
 
       def map_attributes(attributes)
