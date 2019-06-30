@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [v0.1.5] - 2019-06-30
+
+### Added
+
+- [#39] `ActiveInteractor::Error` module
+
+### Deprecated
+
+- [#39] `ActiveInteractor::Context::Failure` in favor of `ActiveInteractor::Error::ContextFailure`
+
+### Security
+
+- [#33], [#37] Update rubocop: 0.67.2 → 0.72.0 (major)
+- [#34] Various dependency updates
+- [#38] Update yard: 0.9.19 → 0.9.20 (minor)
+
 ## [v0.1.4] - 2019-04-12
 
 ### Added
@@ -41,7 +57,8 @@ and this project adheres to [Semantic Versioning].
 
 <!-- versions -->
 
-[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.4..HEAD
+[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.5..HEAD
+[v0.1.5]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.4...v0.1.5
 [v0.1.4]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.3...v0.1.4
 [v0.1.3]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.2...v0.1.3
 [v0.1.2]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.1...v0.1.2
@@ -54,3 +71,8 @@ and this project adheres to [Semantic Versioning].
 [#22]: https://github.com/aaronmallen/activeinteractor/pull/22
 [#25]: https://github.com/aaronmallen/activeinteractor/pull/25
 [#28]: https://github.com/aaronmallen/activeinteractor/pull/28
+[#33]: https://github.com/aaronmallen/activeinteractor/pull/33
+[#34]: https://github.com/aaronmallen/activeinteractor/pull/34
+[#37]: https://github.com/aaronmallen/activeinteractor/pull/37
+[#38]: https://github.com/aaronmallen/activeinteractor/pull/38
+[#39]: https://github.com/aaronmallen/activeinteractor/pull/39
