@@ -7,9 +7,9 @@ ActiveInteractor.configure do |config|
   config.logger = Rails.logger
 
   # Set the default directory for interactors
-  # NOTE: if this is changed after `active_interactor:install`
-  # is generated you will need to update
-  # config/application.rb autoload paths with the
-  # new directory name.
+  <%- if directory != 'interactors' -%>
+  config.dir_name = <%= directory %>
+  <%- else -%>
   # config.dir_name = 'interactors'
+  <%- end -%>
 end

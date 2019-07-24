@@ -5,8 +5,11 @@ require_relative '../active_interactor'
 module ActiveInteractor
   module Generators
     class InstallGenerator < Base
+      desc 'Install ActiveInteractor'
+      argument :directory, type: :string, default: 'interactors', banner: 'directory'
+
       def create_initializer
-        template 'initializer.rb', Rails.root.join('config', 'initializers', 'active_interactor.rb')
+        template 'initializer.erb', Rails.root.join('config', 'initializers', 'active_interactor.rb')
       end
 
       def create_application_interactor
