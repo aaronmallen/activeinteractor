@@ -8,7 +8,7 @@ ActiveInteractor.configure do |config|
 
   # Set the default directory for interactors
   <%- if directory != 'interactors' -%>
-  config.dir_name = <%= directory %>
+  config.dir_name = '<%= directory %>'
   <%- else -%>
   # config.dir_name = 'interactors'
   <%- end -%>
