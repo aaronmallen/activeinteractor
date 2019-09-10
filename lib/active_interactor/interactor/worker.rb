@@ -63,8 +63,9 @@ module ActiveInteractor
 
       def execute_context!
         perform!
-        finalize_context!
         context
+      ensure
+        finalize_context!
       end
 
       def fail_on_invalid_context!(validation_context = nil)
@@ -88,6 +89,7 @@ module ActiveInteractor
 
       def rollback_context_and_raise!(exception)
         context.rollback!
+        context.send(:mark_failed!)
         raise exception
       end
 
