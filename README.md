@@ -33,11 +33,14 @@ gem install activeinteractor
 If you're working with a rails project you will also want to run:
 
 ```bash
-rails generate active_interactor:install
+rails generate active_interactor:install [directory]
 ```
 
+The `directory` option allows you to customize what directory interactors
+will live in within your application (defaults to 'interactors').
+
 This will create an initializer and a new class called `ApplicationInteractor`
-at `app/interactors/application_interactor.rb`
+at `app/<interactor directory>/application_interactor.rb`
 
 you can then automatically generate interactors and interactor organizers with:
 

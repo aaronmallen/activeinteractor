@@ -47,13 +47,21 @@ RSpec.describe ActiveInteractor::Organizer do
           subject
         end
 
-        context 'when `TestInteractor1 `raises `ActiveInteractor::Error::ContextFailure`' do
-          before do
-            error = ActiveInteractor::Error::ContextFailure.new
-            allow(ActiveInteractor.logger).to receive(:error).and_return(true)
-            allow_any_instance_of(TestInteractor1).to receive(:execute_perform!)
-              .and_raise(error)
+        context 'when `TestInteractor1 fails the context' do
+          let(:interactors) do
+            interactor1 = build_interactor('TestInteractor1') do
+              def perform
+                context.fail!
+              end
+            end
+            [interactor1, build_interactor('TestInteractor2')]
           end
+
+          before do
+            allow(ActiveInteractor.logger).to receive(:error).and_return(true)
+          end
+
+          it { should_not be_successful }
 
           it 'should not invoke `#execute_perform!` on `TestInteractor2`' do
             expect_any_instance_of(TestInteractor2).not_to receive(:execute_perform!)

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [v0.1.7] - 2019-09-10
+
+### Fixed
+
+- [#61] Ensure `Organizer` accurately reports context success
+
 ## [v0.1.6] - 2019-07-24
 
 ### Changed
@@ -68,7 +74,8 @@ and this project adheres to [Semantic Versioning].
 
 <!-- versions -->
 
-[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.6..HEAD
+[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.7..HEAD
+[v0.1.7]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.6...v0.1.7
 [v0.1.6]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.5...v0.1.6
 [v0.1.5]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.4...v0.1.5
 [v0.1.4]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.3...v0.1.4
@@ -91,3 +98,4 @@ and this project adheres to [Semantic Versioning].
 [#45]: https://github.com/aaronmallen/activeinteractor/pull/45
 [#48]: https://github.com/aaronmallen/activeinteractor/pull/48
 [#51]: https://github.com/aaronmallen/activeinteractor/pull/51
+[#61]: https://github.com/aaronmallen/activeinteractor/pull/61
