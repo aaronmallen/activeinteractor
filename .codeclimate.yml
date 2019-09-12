@@ -44,7 +44,6 @@ plugins:
 exclude_patterns:
   - .github/PULL_REQUEST_TEMPLATE.md
   - .github/ISSUE_TEMPLATE/*
-  - .mdlrc
   - .yardopts
   - '/bin/*'
   - '**/spec/'
@@ -52,6 +51,5 @@ exclude_patterns:
   - '/.*ignore/'
   - /Gemfile.*/
   - '*.yml'
-  - Dockerfile
   - Rakefile
   - mdl_style.rb
