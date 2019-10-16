@@ -14,7 +14,7 @@ on:
 
 jobs:
   test:
-    name: Test for Ruby ${{ matrix.ruby }}
+    name: Ruby ${{ matrix.ruby }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
