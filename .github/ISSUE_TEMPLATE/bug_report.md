@@ -1,6 +1,9 @@
 ---
 name: 🐞 Bug Report
 about: Report a bug to help us improve.
+title: '[Bug Report]'
+labels: bug, needs-verification
+assignees: ''
 ---
 
 <!--- ⚠️ If you do not respect this template your issue will be closed. -->
@@ -16,9 +19,7 @@ about: Report a bug to help us improve.
 <!--- Provide a link to a live example or an unambiguous set of steps to -->
 <!--- reproduce this bug. Include code to reproduce, if relevant -->
 1.
-2.
-3.
-4.
+
 
 #### Additional Comments
 <!--- Are there any more details you'd like to provide about this bug? -->
