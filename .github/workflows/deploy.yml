@@ -1,0 +1,61 @@
+name: Deploy
+
+on:
+  release:
+    types:
+      - published
+      - prereleased
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+          architecture: x64
+      - name: Install Dependencies
+        run: gem install bundler && bundler install --jobs 20  --retry 5
+      - name: Install Code Climate Test Reporter
+        run: |
+          curl -L curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          chmod +x ./cc-test-reporter
+          ./cc-test-reporter before-build
+      - name: Run Specs
+        run: bundle exec rake spec
+      - name: Reporting Coverage to Code Climate
+        run: ./cc-test-reporter after-build --exit-code $!
+  build-and-publish:
+    name: Build and Publish
+    needs:
+      - test
+    if: success()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+          architecture: x64
+      - name: Publish to GPR
+        run: |
+          mkdir -p $HOME/.gem
+          touch $HOME/.gem/credentials
+          chmod 0600 $HOME/.gem/credentials
+          printf -- "---\n:github: Bearer ${GEM_HOST_API_KEY}\n" > $HOME/.gem/credentials
+          gem build *.gemspec
+          gem push --KEY github --host https://rubygems.pkg.github.com/${OWNER} *.gem
+        env:
+          GEM_HOST_API_KEY: ${{secrets.GPR_AUTH_TOKEN}}
+          OWNER: aaronmallen
+      - name: Publish to RubyGems
+        run: |
+          mkdir -p $HOME/.gem
+          touch $HOME/.gem/credentials
+          chmod 0600 $HOME/.gem/credentials
+          printf -- "---\n:rubygems_api_key: ${GEM_HOST_API_KEY}\n" > $HOME/.gem/credentials
+          gem build *.gemspec
+          gem push *.gem
+        env:
+          GEM_HOST_API_KEY: ${{secrets.RUBYGEMS_AUTH_TOKEN}}

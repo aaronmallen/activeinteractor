@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - master
+      - /.*-(alpha|beta|stable)/
+      - /^v\d+\.\d+\.\d+.*/
+  push:
+    branches:
+      - master
+      - /.*-(alpha|beta|stable)/
+      - /^v\d+\.\d+\.\d+.*/
+
+jobs:
+  test:
+    name: Test for Ruby ${{ matrix.ruby }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          architecture: x64
+      - name: Install Dependencies
+        run: gem install bundler && bundler install --jobs 20  --retry 5
+      - name: Install Code Climate Test Reporter
+        run: |
+          curl -L curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          chmod +x ./cc-test-reporter
+          ./cc-test-reporter before-build
+      - name: Run Specs
+        run: bundle exec rake spec
+      - name: Reporting Coverage to Code Climate
+        run: ./cc-test-reporter after-build --exit-code $!
+    strategy:
+      matrix:
+        ruby:
+          - '2.5'
+          - '2.6'
+  build:
+    name: Building Gem for Ruby ${{ matrix.ruby }}
+    needs:
+      - test
+    if: success()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          architecture: x64
+      - name: Building Gem
+        run: bundle exec rake build
+    strategy:
+      matrix:
+        ruby:
+          - '2.5'
+          - '2.6'
