@@ -793,8 +793,6 @@ You can also run `bin/console` for an interactive prompt that will allow you to 
 
 To install this gem onto your local machine, run `bundle exec rake install`.
 
-Additionally you can run tests in both rails 2.5 and rails 2.6 with `bin/test`.
-
 ## Contributing
 
 Read our guidelines for [Contributing](CONTRIBUTING.md).
