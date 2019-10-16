@@ -47,6 +47,7 @@ jobs:
     if: success()
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v1
       - uses: actions/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
