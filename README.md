@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/github/license/aaronmallen/activeinteractor.svg?maxAge=300&style=for-the-badge)](https://github.com/aaronmallen/activeinteractor/blob/master/LICENSE)
 [![Dependencies](https://img.shields.io/depfu/aaronmallen/activeinteractor.svg?maxAge=300&style=for-the-badge)](https://depfu.com/github/aaronmallen/activeinteractor)
 
-[![Build Status](https://img.shields.io/travis/com/aaronmallen/activeinteractor/master.svg?logo=travis&maxAge=300&style=for-the-badge)](https://www.travis-ci.com/aaronmallen/activeinteractor)
+[![Build Status](https://github.com/aaronmallen/activeinteractor/workflows/Build/badge.svg)](https://github.com/aaronmallen/activeinteractor/actions)
 [![Maintainability](https://img.shields.io/codeclimate/maintainability/aaronmallen/activeinteractor.svg?maxAge=300&style=for-the-badge)](https://codeclimate.com/github/aaronmallen/activeinteractor/maintainability)
 [![Test Coverage](https://img.shields.io/codeclimate/coverage/aaronmallen/activeinteractor.svg?maxAge=300&style=for-the-badge)](https://codeclimate.com/github/aaronmallen/activeinteractor/test_coverage)
 
