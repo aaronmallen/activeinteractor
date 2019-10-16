@@ -1,16 +1,19 @@
 # frozen_string_literal: true
 
-require 'simplecov'
+begin
+  require 'simplecov'
 
-SimpleCov.start do
-  track_files 'lib/**/*.rb'
-  add_filter 'lib/rails/generators'
-  add_filter '/spec/'
+  SimpleCov.start do
+    track_files 'lib/**/*.rb'
+    add_filter 'lib/rails/generators'
+    add_filter '/spec/'
+  end
+rescue LoadError
+  puts 'Not reporting coverage...'
 end
 
 require 'bundler/setup'
 require 'active_interactor'
-require 'rspec/collection_matchers'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
