@@ -32,7 +32,9 @@ jobs:
       - name: Run Specs
         run: bundle exec rake spec
       - name: Reporting Coverage to Code Climate
-        run: ./cc-test-reporter after-build --exit-code $!
+        run: ./cc-test-reporter after-build --exit-code $?
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
     strategy:
       matrix:
         ruby:
