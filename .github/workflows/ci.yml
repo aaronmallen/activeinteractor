@@ -51,6 +51,8 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           architecture: x64
+      - name: Install Dependencies
+        run: gem install bundler && bundler install --jobs 20  --retry 5
       - name: Building Gem
         run: bundle exec rake build
     strategy:
