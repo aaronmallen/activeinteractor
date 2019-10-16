@@ -3,9 +3,11 @@
 require 'bundler/gem_tasks'
 require 'rspec/core/rake_task'
 
+RSpec::Core::RakeTask.new(:rspec)
+
 begin
   require 'rubocop/rake_task'
-  require 'rubocop/yard'
+  require 'yard'
 
   RuboCop::RakeTask.new do |task|
     task.options << '-D'
@@ -17,13 +19,9 @@ begin
   end
 
   YARD::Rake::YardocTask.new(:doc)
+  Rake::Task[:spec].clear.enhance %i[mdl rubocop rspec]
 rescue LoadError
-  task :doc
-  task :mdl
-  task :rubocop
+  Rake::Task[:spec].clear.enhance %i[rspec]
 end
 
-RSpec::Core::RakeTask.new(:rspec)
-
-task spec: %i[mdl rubocop rspec]
-task default: %i[spec doc build]
+task default: %i[spec build]
