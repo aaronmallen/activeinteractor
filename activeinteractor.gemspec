@@ -40,14 +40,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'activesupport', '>= 4.2', '< 6.1'
 
   spec.add_development_dependency 'bundler', '~> 2.0'
-  spec.add_development_dependency 'github-markup', '~> 3.0'
-  spec.add_development_dependency 'mdl', '~> 0.5'
   spec.add_development_dependency 'rake', '~> 12.3'
-  spec.add_development_dependency 'redcarpet', '~> 3.4'
   spec.add_development_dependency 'rspec', '~> 3.0'
-  spec.add_development_dependency 'rspec-collection_matchers', '~> 1.1'
-  spec.add_development_dependency 'rubocop', '~> 0.67'
-  spec.add_development_dependency 'simplecov', '~> 0.16'
-  spec.add_development_dependency 'yard', '~> 0.9'
-  spec.add_development_dependency 'yard-activesupport-concern', '0.0.1'
 end
