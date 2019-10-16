@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-docker-compose run ruby-2.5 ruby -v
-docker-compose run ruby-2.5 rake
-docker-compose run ruby-2.6 ruby -v
-docker-compose run ruby-2.6 rake
