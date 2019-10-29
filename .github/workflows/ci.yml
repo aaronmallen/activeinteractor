@@ -16,6 +16,8 @@ jobs:
   test:
     name: Ruby ${{ matrix.ruby }}
     runs-on: ubuntu-latest
+    env:
+      CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-ruby@v1
@@ -35,8 +37,6 @@ jobs:
         run: bundle exec rake build
       - name: Reporting Coverage to Code Climate
         run: ./cc-test-reporter after-build --exit-code $?
-        env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
     strategy:
       matrix:
         ruby:
