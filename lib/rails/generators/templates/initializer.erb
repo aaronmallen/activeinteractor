@@ -7,9 +7,12 @@ ActiveInteractor.configure do |config|
   config.logger = Rails.logger
 
   # Set the default directory for interactors
-  <%- if directory != 'interactors' -%>
+  <%- if !directory.blank? -%>
   config.dir_name = '<%= directory %>'
   <%- else -%>
   # config.dir_name = 'interactors'
   <%- end -%>
+
+  # Do not generate seperate context classes
+  # config.generate_context_class = false
 end

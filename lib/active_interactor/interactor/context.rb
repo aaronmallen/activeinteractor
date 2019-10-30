@@ -7,7 +7,7 @@ module ActiveInteractor
     # @api private
     # @author Aaron Allen <hello@aaronmallen.me>
     # @since 0.0.1
-    # @version 0.2
+    # @version 0.3
     module Context
       extend ActiveSupport::Concern
 
@@ -23,9 +23,13 @@ module ActiveInteractor
         delegate(*ActiveModel::Validations::ClassMethods.instance_methods, to: :context_class, prefix: :context)
         delegate(*ActiveModel::Validations::HelperMethods.instance_methods, to: :context_class, prefix: :context)
 
-        # Create the context class for inherited classes.
+        # Create the context class for inherited classes if a context
+        #  class does not already exist.
         def inherited(base)
+          return if base.context_class
+
           base.const_set 'Context', Class.new(ActiveInteractor::Context::Base)
+          base.contextualize_with :context
         end
 
         # Assign attributes to the context class of the interactor
@@ -88,7 +92,48 @@ module ActiveInteractor
         #  MyInteractor.context_class
         #  #=> MyInteractor::Context
         def context_class
-          const_get 'Context'
+          @context_class
+        end
+
+        # Sets the interactor's context class
+        #
+        # @example
+        #  class MyContext < ActiveInteractor::Context::Base
+        #  end
+        #
+        #  class MyInteractor < ActiveInteractor::Base
+        #    contextualize_with :my_context
+        #  end
+        #
+        #  MyInteractor.context_class
+        #  #=> MyContext
+        #
+        # @raise [Error::UnknownContext] if context class is not found
+        # @return [Class] the interactor context class
+        def contextualize_with(class_name)
+          klass = find_context_class(class_name)
+          raise_unknown_context!(class_name) unless klass
+
+          @context_class = klass
+        end
+
+        private
+
+        def classify(class_name)
+          ActiveSupport::Inflector.classify(class_name)
+        end
+
+        def find_context_class(class_name)
+          classified_name = classify(class_name)
+          [
+            classified_name,
+            classify("Context::#{classified_name}"),
+            classify("#{name}::#{classified_name}")
+          ].map(&:safe_constantize).compact.first
+        end
+
+        def raise_unknown_context!(class_name)
+          raise ActiveInteractor::Error::UnknownContext, class_name
         end
       end
     end

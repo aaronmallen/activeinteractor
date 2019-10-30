@@ -1,0 +1,7 @@
+# frozen_string_literal: true
+
+class Context::<%= class_name %> < ActiveInteractor::Context::Base
+<%- if context_attributes.any? %>
+  self.attributes = <%= context_attributes.map(&:to_sym).join(", ") %>
+<%- end -%>
+end

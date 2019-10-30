@@ -175,7 +175,7 @@ module ActiveInteractor
       end
 
       def raise_context_failure!
-        raise Error::ContextFailure, self
+        raise ActiveInteractor::Error::ContextFailure, self
       end
 
       def rollback_called

@@ -5,7 +5,7 @@ module ActiveInteractor
   #
   # @author Aaron Allen <hello@aaronmallen.me>
   # @since 0.1.5
-  # @version 0.1
+  # @version 0.2
   module Error
     # Raised when an interactor context fails
     #
@@ -26,6 +26,15 @@ module ActiveInteractor
         @context = context
         super
       end
+    end
+
+    # Raised when an interactor is contextualized
+    #  with an unknown class
+    #
+    # @author Aaron Allen <hello@aaronmallen.me>
+    # @since 0.2.0
+    # @version 0.1
+    class UnknownContext < StandardError
     end
   end
 end
