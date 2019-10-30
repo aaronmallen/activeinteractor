@@ -17,6 +17,8 @@ GEM
       tzinfo (~> 1.1)
       zeitwerk (~> 2.1, >= 2.1.8)
     ast (2.4.0)
+    codacy-coverage (2.1.5)
+      simplecov
     concurrent-ruby (1.1.5)
     diff-lcs (1.3)
     docile (1.3.2)
@@ -85,6 +87,7 @@ PLATFORMS
 DEPENDENCIES
   activeinteractor!
   bundler (~> 2.0)
+  codacy-coverage (~> 2.1)
   github-markup (~> 3.0)
   mdl (~> 0.5)
   rake (~> 12.3)
