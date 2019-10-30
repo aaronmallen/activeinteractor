@@ -19,6 +19,7 @@ jobs:
     env:
       CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
       CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
+      CODACY_RUN_LOCAL: true
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-ruby@v1
