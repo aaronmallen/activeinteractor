@@ -1,12 +1,13 @@
 # ActiveInteractor
 
-[![Version](https://img.shields.io/gem/v/activeinteractor.svg?logo=ruby&style=for-the-badge)](https://rubygems.org/gems/activeinteractor)
-[![License](https://img.shields.io/github/license/aaronmallen/activeinteractor.svg?maxAge=300&style=for-the-badge)](https://github.com/aaronmallen/activeinteractor/blob/master/LICENSE)
-[![Dependencies](https://img.shields.io/depfu/aaronmallen/activeinteractor.svg?maxAge=300&style=for-the-badge)](https://depfu.com/github/aaronmallen/activeinteractor)
+[![Version](https://img.shields.io/gem/v/activeinteractor.svg?logo=ruby)](https://rubygems.org/gems/activeinteractor)
+[![License](https://img.shields.io/github/license/aaronmallen/activeinteractor.svg?maxAge=300)](https://github.com/aaronmallen/activeinteractor/blob/master/LICENSE)
+[![Dependencies](https://img.shields.io/depfu/aaronmallen/activeinteractor.svg?maxAge=300)](https://depfu.com/github/aaronmallen/activeinteractor)
 
 [![Build Status](https://github.com/aaronmallen/activeinteractor/workflows/Build/badge.svg)](https://github.com/aaronmallen/activeinteractor/actions)
-[![Maintainability](https://img.shields.io/codeclimate/maintainability/aaronmallen/activeinteractor.svg?maxAge=300&style=for-the-badge)](https://codeclimate.com/github/aaronmallen/activeinteractor/maintainability)
-[![Test Coverage](https://img.shields.io/codeclimate/coverage/aaronmallen/activeinteractor.svg?maxAge=300&style=for-the-badge)](https://codeclimate.com/github/aaronmallen/activeinteractor/test_coverage)
+[![Maintainability](https://img.shields.io/codeclimate/maintainability/aaronmallen/activeinteractor.svg?maxAge=300)](https://codeclimate.com/github/aaronmallen/activeinteractor/maintainability)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/be92c4ecf12347da82d266f6a4368b6e)](https://www.codacy.com/manual/aaronmallen/activeinteractor?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=aaronmallen/activeinteractor&amp;utm_campaign=Badge_Grade)
+[![Test Coverage](https://img.shields.io/codeclimate/coverage/aaronmallen/activeinteractor.svg?maxAge=300)](https://codeclimate.com/github/aaronmallen/activeinteractor/test_coverage)
 
 Ruby interactors with [ActiveModel::Validations] based on the [interactor][collective_idea_interactors] gem.
 

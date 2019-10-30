@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 begin
+  require 'codacy-coverage'
   require 'simplecov'
 
+  Codacy::Reporter.start
   SimpleCov.start do
     track_files 'lib/**/*.rb'
     add_filter 'lib/rails/generators'

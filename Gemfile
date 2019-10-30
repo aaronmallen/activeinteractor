@@ -5,6 +5,7 @@ source 'https://rubygems.org'
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
 group :development do
+  gem 'codacy-coverage', '~> 2.1'
   gem 'github-markup', '~> 3.0'
   gem 'mdl', '~> 0.5'
   gem 'redcarpet', '~> 3.4'
