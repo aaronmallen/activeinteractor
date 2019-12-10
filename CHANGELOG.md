@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Removed
+
+- Aliasing attributes for context classes
+
 ## [v0.1.7] - 2019-09-10
 
 ### Fixed

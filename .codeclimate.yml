@@ -52,6 +52,3 @@ exclude_patterns:
   - '/.*ignore/'
   - /Gemfile.*/
   - '*.yml'
-  - Dockerfile
-  - Rakefile
-  - mdl_style.rb

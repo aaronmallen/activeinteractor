@@ -26,6 +26,7 @@ Gem::Specification.new do |spec|
 
   spec.files         = Dir['CHANGELOG.md', 'LICENSE', 'README.md', 'lib/**/*']
   spec.require_paths = ['lib']
+  spec.test_files    = Dir['spec/**/*']
 
   spec.metadata = {
     'bug_tracker_uri' => 'https://github.com/aaronmallen/activeinteractor/issues',
@@ -36,10 +37,10 @@ Gem::Specification.new do |spec|
     'wiki_uri' => 'https://github.com/aaronmallen/activeinteractor/wiki'
   }
 
-  spec.add_dependency 'activemodel', '>= 4.2', '< 6.1'
-  spec.add_dependency 'activesupport', '>= 4.2', '< 6.1'
+  spec.add_dependency 'activemodel', '>= 4.2', '< 7.0'
+  spec.add_dependency 'activesupport', '>= 4.2', '< 7.0'
 
   spec.add_development_dependency 'bundler', '~> 2.0'
-  spec.add_development_dependency 'rake', '~> 12.3'
-  spec.add_development_dependency 'rspec', '~> 3.0'
+  spec.add_development_dependency 'rake', '~> 13.0'
+  spec.add_development_dependency 'rspec', '~> 3.9'
 end

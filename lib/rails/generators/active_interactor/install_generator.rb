@@ -1,30 +1,26 @@
 # frozen_string_literal: true
 
-require_relative '../active_interactor'
+require 'rails/generators/base'
 
 module ActiveInteractor
   module Generators
-    class InstallGenerator < Base
+    class InstallGenerator < ::Rails::Generators::Base
+      source_root File.expand_path('templates', __dir__)
       desc 'Install ActiveInteractor'
-      argument :directory, type: :string, default: 'interactors', banner: 'directory'
 
       def create_initializer
         template 'initializer.erb', Rails.root.join('config', 'initializers', 'active_interactor.rb')
       end
 
-      def create_application_interactor
-        template 'application_interactor.erb', Rails.root.join('app', directory, 'application_interactor.rb')
-      end
-
-      def create_interactor_concerns
-        create_file Rails.root.join('app', directory, 'concerns', '.keep')
+      def create_application_interactor_and_context
+        generate :'active_interactor:application_interactor'
       end
 
       def autoload_interactors
         application do
-          <<~CONFIG
-             # autoload interactors
-            config.autoload_paths += %w[app/#{directory}]
+          <<-CONFIG
+          # autoload interactors
+          config.autoload_paths += %w[app/interactors]
 
           CONFIG
         end

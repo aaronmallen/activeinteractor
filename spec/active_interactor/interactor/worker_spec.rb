@@ -3,70 +3,85 @@
 require 'spec_helper'
 
 RSpec.describe ActiveInteractor::Interactor::Worker do
-  context 'with an interactor instance' do
-    subject(:worker) { described_class.new(interactor) }
-    let(:interactor) { build_interactor.new }
+  context 'with interactor class TestInteractor' do
+    before { build_interactor }
+    let(:interactor) { TestInteractor.new }
 
     describe '#execute_perform' do
-      subject { worker.execute_perform }
+      subject { described_class.new(interactor).execute_perform }
 
-      it { expect { subject }.not_to raise_error }
-      it { should be_an ActiveInteractor::Context::Base }
-      it 'should invoke `#execute_perform`' do
-        expect(worker).to receive(:execute_perform!).and_call_original
-        subject
-      end
+      it { is_expected.to be_an TestInteractor.context_class }
 
-      context 'when `#execute_perform!` raises `ActiveInteractor::Error::ContextFailure`' do
+      context 'when context fails' do
         before do
-          error = ActiveInteractor::Error::ContextFailure.new
-          allow(ActiveInteractor.logger).to receive(:error).and_return(true)
-          expect(worker).to receive(:execute_perform!).and_raise(error)
+          allow_any_instance_of(TestInteractor).to receive(:perform)
+            .and_raise(ActiveInteractor::Error::ContextFailure)
         end
 
         it { expect { subject }.not_to raise_error }
-        it { should be_an ActiveInteractor::Context::Base }
+        it { is_expected.to be_an TestInteractor.context_class }
       end
     end
 
     describe '#execute_perform!' do
-      subject { worker.execute_perform! }
+      subject { described_class.new(interactor).execute_perform! }
 
-      it { should be_an ActiveInteractor::Context::Base }
+      it { is_expected.to be_an TestInteractor.context_class }
 
-      it 'should invoke `#run_callbacks` on the interactor' do
-        expect_any_instance_of(interactor.class).to receive(:run_callbacks)
-          .exactly(3).times
-          .and_call_original
+      it 'is expected to run perform callbacks on interactor' do
+        expect_any_instance_of(TestInteractor).to receive(:run_callbacks)
+          .with(:perform)
         subject
       end
 
-      it 'should check context validation' do
-        expect_any_instance_of(interactor.class.context_class).to receive(:valid?)
-          .twice
-          .and_call_original
+      it 'calls #perform on interactor instance' do
+        expect_any_instance_of(TestInteractor).to receive(:perform)
         subject
       end
 
-      it 'should invoke `#perform` on the interactor' do
-        expect_any_instance_of(interactor.class).to receive(:perform)
-          .and_call_original
-        subject
+      context 'when interactor context is invalid on :calling' do
+        before do
+          allow_any_instance_of(TestInteractor.context_class).to receive(:valid?)
+            .with(:calling)
+            .and_return(false)
+        end
+
+        it { expect { subject }.to raise_error(ActiveInteractor::Error::ContextFailure) }
+        it 'rollsback the interactor context' do
+          expect_any_instance_of(TestInteractor).to receive(:context_rollback!)
+          expect { subject }.to raise_error(ActiveInteractor::Error::ContextFailure)
+        end
+      end
+
+      context 'when interactor context is invalid on :called' do
+        before do
+          allow_any_instance_of(TestInteractor.context_class).to receive(:valid?)
+            .with(:calling)
+            .and_return(true)
+          allow_any_instance_of(TestInteractor.context_class).to receive(:valid?)
+            .with(:called)
+            .and_return(false)
+        end
+
+        it { expect { subject }.to raise_error(ActiveInteractor::Error::ContextFailure) }
+        it 'rollsback the interactor context' do
+          expect_any_instance_of(TestInteractor).to receive(:context_rollback!)
+          expect { subject }.to raise_error(ActiveInteractor::Error::ContextFailure)
+        end
       end
     end
 
     describe '#execute_rollback' do
-      subject { worker.execute_rollback }
+      subject { described_class.new(interactor).execute_rollback }
 
-      it 'should invoke `#run_callbacks` on the interactor' do
-        expect_any_instance_of(interactor.class).to receive(:run_callbacks)
+      it 'is expected to run rollback callbacks on interactor' do
+        expect_any_instance_of(TestInteractor).to receive(:run_callbacks)
           .with(:rollback)
-          .and_call_original
         subject
       end
 
-      it 'should invoke `#rollback` on the interactor' do
-        expect_any_instance_of(interactor.class).to receive(:rollback)
+      it 'calls #context_rollback on interactor instance' do
+        expect_any_instance_of(TestInteractor).to receive(:context_rollback!)
         subject
       end
     end

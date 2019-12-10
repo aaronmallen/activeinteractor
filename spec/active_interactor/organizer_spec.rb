@@ -3,74 +3,174 @@
 require 'spec_helper'
 
 RSpec.describe ActiveInteractor::Organizer do
-  describe "A class that inherits #{described_class} called \"TestOrganizer\"" do
-    subject(:organizer) { build_organizer('TestOrganizer') }
-    include_examples 'An ActiveInteractor::Base class'
-    it { should respond_to? :organize }
-    it { should respond_to? :organized }
+  let(:interactor_class) { described_class }
+  include_examples 'a class with interactor methods'
+  include_examples 'a class with interactor callback methods'
+  include_examples 'a class with interactor context methods'
+  include_examples 'a class with organizer callback methods'
 
-    describe 'as an instance' do
-      subject { organizer.new }
-      include_examples 'An ActiveInteractor::Base instance'
+  describe '.contextualize_with' do
+    subject { described_class.contextualize_with(klass) }
+
+    context 'with an class that does not exist' do
+      let(:klass) { 'SomeClassThatDoesNotExist' }
+
+      it { expect { subject }.to raise_error(ActiveInteractor::Error::InvalidContextClass) }
     end
 
-    context 'with two (2) Interactors: "TestInteractor1" and "TestInteractor2"' do
-      let(:interactors) { Array.new(2) { |i| build_interactor("TestInteractor#{i + 1}") } }
+    context 'with context class TestContext' do
+      before { build_context }
 
-      describe '`#organize`' do
-        subject { organizer.organize(*interactors) }
-        it { should be_an Array }
-        it { should match_array(interactors) }
+      context 'when passed as a string' do
+        let(:klass) { 'TestContext' }
+
+        it 'assigns the context class' do
+          subject
+          expect(described_class.context_class).to eq TestContext
+        end
       end
 
-      describe '`#organized`' do
-        subject { organizer.organized }
-        before { organizer.organize(*interactors) }
+      context 'when passed as a symbol' do
+        let(:klass) { :test_context }
 
-        it { should be_an Array }
-        it { should match_array(interactors) }
+        it 'assigns the context class' do
+          subject
+          expect(described_class.context_class).to eq TestContext
+        end
       end
 
-      describe '`#perform`' do
-        subject { organizer.perform }
-        before { organizer.organize(*interactors) }
+      context 'when passed as a constant' do
+        let(:klass) { TestContext }
 
-        it 'should invoke `#skip_clean_context!` on both interactors' do
-          expect_any_instance_of(TestInteractor1).to receive(:skip_clean_context!).and_call_original
-          expect_any_instance_of(TestInteractor2).to receive(:skip_clean_context!).and_call_original
+        it 'assigns the context class' do
           subject
+          expect(described_class.context_class).to eq TestContext
+        end
+      end
+    end
+  end
+
+  describe '.organize' do
+    subject { interactor_class }
+    context 'with two existing interactors' do
+      let!(:interactor1) { build_interactor('TestInteractor1') }
+      let!(:interactor2) { build_interactor('TestInteractor2') }
+
+      context 'when interactors are passed as contants' do
+        let(:interactor_class) do
+          build_organizer do
+            organize TestInteractor1, TestInteractor2
+          end
         end
 
-        it 'should invoke `#excute_perform!` on both interactors' do
-          expect_any_instance_of(TestInteractor1).to receive(:execute_perform!).and_call_original
-          expect_any_instance_of(TestInteractor2).to receive(:execute_perform!).and_call_original
-          subject
+        it { is_expected.to have_attributes(organized: [TestInteractor1, TestInteractor2]) }
+      end
+
+      context 'when interactors are passed as symbols' do
+        let(:interactor_class) do
+          build_organizer do
+            organize :test_interactor_1, :test_interactor_2
+          end
         end
 
-        context 'when `TestInteractor1 fails the context' do
-          let(:interactors) do
-            interactor1 = build_interactor('TestInteractor1') do
-              def perform
-                context.fail!
-              end
+        it { is_expected.to have_attributes(organized: [TestInteractor1, TestInteractor2]) }
+
+        context 'having a non existance interactor' do
+          let(:interactor_class) do
+            build_organizer do
+              organize :test_interactor_1, :interactor_that_doesnt_exist, :test_interactor_2
             end
-            [interactor1, build_interactor('TestInteractor2')]
           end
 
-          before do
-            allow(ActiveInteractor.logger).to receive(:error).and_return(true)
+          it { is_expected.to have_attributes(organized: [TestInteractor1, TestInteractor2]) }
+        end
+      end
+
+      context 'when interactors are passed as strings' do
+        let(:interactor_class) do
+          build_organizer do
+            organize 'TestInteractor1', 'TestInteractor2'
+          end
+        end
+
+        it { is_expected.to have_attributes(organized: [TestInteractor1, TestInteractor2]) }
+
+        context 'having a non existance interactor' do
+          let(:interactor_class) do
+            build_organizer do
+              organize 'TestInteractor1', 'InteractorThatDoesntExist', 'TestInteractor2'
+            end
           end
 
-          it { should_not be_successful }
+          it { is_expected.to have_attributes(organized: [TestInteractor1, TestInteractor2]) }
+        end
+      end
+    end
+  end
 
-          it 'should not invoke `#execute_perform!` on `TestInteractor2`' do
-            expect_any_instance_of(TestInteractor2).not_to receive(:execute_perform!)
-          end
+  describe '#perform' do
+    subject { interactor_class.perform }
+    context 'with two existing interactors' do
+      let!(:interactor1) { build_interactor('TestInteractor1') }
+      let!(:interactor2) { build_interactor('TestInteractor2') }
+      let(:interactor_class) do
+        build_organizer do
+          organize TestInteractor1, TestInteractor2
+        end
+      end
 
-          it 'should invoke `#rollback!` on `TestOrganizer::Context`' do
-            expect_any_instance_of(TestOrganizer::Context).to receive(:rollback!).and_call_original
-            subject
+      it { is_expected.to be_a interactor_class.context_class }
+      it 'is expected to call #perform on both interactors' do
+        expect_any_instance_of(interactor1).to receive(:perform)
+        expect_any_instance_of(interactor2).to receive(:perform)
+        subject
+      end
+
+      context 'when the first interactor context fails' do
+        let!(:interactor1) do
+          build_interactor('TestInteractor1') do
+            def perform
+              context.fail!
+            end
           end
+        end
+
+        it { expect { subject }.not_to raise_error }
+        it { is_expected.to be_a interactor_class.context_class }
+        it 'is expected to call #perform on the first interactor' do
+          expect_any_instance_of(interactor1).to receive(:perform)
+          subject
+        end
+        it 'is expected to not call #perform on the second interactor' do
+          expect_any_instance_of(interactor2).not_to receive(:perform)
+          subject
+        end
+        it 'is expected to call #rollback on the first interactor' do
+          expect_any_instance_of(interactor1).to receive(:rollback)
+          subject
+        end
+      end
+
+      context 'when the second interactor context fails' do
+        let!(:interactor2) do
+          build_interactor('TestInteractor2') do
+            def perform
+              context.fail!
+            end
+          end
+        end
+
+        it { expect { subject }.not_to raise_error }
+        it { is_expected.to be_a interactor_class.context_class }
+        it 'is expected to call #perform on both interactors' do
+          expect_any_instance_of(interactor1).to receive(:perform)
+          expect_any_instance_of(interactor2).to receive(:perform)
+          subject
+        end
+        it 'is expected to call #rollback on both interactors' do
+          expect_any_instance_of(interactor1).to receive(:rollback)
+          expect_any_instance_of(interactor2).to receive(:rollback)
+          subject
         end
       end
     end
