@@ -76,7 +76,7 @@ GEM
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
     unicode-display_width (1.6.0)
-    yard (0.9.20)
+    yard (0.9.22)
     yard-activesupport-concern (0.0.1)
       yard (>= 0.8)
     zeitwerk (2.2.2)
