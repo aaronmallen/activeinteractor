@@ -11,6 +11,35 @@
 
 Ruby interactors with [ActiveModel::Validations] based on the [interactor][collective_idea_interactors] gem.
 
+<!-- TOC -->
+
+* [Getting Started](#getting-started)
+* [What is an Interactor](#what-is-an-interactor)
+* [Usage](#usage)
+  * [Context](#context)
+    * [Adding to the Context](#adding-to-the-context)
+    * [Failing the Context](#failing-the-context)
+    * [Dealing with Failure](#dealing-with-failure)
+    * [Context Attributes](#context-attributes)
+    * [Validating the Context](#validating-the-context)
+  * [Using Interactors](#using-interactors)
+    * [Kinds of Interactors](#kinds-of-interactors)
+    * [Interactors](#interactors)
+    * [Organizers](#organizers)
+    * [Rollback](#rollback)
+    * [Callbacks](#callbacks)
+      * [Validation Callbacks](#validation-callbacks)
+      * [Perform Callbacks](#perform-callbacks)
+      * [Rollback Callbacks](#rollback-callbacks)
+      * [Organizer Callbacks](#organizer-callbacks)
+* [Working With Rails](#working-with-rails)
+* [Development](#development)
+* [Contributing](#contributing)
+* [Acknowledgements](#acknowledgements)
+* [License](#license)
+
+<!-- TOC -->
+
 ## Getting Started
 
 Add this line to your application's Gemfile:
@@ -31,31 +60,6 @@ Or install it yourself as:
 gem install activeinteractor
 ```
 
-If you're working with a rails project you will also want to run:
-
-```bash
-rails generate active_interactor:install [directory]
-```
-
-The `directory` option allows you to customize what directory interactors
-will live in within your application (defaults to 'interactors').
-
-This will create an initializer and a new class called `ApplicationInteractor`
-at `app/<interactor directory>/application_interactor.rb`
-
-you can then automatically generate interactors and interactor organizers with:
-
-```bash
-rails generate interactor MyInteractor
-```
-
-```bash
-rails generate interactor:organizer MyInteractor1 MyInteractor2
-```
-
-These two generators will automatically create an interactor class which
-inherits from `ApplicationInteractor` and a matching spec or test file.
-
 ## What is an Interactor
 
 An interactor is a simple, single-purpose service object.
@@ -68,26 +72,58 @@ Each interactor represents one thing that your application does.
 
 ### Context
 
-Each interactor will have it's own immutable `context` and `context` class.
-For example:
+Each interactor will have it's own immutable context and context class.  All context classes should
+inherit from `ActiveInteractor::Context::Base`. By default an interactor will attempt to find an existing
+class following the naming conventions: `MyInteractor::Context` or `MyInteractorContext`.  If no class
+is found a context class will be created using the naming convention `MyInteractor::Context` for example:
 
 ```ruby
-class MyInteractor < ActiveInteractor::Base
-end
+class MyInteractor < ActiveInteractor::Base; end
+class MyInteractor::Context < ActiveInteractor::Context::Base; end
 
 MyInteractor.context_class #=> MyInteractor::Context
 ```
 
-An interactor's context contains everything the interactor needs to do its work.
-When an interactor does its single purpose, it affects its given context.
+```ruby
+class MyInteractorContext < ActiveInteractor::Context::Base; end
+class MyInteractor < ActiveInteractor::Base; end
+
+MyInteractor.context_class #=> MyInteractorContext
+```
+
+```ruby
+class MyInteractor < ActiveInteractor::Base; end
+
+MyInteractor.context_class #=> MyInteractor::Context
+```
+
+Additionally you can manually specify a context for an interactor with the `contextualize_with`
+method.
+
+```ruby
+class MyGenericContext < ActiveInteractor::Context::Base; end
+
+class MyInteractor
+  contextualize_with :my_generic_context
+end
+
+MyInteractor.context_class #=> MyGenericContext
+```
+
+An interactor's context contains everything the interactor needs to do its work. When an interactor does its single purpose,
+it affects its given context.
 
 #### Adding to the Context
 
-All instances of `context` inherit from `OpenStruct`. As an interactor runs it can
-add information to it's `context`.
+All instances of context inherit from `OpenStruct`. As an interactor runs it can add information to
+it's context.
 
 ```ruby
-context.user = user
+class MyInteractor
+  def perform
+    context.user = User.create(...)
+  end
+end
 ```
 
 #### Failing the Context
@@ -98,12 +134,12 @@ When something goes wrong in your interactor, you can flag the context as failed
 context.fail!
 ```
 
-When given a hash argument or an instance of `ActiveModel::Errors`, the fail!
-method can also update the context. The following are equivalent:
+When given an argument of an instance of `ActiveModel::Errors`, the `#fail!` method can also update the context.
+The following are equivalent:
 
 ```ruby
 context.errors.merge!(user.errors)
-context.fail!
+context.
 ```
 
 ```ruby
@@ -113,513 +149,123 @@ context.fail!(user.errors)
 You can ask a context if it's a failure:
 
 ```ruby
-context.failure? #=> false
-context.fail!
-context.failure? #=> true
+class MyInteractor
+  def perform
+    context.fail!
+  end
+end
+
+result = MyInteractor.perform
+result.failure? #=> true
 ```
 
 or if it's a success:
 
 ```ruby
-context.success? # => true
-context.fail!
-context.success? # => false
+class MyInteractor
+  def perform
+    context.user = User.create(...)
+  end
+end
+
+result = MyInteractor.perform
+result.success? #=> true
 ```
 
 #### Dealing with Failure
 
 `context.fail!` always throws an exception of type `ActiveInteractor::Error::ContextFailure`.
 
-Normally, however, these exceptions are not seen. In the recommended usage, the consuming
-object invokes the interactor using the class method call, then checks the `success?` method of
-the context.
+Normally, however, these exceptions are not seen. In the recommended usage, the consuming object invokes the interactor
+using the class method `perform`, then checks the `success?` method of the context.
 
-This works because the call class method swallows exceptions. When unit testing an interactor, if calling
-custom business logic methods directly and bypassing call, be aware that `fail!` will generate such exceptions.
+This works because the `perform` class method swallows exceptions. When unit testing an interactor, if calling custom business
+logic methods directly and bypassing `perform`, be aware that `fail!` will generate such exceptions.
 
 See [Using Interactors](#using-interactors), below, for the recommended usage of `perform` and `success?`.
 
 #### Context Attributes
 
-Each `context` instance have basic attribute assignment methods which can be invoked directly
-from the interactor.  You never need to directly interface with an interactor's context class.
-Assigning attributes to a `context` is a simple way to explicitly defined what properties a
-`context` should have after an interactor has done it's work.
+Each context instance have basic attribute assignment methods which can be invoked directly from the interactor.
+You never need to directly interface with an interactor's context class. Assigning attributes to a context is a
+simple way to explicitly defined what properties a context should have after an interactor has done it's work.
 
-You can see what attributes are defined on a given `context` with the `#attributes` method:
+You can see what attributes are defined on a given context with the `#attributes` method:
 
 ```ruby
-class MyInteractor < ActiveInteractor::Base
-  # we define user as an attribute because it will be assigned a value
-  # in the perform method.
-  context_attributes :first_name, :last_name, :email, :user
+class MyInteractorContext < ActiveInteractor::Context::Base
+  attributes :first_name, :last_name, :email, :user
 end
 
-context = MyInteractor.perform(
+class MyInteractor < ActiveInteractor::Base; end
+
+result = MyInteractor.perform(
   first_name: 'Aaron',
   last_name: 'Allen',
   email: 'hello@aaronmallen.me',
   occupation: 'Software Dude'
 )
-#=> <#<MyInteractor::Context first_name='Aaron', last_name='Allen, email='hello@aaronmallen.me', occupation='Software Dude'>
+#=> <#MyInteractor::Context first_name='Aaron' last_name='Allen' email='hello@aaronmallen.me' occupation='Software Dude'>
 
-context.attributes #=> { first_name: 'Aaron', last_name: 'Allen', email: 'hello@aaronmallen.me' }
-context.occupation #=> 'Software Dude'
-```
-
-You can see what properties are defined on a given `context` with the `#keys` method
-regardless of whether or not the properties are defined in a `context#attributes`:
-
-```ruby
-context.keys #=> [:first_name, :last_name, :email, :occupation]
-```
-
-Finally you can invoke `#clean!` on a context to remove any properties not explicitly
-defined in a `context#attributes`:
-
-```ruby
-context.clean! #=> { occupation: 'Software Dude' }
-context.occupation #=> nil
-```
-
-#### Aliasing Attributes
-
-Sometimes you may want to use the same interactor functionality with different
-model types having different naming conventions for similar attributes.  We can
-inform the interactors context of these aliases with the `context_attribute_aliases`
-method on our interactors.
-
-```ruby
-class MyInteractor < ActiveInteractor::Base
-  context_attributes :first_name, :last_name
-  context_attribute_aliases last_name: :sir_name
-end
-
-context = MyInteractor.perform(first_name: 'Aaron', sir_name: 'Allen')
-# => <#MyInteractor::Context first_name='Aaron', last_name='Allen'>
-```
-
-We can also pass an array of aliases to the attribute like this:
-
-```ruby
-class MyInteractor < ActiveInteractor::Base
-  context_attributes :first_name, :last_name
-  context_attribute_aliases last_name: %i[sir_name sirname]
-end
-
-context = MyInteractor.perform(first_name: 'Aaron', sir_name: 'Allen')
-# => <#MyInteractor::Context first_name='Aaron', last_name='Allen'>
-
-context = MyInteractor.perform(first_name: 'Aaron', sirname: 'Allen')
-# => <#MyInteractor::Context first_name='Aaron', last_name='Allen'>
+result.attributes #=> { first_name: 'Aaron', last_name: 'Allen', email: 'hello@aaronmallen.me' }
+result.occupation #=> 'Software Dude'
 ```
 
 #### Validating the Context
 
-`ActiveInteractor` delegates all the validation methods provided by [ActiveModel::Validations]
-onto an interactor's context class from the interactor itself.  All of the methods found in
-[ActiveModel::Validations] can be invoked directly on your interactor with the prefix `context_`.
+ActiveInteractor delegates all the validation methods provided by [ActiveModel::Validations] onto an interactor's
+context class from the interactor itself. All of the methods found in [ActiveModel::Validations] can be invoked directly
+on your interactor with the prefix `context_`. However this can be confusing and it is recommended to make all validation
+calls on a context class directly.
 
-`ActiveInteractor` provides two validation callback steps:
+ActiveInteractor provides two validation callback steps:
 
-* `:calling` used before `#perform` is invoked
-* `:called` used after `#perform` is invoked
+* `:calling` used before `#perform` is invoked on an interactor
+* `:called` used after `#perform` is invoked on an interactor
 
 A basic implementation might look like this:
 
 ```ruby
-class MyInteractor < ActiveInteractor::Base
-  context_attributes :first_name, :last_name, :email, :user
+class MyInteractorContext < ActiveInteractor::Context::Base
+  attributes :first_name, :last_name, :email, :user
   # only validates presence before perform is invoked
-  context_validates :first_name, presence: true, on: :calling
+  validates :first_name, presence: true, on: :calling
   # validates before and after perform is invoked
-  context_validates :email, presence: true,
-                            format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :email, presence: true,
+                    format: { with: URI::MailTo::EMAIL_REGEXP }
   # validates after perform is invoked
-  context_validates :user, presence: true, on: :called
-  context_validate :user_is_a_user, on: :called
+  validates :user, presence: true, on: :called
+  validate :user_is_a_user, on: :called
 
+  private
+
+  def user_is_a_user
+    return if user.is_a?(User)
+
+    errors.add(:user, :invalid)
+  end
+end
+
+class MyInteractor < ActiveInteractor::Base
   def perform
     context.user = User.create_with(
       first_name: context.first_name,
       last_name: context.last_name
     ).find_or_create_by(email: context.email)
   end
-
-  private
-
-  def user_is_a_user
-    return if context.user.is_a?(User)
-
-    context.errors.add(:user, :invalid)
-  end
 end
 
-context = MyInteractor.perform(last_name: 'Allen')
+result = MyInteractor.perform(last_name: 'Allen')
 #=> <#MyInteractor::Context last_name='Allen>
-context.failure? #=> true
-context.valid? #=> false
-context.errors[:first_name] #=> ['can not be blank']
-
-context = MyInterator.perform(first_name: 'Aaron', email: 'hello@aaronmallen.me')
-#=> <#MyInteractor::Context first_name='Aaron', email='hello@aaronmallen.me'>
-context.success? #=> true
-context.valid? #=> true
-context.errors.empty? #=> true
-```
-
-### Callbacks
-
-`ActiveInteractor` uses [ActiveModel::Callbacks] and [ActiveModel::Validations::Callbacks]
-on context validation, `perform`, and `rollback`.  Callbacks can be defined with a `block`,
-`Proc`, or `Symbol` method name and take the same conditional arguments outlined
-in those two modules.
-
-**NOTE:** When using symbolized method names as arguments the context class
-will first attempt to invoke the method on itself, if it cannot find the defined
-method it will attempt to invoke it on the interactor.  Be concious of scope
-when defining these methods.
-
-#### Validation Callbacks
-
-We can do work before an interactor's context is validated with the `before_context_validation` method:
-
-```ruby
-class MyInteractor < ActiveInteractor::Base
-  context_attributes :first_name, :last_name, :email, :user
-  context_validates :last_name, presence: true
-  before_context_validation { last_name ||= 'Unknown' }
-end
-
-context = MyInteractor.perform(first_name: 'Aaron', email: 'hello@aaronmallen.me')
-context.valid? #=> true
-context.last_name #=> 'Unknown'
-```
-
-We can do work after an interactor's context is validated with the `after_context_validation` method:
-
-```ruby
-class MyInteractor < ActiveInteractor::Base
-  context_attributes :first_name, :last_name, :email, :user
-  context_validates :email, presence: true,
-                            format: { with: URI::MailTo::EMAIL_REGEXP }
-  after_context_validation :downcase_email!
-
-  private
-
-  def downcase_email
-    context.email = context.email&.downcase!
-  end
-end
-
-context = MyInteractor.perform(first_name: 'Aaron', email: 'HELLO@aaronmallen.me')
-context.email #=> 'hello@aaronmallen.me'
-```
-
-We can prevent a context from failing when invalid by invoking the
-`allow_context_to_be_invalid` class method:
-
-```ruby
-class MyInteractor < ActiveInteractor::Base
-  allow_context_to_be_invalid
-  context_attributes :first_name, :last_name, :email, :user
-  context_validates :first_name, presence: true
-end
-
-context = MyInteractor.perform(email: 'HELLO@aaronmallen.me')
-context.valid? #=> false
-context.success? #=> true
-```
-
-#### Context Attribute Callbacks
-
-We can ensure only properties in the context's `attributes` are
-returned after `perform` is invoked with the `clean_context_on_completion`
-class method:
-
-```ruby
-class MyInteractor < ActiveInteractor::Base
-  clean_context_on_completion
-  context_attributes :user
-
-  def perform
-    context.user = User.create_with(
-      occupation: context.occupation
-    ).find_or_create_by(email: context.email)
-  end
-end
-
-context = MyInteractor.perform(email: 'hello@aaronmallen.me', occupation: 'Software Dude')
-context.email #=> nil
-context.occupation #=> nil
-context.user #=> <#User email='hello@aaronmallen.me', occupation='Software Dude'>
-```
-
-#### Perform Callbacks
-
-We can do work before `perform` is invoked with the `before_perform` method:
-
-```ruby
-class MyInteractor < ActiveInteractor::Base
-  before_perform :print_start
-
-  def perform
-    puts 'Performing'
-  end
-
-  private
-
-  def print_start
-    puts 'Start'
-  end
-end
-
-context = MyInteractor.perform
-"Start"
-"Performing"
-```
-
-We can do work around `perform` invokation with the `around_perform` method:
-
-```ruby
-class MyInteractor < ActiveInteractor::Base
-  context_validates :first_name, presence: true
-  around_perform :track_time, if: :context_valid?
-
-  private
-
-  def track_time
-    context.start_time = Time.now.utc
-    yield
-    context.end_time = Time.now.utc
-  end
-end
-
-context = MyInteractor.perform(first_name: 'Aaron')
-context.start_time #=> 2019-01-01 00:00:00 UTC
-context.end_time #  #=> 2019-01-01 00:00:01 UTC
-
-context = MyInteractor.perform
-context.valid? #=> false
-context.start_time #=> nil
-context.end_time #  #=> nil
-```
-
-We can do work after `perform` is invoked with the `after_perform` method:
-
-```ruby
-class MyInteractor < ActiveInteractor::Base
-  after_perform :print_done
-
-  def perform
-    puts 'Performing'
-  end
-
-  private
-
-  def print_done
-    puts 'Done'
-  end
-end
-
-context = MyInteractor.perform
-"Performing"
-"Done"
-```
-
-#### Rollback Callbacks
-
-We can do work before `rollback` is invoked with the `before_rollback` method:
-
-```ruby
-class MyInteractor < ActiveInteractor::Base
-  before_rollback :print_start
-
-  def rollback
-    puts 'Rolling Back'
-  end
-
-  private
-
-  def print_start
-    puts 'Start'
-  end
-end
-
-context = MyInteractor.perform
-context.rollback!
-"Start"
-"Rolling Back"
-```
-
-We can do work around `rollback` invokation with the `around_rollback` method:
-
-```ruby
-class MyInteractor < ActiveInteractor::Base
-  around_rollback :track_time
-
-  private
-
-  def track_time
-    context.start_time = Time.now.utc
-    yield
-    context.end_time = Time.now.utc
-  end
-end
-
-context = MyInteractor.perform
-context.rollback!
-context.start_time #=> 2019-01-01 00:00:00 UTC
-context.end_time #  #=> 2019-01-01 00:00:01 UTC
-```
-
-We can do work after `rollback` is invoked with the `after_rollback` method:
-
-```ruby
-class MyInteractor < ActiveInteractor::Base
-  after_rollback :print_done
-
-  def rollback
-    puts 'Rolling Back'
-  end
-
-  private
-
-  def print_done
-    puts 'Done'
-  end
-end
-
-context = MyInteractor.perform
-context.rollback!
-"Rolling Back"
-"Done"
-```
-
-#### Organizer Callbacks
-
-We can do worker before `perform` is invoked on each interactor in an [Organizer](#organizers)
-with the `before_each_perform` method:
-
-```ruby
- class MyInteractor1 < ActiveInteractor::Base
-  before_perform :print_name
-
-  def perform
-    puts 'MyInteractor1'
-  end
-end
-
-class MyInteractor2 < ActiveInteractor::Base
-  before_perform :print_name
-
-  def perform
-    puts 'MyInteractor2'
-  end
-end
-
-class MyOrganizer < ActiveInteractor::Organizer
-  before_each_perform :print_start
-
-  organized MyInteractor1, MyInteractor2
-
-  private
-
-  def print_start
-    puts "Start"
-  end
-end
-
-MyOrganizer.perform(name: 'Aaron')
-"Start"
-"MyInteractor1"
-"Start"
-"MyInteractor2"
-#=> <MyOrganizer::Context name='Aaron'>
-```
-
-We can do worker around `perform` is invokation on each interactor in an [Organizer](#organizers)
-with the `around_each_perform` method:
-
-```ruby
- class MyInteractor1 < ActiveInteractor::Base
-  before_perform :print_name
-
-  def perform
-    puts 'MyInteractor1'
-  end
-end
-
-class MyInteractor2 < ActiveInteractor::Base
-  before_perform :print_name
-
-  def perform
-    puts 'MyInteractor2'
-  end
-end
-
-class MyOrganizer < ActiveInteractor::Organizer
-  around_each_perform :print_time
-
-  organized MyInteractor1, MyInteractor2
-
-  private
-
-  def print_time
-    puts Time.now.utc
-    yield
-    puts Time.now.utc
-  end
-end
-
-MyOrganizer.perform(name: 'Aaron')
-"2019-04-01 00:00:00 UTC"
-"MyInteractor1"
-"2019-04-01 00:00:01 UTC"
-"2019-04-01 00:00:02 UTC"
-"MyInteractor2"
-"2019-04-01 00:00:03 UTC"
-#=> <MyOrganizer::Context name='Aaron'>
-```
-
-We can do worker after `perform` is invoked on each interactor in an [Organizer](#organizers)
-with the `after_each_perform` method:
-
-```ruby
-class MyInteractor1 < ActiveInteractor::Base
-  before_perform :print_name
-
-  def perform
-    puts 'MyInteractor1'
-  end
-end
-
-class MyInteractor2 < ActiveInteractor::Base
-  before_perform :print_name
-
-  def perform
-    puts 'MyInteractor2'
-  end
-end
-
-class MyOrganizer < ActiveInteractor::Organizer
-  after_each_perform :print_done
-
-  organized MyInteractor1, MyInteractor2
-
-  private
-
-  def print_done
-    puts "done"
-  end
-end
-
-MyOrganizer.perform(name: 'Aaron')
-"MyInteractor1"
-"Done"
-"MyInteractor2"
-"Done"
-#=> <MyOrganizer::Context name='Aaron'>
+result.failure? #=> true
+result.valid? #=> false
+result.errors[:first_name] #=> ['can not be blank']
+
+result = MyInterator.perform(first_name: 'Aaron', email: 'hello@aaronmallen.me')
+#=> <#MyInteractor::Context first_name='Aaron' email='hello@aaronmallen.me' user=<#User ...>>
+result.success? #=> true
+result.valid? #=> true
+result.errors.empty? #=> true
 ```
 
 ### Using Interactors
@@ -670,16 +316,18 @@ class SessionsController < ApplicationController
 end
 ```
 
-given the basic interactor:
+given the basic interactor and context:
 
 ```ruby
-class AuthenticateUser < ActiveInteractor::Base
-  context_attributes :email, :password, :user, :token
-  context_validates :email, presence: true,
-                            format: { with: URI::MailTo::EMAIL_REGEXP }
-  context_validates :password, presence: true
-  context_validates :user, presence: true, on: :called
+class AuthenticateUserContext < ActiveInteractor::Context::Base
+  attributes :email, :password, :user, :token
+  validates :email, presence: true,
+                    format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :password, presence: true
+  validates :user, presence: true, on: :called
+end
 
+class AuthenticateUser < ActiveInteractor::Base
   def perform
     context.user = User.authenticate(
       context.email,
@@ -690,26 +338,23 @@ class AuthenticateUser < ActiveInteractor::Base
 end
 ```
 
-The `perform` class method is the proper way to invoke an interactor.
-The hash argument is converted to the interactor instance's context.
-The `preform` instance method is invoked along with any callbacks and validations
-that the interactor might define. Finally, the context (along with any changes made to it)
-is returned.
+The `perform` class method is the proper way to invoke an interactor. The hash argument is converted to the interactor instance's
+context. The `perform` instance method is invoked along with any callbacks and validations that the interactor might define.
+Finally, the context (along with any changes made to it) is returned.
 
-### Kinds of Interactors
+#### Kinds of Interactors
 
 There are two kinds of interactors built into the Interactor library: basic interactors and organizers.
 
 #### Interactors
 
-A basic interactor is a class that includes Interactor and defines call.
+A basic interactor is a class that includes Interactor and defines `perform`.\
 
 ```ruby
-class AuthenticateUser
-  include Interactor
-
+class AuthenticateUser < ActiveInteractor::Base
   def perform
-    if user = User.authenticate(context.email, context.password)
+    user = User.authenticate(context.email, context.password)
+    if user
       context.user = user
       context.token = user.secret_token
     else
@@ -726,10 +371,27 @@ Basic interactors are the building blocks. They are your application's single-pu
 An organizer is an important variation on the basic interactor. Its single purpose is to run other interactors.
 
 ```ruby
-class PlaceOrder
-  include Interactor::Organizer
+class CreateOrder < ActiveInteractor::Base
+  def perform
+    ...
+  end
+end
 
-  organize CreateOrder, ChargeCard, SendThankYou
+class ChargeCard < ActiveInteractor::Base
+  def perform
+    ...
+  end
+end
+
+class SendThankYou < ActiveInteractor::Base
+  def perform
+    ...
+  end
+end
+
+class PlaceOrder < ActiveInteractor::Organizer
+
+  organize :create_order, :charge_card, :send_thank_you
 end
 ```
 
@@ -738,7 +400,7 @@ In the controller, you can run the `PlaceOrder` organizer just like you would an
 ```ruby
 class OrdersController < ApplicationController
   def create
-    result = PlaceOrder.call(order_params: order_params)
+    result = PlaceOrder.perform(order_params: order_params)
 
     if result.success?
       redirect_to result.order
@@ -756,21 +418,19 @@ class OrdersController < ApplicationController
 end
 ```
 
-The organizer passes its context to the interactors that it organizes, one at a time and in order.
-Each interactor may change that context before it's passed along to the next interactor.
+The organizer passes its context to the interactors that it organizes, one at a time and in order. Each interactor may
+change that context before it's passed along to the next interactor.
 
 #### Rollback
 
-If any one of the organized interactors fails its context, the organizer stops.
-If the `ChargeCard` interactor fails, `SendThankYou` is never called.
+If any one of the organized interactors fails its context, the organizer stops. If the `ChargeCard` interactor fails,
+`SendThankYou` is never called.
 
 In addition, any interactors that had already run are given the chance to undo themselves, in reverse order.
 Simply define the rollback method on your interactors:
 
 ```ruby
-class CreateOrder
-  include Interactor
-
+class CreateOrder < ActiveInteractor::Base
   def perform
     order = Order.create(order_params)
 
@@ -786,6 +446,349 @@ class CreateOrder
   end
 end
 ```
+
+#### Callbacks
+
+ActiveInteractor uses [ActiveModel::Callbacks] and [ActiveModel::Validations::Callbacks] on context validation, perform,
+and rollback. Callbacks can be defined with a `block`, `Proc`, or `Symbol` method name and take the same conditional arguments
+outlined in those two modules.
+
+##### Validation Callbacks
+
+We can do work before an interactor's context is validated with the `before_context_validation` method:
+
+```ruby
+class MyInteractorContext < ActiveInteractor::Context::Base
+  attributes :first_name, :last_name, :email
+  validates :last_name, presence: true
+end
+
+class MyInteractor < ActiveInteractor::Base
+  before_context_validation { context.last_name ||= 'Unknown' }
+end
+
+result = MyInteractor.perform(first_name: 'Aaron', email: 'hello@aaronmallen.me')
+result.valid? #=> true
+result.last_name #=> 'Unknown'
+```
+
+We can do work after an interactor's context is validated with the `after_context_validation` method:
+
+```ruby
+class MyInteractorContext < ActiveInteractor::Context::Base
+  attributes :first_name, :last_name, :email
+  validates :email, presence: true,
+                    format: { with: URI::MailTo::EMAIL_REGEXP }
+end
+
+class MyInteractor < ActiveInteractor::Base
+  after_context_validation { context.email&.downcase! }
+end
+
+result = MyInteractor.perform(first_name: 'Aaron', last_name: 'Allen', email: 'HELLO@AARONMALLEN.ME')
+result.valid? #=> true
+result.email #=> 'hello@aaronmallen.me'
+```
+
+##### Perform Callbacks
+
+We can do work before `perform` is invoked with the `before_perform` method:
+
+```ruby
+class MyInteractor < ActiveInteractor::Base
+  before_perform :print_start
+
+  def perform
+    puts 'Performing'
+  end
+
+  private
+
+  def print_start
+    puts 'Start'
+  end
+end
+
+MyInteractor.perform
+"Start"
+"Performing"
+#=> <#MyInteractor::Context...>
+```
+
+We can do work around `perform` invokation with the `around_perform` method:
+
+```ruby
+class MyInteractor < ActiveInteractor::Base
+  around_perform :track_time
+
+  def perform
+    sleep(1)
+  end
+
+  private
+
+  def track_time
+    context.start_time = Time.now.utc
+    yield
+    context.end_time = Time.now.utc
+  end
+end
+
+result = MyInteractor.perform
+result.start_time #=> 2019-01-01 00:00:00 UTC
+result.end_time #=> 2019-01-01 00:00:01 UTC
+```
+
+We can do work after `perform` is invoked with the `after_perform` method:
+
+```ruby
+class MyInteractor < ActiveInteractor::Base
+  after_perform :print_done
+
+  def perform
+    puts 'Performing'
+  end
+
+  private
+
+  def print_done
+    puts 'Done'
+  end
+end
+
+MyInteractor.perform
+"Performing"
+"Done"
+#=> <#MyInteractor::Context...>
+```
+
+##### Rollback Callbacks
+
+We can do work before `rollback` is invoked with the `before_rollback` method:
+
+```ruby
+class MyInteractor < ActiveInteractor::Base
+  before_rollback :print_start
+
+  def perform
+    context.fail!
+  end
+
+  def rollback
+    puts 'Rolling Back'
+  end
+
+  private
+
+  def print_start
+    puts 'Start'
+  end
+end
+
+MyInteractor.perform
+"Start"
+"Rolling Back"
+#=> <#MyInteractor::Context...>
+```
+
+We can do work around `rollback` invokation with the `around_rollback` method:
+
+```ruby
+class MyInteractor < ActiveInteractor::Base
+  around_rollback :track_time
+
+  def perform
+    context.fail!
+  end
+
+  def rollback
+    sleep(1)
+  end
+
+  private
+
+  def track_time
+    context.start_time = Time.now.utc
+    yield
+    context.end_time = Time.now.utc
+  end
+end
+
+result = MyInteractor.perform
+result.start_time #=> 2019-01-01 00:00:00 UTC
+result.end_time #=> 2019-01-01 00:00:01 UTC
+```
+
+We can do work after `rollback` is invoked with the `after_rollback` method:
+
+```ruby
+class MyInteractor < ActiveInteractor::Base
+  after_rollback :print_done
+
+  def perform
+    context.fail!
+  end
+
+  def rollback
+    puts 'Rolling Back'
+  end
+
+  private
+
+  def print_done
+    puts 'Done'
+  end
+end
+
+MyInteractor.perform
+"Rolling Back"
+"Done"
+#=> <#MyInteractor::Context...>
+```
+
+##### Organizer Callbacks
+
+We can do worker before `perform` is invoked on each interactor in an [Organizer](#organizers) with the
+`before_each_perform` method:
+
+```ruby
+class MyInteractor1 < ActiveInteractor::Base
+  def perform
+    puts 'MyInteractor1'
+  end
+end
+
+class MyInteractor2 < ActiveInteractor::Base
+  def perform
+    puts 'MyInteractor2'
+  end
+end
+
+class MyOrganizer < ActiveInteractor::Organizer
+  before_each_perform :print_start
+
+  organized MyInteractor1, MyInteractor2
+
+  private
+
+  def print_start
+    puts "Start"
+  end
+end
+
+MyOrganizer.perform
+"Start"
+"MyInteractor1"
+"Start"
+"MyInteractor2"
+#=> <MyOrganizer::Context...>
+```
+
+We can do worker around `perform` is invokation on each interactor in an [Organizer](#organizers) with the
+`around_each_perform` method:
+
+```ruby
+ class MyInteractor1 < ActiveInteractor::Base
+  def perform
+    puts 'MyInteractor1'
+    sleep(1)
+  end
+end
+
+class MyInteractor2 < ActiveInteractor::Base
+  def perform
+    puts 'MyInteractor2'
+    sleep(1)
+  end
+end
+
+class MyOrganizer < ActiveInteractor::Organizer
+  around_each_perform :print_time
+
+  organized MyInteractor1, MyInteractor2
+
+  private
+
+  def print_time
+    puts Time.now.utc
+    yield
+    puts Time.now.utc
+  end
+end
+
+MyOrganizer.perform
+"2019-01-01 00:00:00 UTC"
+"MyInteractor1"
+"2019-01-01 00:00:01 UTC"
+"2019-01-01 00:00:01 UTC"
+"MyInteractor2"
+"2019-01-01 00:00:02 UTC"
+#=> <MyOrganizer::Context...>
+```
+
+We can do worker after `perform` is invoked on each interactor in an [Organizer](#organizers) with the
+`after_each_perform` method:
+
+```ruby
+class MyInteractor1 < ActiveInteractor::Base
+  def perform
+    puts 'MyInteractor1'
+  end
+end
+
+class MyInteractor2 < ActiveInteractor::Base
+  def perform
+    puts 'MyInteractor2'
+  end
+end
+
+class MyOrganizer < ActiveInteractor::Organizer
+  after_each_perform :print_done
+
+  organized MyInteractor1, MyInteractor2
+
+  private
+
+  def print_done
+    puts "Done"
+  end
+end
+
+MyOrganizer.perform
+"MyInteractor1"
+"Done"
+"MyInteractor2"
+"Done"
+#=> <MyOrganizer::Context...>
+```
+
+## Working With Rails
+
+If you're working with a rails project ActiveInteractor comes bundled with some useful generators
+to help speed up development.  You should first run the install generator with:
+
+```bash
+rails generate active_interactor:install
+```
+
+This will create an initializer a some new classes `ApplicationInteractor`, `ApplicationOrganizer` and
+`ApplicationContext` in the `app/interactors` directory.
+
+You can then automatically generate interactors, organizers, and contexts with:
+
+```bash
+rails generate interactor MyInteractor
+```
+
+```bash
+rails generate interactor:organizer MyInteractor1 MyInteractor2
+```
+
+```bash
+rails generate interactor:context MyContext
+```
+
+These generators will automatically create the approriate classes and matching spec or test files.
 
 ## Development
 

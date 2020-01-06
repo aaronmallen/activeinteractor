@@ -1,63 +1,46 @@
 # frozen_string_literal: true
 
 module ActiveInteractor
-  # Provides interactor methods to included classes
-  #
+  # Interactor methods. {Base} includes {Interactor} all interactors
+  #  should inherit from {Base}.
   # @author Aaron Allen <hello@aaronmallen.me>
   # @since 0.0.1
-  # @version 0.1
   module Interactor
-    extend ActiveSupport::Concern
-
-    included do
-      extend ClassMethods
-      include Callbacks
-      include Context
-      include Execution
-
-      private
-
-      attr_accessor :context
+    def self.included(base)
+      base.class_eval do
+        extend ClassMethods
+        include Callbacks
+        include Context
+        delegate :execute_perform, :execute_perform!, :execute_rollback, to: :worker
+      end
     end
-
+    # Interactor class methods.
     module ClassMethods
-      # Invoke an interactor. This is the primary public API method to an
-      #  interactor.
-      #
+      # Run an interactor context.  This it the primary API method for
+      # interacting with interactors.
       # @example Run an interactor
       #  MyInteractor.perform(name: 'Aaron')
       #  #=> <#MyInteractor::Context name='Aaron'>
-      #
-      # @param context [Hash] properties to assign to the interactor context
-      # @return [ActiveInteractor::Context::Base] an instance of context
+      # @param context [Hash|Context::Base] properties to assign to
+      #  an interactor's context.
+      # @return [Context::Base] an instance of context.
       def perform(context = {})
         new(context).execute_perform
       end
 
-      # Invoke an Interactor. The {.perform!} method behaves identically to
+      # Run an interactor context. The {.perform!} method behaves identically to
       #  the {.perform} method with one notable exception. If the context is failed
-      #  during invocation of the interactor, the {ActiveInteractor::Error::ContextFailure}
+      #  during invocation of the interactor, the {Error::ContextFailure}
       #  is raised.
-      #
       # @example Run an interactor
       #  MyInteractor.perform!(name: 'Aaron')
       #  #=> <#MyInteractor::Context name='Aaron'>
-      #
-      # @param context [Hash] properties to assign to the interactor context
-      # @return [ActiveInteractor::Context::Base] an instance of context
+      # @param context [Hash|Context::Base] properties to assign to the interactor context.
+      # @raise [Error::ContextFailure] if the context fails.
+      # @return [Context::Base] an instance of context.
       def perform!(context = {})
         new(context).execute_perform!
       end
-    end
-
-    # Whether or not the context should fail when invalid
-    #  this will return false if
-    #  {Interactor::Callbacks::ClassMethods#allow_context_to_be_invalid}
-    #  has been invoked on the class.
-    # @return [Boolean] `true` if the context should fail
-    #  `false` if it should not.
-    def fail_on_invalid_context?
-      self.class.__fail_on_invalid_context
     end
 
     # Invoke an Interactor instance without any hooks, tracking, or rollback
@@ -70,28 +53,12 @@ module ActiveInteractor
     #  failure is expected to overwrite the {#rollback} method.
     def rollback; end
 
-    # Whether or not the context should be cleaned after {#perform}
-    #  if {#skip_clean_context!} has not been invoked on the instance
-    #  and {Interactor::Callbacks::ClassMethods#clean_context_on_completion}
-    #  is invoked on the class this will return `true`.
-    #
-    # @return [Boolean] `true` if the context should be cleaned
-    #  `false` if it should not be cleaned.
-    def should_clean_context?
-      @should_clean_context.nil? && self.class.__clean_after_perform
-    end
+    private
 
-    # Skip {ActiveInteractor::Context::Attributes#clean! #clean! on an interactor
-    #  context that calls the {Callbacks.clean_context_on_completion} class method.
-    #  This method is meant to be invoked by organizer interactors
-    #  to ensure contexts are approriately passed between interactors.
-    #
-    # @return [Boolean] `true` if the context should be cleaned
-    #  `false` if it should not.
-    def skip_clean_context!
-      @should_clean_context = false
+    def worker
+      Worker.new(self)
     end
   end
 end
 
-Dir[File.expand_path('interactor/*.rb', __dir__)].each { |file| require file }
+Dir[File.expand_path('interactor/*.rb', __dir__)].sort.each { |file| require file }

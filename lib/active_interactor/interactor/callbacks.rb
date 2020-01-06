@@ -1,62 +1,56 @@
 # frozen_string_literal: true
 
+require 'active_support/callbacks'
 require 'active_support/core_ext/array/extract_options'
 require 'active_support/core_ext/class/attribute'
 
 module ActiveInteractor
   module Interactor
-    # Provides context attribute assignment methods to included classes
-    #
+    # Interactor callback methods included by all {Base}
     # @author Aaron Allen <hello@aaronmallen.me>
     # @since 0.0.1
-    # @version 0.1
     module Callbacks
-      extend ActiveSupport::Concern
+      def self.included(base)
+        base.class_eval do
+          extend ClassMethods
+          include ActiveSupport::Callbacks
 
-      included do
-        extend ClassMethods
-        include ActiveSupport::Callbacks
-
-        class_attribute :__clean_after_perform, instance_writer: false, default: false
-        class_attribute :__fail_on_invalid_context, instance_writer: false, default: true
-        define_callbacks :validation,
-                         skip_after_callbacks_if_terminated: true,
-                         scope: %i[kind name]
-        define_callbacks :perform, :rollback
+          define_callbacks :validation,
+                           skip_after_callbacks_if_terminated: true,
+                           scope: %i[kind name]
+          define_callbacks :perform, :rollback
+        end
       end
 
+      # Interactor callback class methods extended by all {Base}
       module ClassMethods
-        # Define a callback to call after `#valid?` has been invoked on an
+        # Define a callback to call after {ActiveInteractor::Context::Base#valid? #valid?} has been invoked on an
         #  interactor's context
-        #
         # @example Implement an after_context_validation callback
         #  class MyInteractor < ActiveInteractor::Base
-        #    after_context_validation :ensure_name_is_aaron
-        #    context_validates :name, inclusion: { in: %w[Aaron] }
+        #    after_context_validation :downcase_name
         #
-        #    def ensure_name_is_aaron
-        #      context.name = 'Aaron'
+        #    private
+        #
+        #    def downcase_name
+        #      context.name.downcase!
         #    end
         #  end
         #
-        #  context = MyInteractor.perform(name: 'Bob')
-        #  #=> <MyInteractor::Context name='Bob'>
+        #  result = MyInteractor.perform(name: 'Aaron')
+        #  #=> <MyInteractor::Context name='aaron'>
         #
-        #  context.valid?
-        #  #=> false
-        #
-        #  context.name
-        #  #=> 'Aaron'
-        #
-        #  context.valid?
+        #  result.valid?
         #  #=> true
+        #
+        #  result.name
+        #  #=> 'aaron'
         def after_context_validation(*args, &block)
           options = normalize_options(args.extract_options!.dup.merge(prepend: true))
           set_callback(:validation, :after, *args, options, &block)
         end
 
-        # Define a callback to call after {ActiveInteractor::Base.perform} has been invoked
-        #
+        # Define a callback to call after {Interactor#perform #perform} has been invoked
         # @example
         #  class MyInteractor < ActiveInteractor::Base
         #    after_perform :print_done
@@ -64,6 +58,8 @@ module ActiveInteractor
         #    def perform
         #      puts 'Performing'
         #    end
+        #
+        #    private
         #
         #    def print_done
         #      puts 'Done'
@@ -78,15 +74,20 @@ module ActiveInteractor
           set_callback(:perform, :after, *filters, &block)
         end
 
-        # Define a callback to call after {ActiveInteractor::Base#rollback} has been invoked
-        #
+        # Define a callback to call after {Interactor#rollback #rollback} has been invoked
         # @example
         #  class MyInteractor < ActiveInteractor::Base
         #    after_rollback :print_done
         #
+        #    def perform
+        #      context.fail!
+        #    end
+        #
         #    def rollback
         #      puts 'Rolling back'
         #    end
+        #
+        #    private
         #
         #    def print_done
         #      puts 'Done'
@@ -103,17 +104,7 @@ module ActiveInteractor
           set_callback(:rollback, :after, *filters, &block)
         end
 
-        # By default an interactor context will fail if it is deemed
-        #  invalid before or after the {ActiveInteractor::Base.perform} method
-        #  is invoked.  Calling this method on an interactor class
-        #  will not invoke {ActiveInteractor::Context::Base#fail!} if the
-        #  context is invalid.
-        def allow_context_to_be_invalid
-          self.__fail_on_invalid_context = false
-        end
-
-        # Define a callback to call around {ActiveInteractor::Base.perform} invokation
-        #
+        # Define a callback to call around {Interactor#perform #perform} invokation
         # @example
         #  class MyInteractor < ActiveInteractor::Base
         #    around_perform :track_time
@@ -122,6 +113,8 @@ module ActiveInteractor
         #      sleep(1)
         #    end
         #
+        #    private
+        #
         #    def track_time
         #      context.start_time = Time.now.utc
         #      yield
@@ -129,20 +122,19 @@ module ActiveInteractor
         #    end
         #  end
         #
-        #  context = MyInteractor.perform(name: 'Aaron')
+        #  result = MyInteractor.perform(name: 'Aaron')
         #  #=> <MyInteractor::Context name='Aaron'>
         #
-        #  context.start_time
+        #  result.start_time
         #  #=> 2019-01-01 00:00:00 UTC
         #
-        #  context.end_time
+        #  result.end_time
         #  #=> 2019-01-01 00:00:01 UTC
         def around_perform(*filters, &block)
           set_callback(:perform, :around, *filters, &block)
         end
 
-        # Define a callback to call around {ActiveInteractor::Base#rollback} invokation
-        #
+        # Define a callback to call around {Interactor#rollback #rollback} invokation
         # @example
         #  class MyInteractor < ActiveInteractor::Base
         #    around_rollback :track_time
@@ -151,6 +143,8 @@ module ActiveInteractor
         #      sleep(1)
         #    end
         #
+        #    private
+        #
         #    def track_time
         #      context.start_time = Time.now.utc
         #      yield
@@ -158,49 +152,48 @@ module ActiveInteractor
         #    end
         #  end
         #
-        #  context = MyInteractor.perform(name: 'Aaron')
+        #  result = MyInteractor.perform(name: 'Aaron')
         #  #=> <MyInteractor::Context name='Aaron'>
         #
-        #  context.rollback!
+        #  result.rollback!
         #  #=> true
         #
-        #  context.start_time
+        #  result.start_time
         #  #=> 2019-01-01 00:00:00 UTC
         #
-        #  context.end_time
+        #  result.end_time
         #  #=> 2019-01-01 00:00:01 UTC
         def around_rollback(*filters, &block)
           set_callback(:rollback, :around, *filters, &block)
         end
 
-        # Define a callback to call before `#valid?` has been invoked on an
+        # Define a callback to call before {ActiveInteractor::Context::Base#valid? #valid?} has been invoked on an
         #  interactor's context
-        #
         # @example Implement an after_context_validation callback
         #  class MyInteractor < ActiveInteractor::Base
-        #    before_context_validation :set_name_aaron
-        #    context_validates :name, inclusion: { in: %w[Aaron] }
+        #    before_context_validation :downcase_name
         #
-        #    def set_name_aaron
-        #      context.name = 'Aaron'
+        #    private
+        #
+        #    def downcase_name
+        #      context.name.downcase!
         #    end
         #  end
         #
-        #  context = MyInteractor.perform(name: 'Bob')
-        #  #=> <MyInteractor::Context name='Bob'>
+        #  result = MyInteractor.perform(name: 'Aaron')
+        #  #=> <MyInteractor::Context name='aaron'>
         #
-        #  context.valid?
+        #  result.valid?
         #  #=> true
         #
-        #  context.name
-        #  #=> 'Aaron'
+        #  result.name
+        #  #=> 'aaron'
         def before_context_validation(*args, &block)
           options = normalize_options(args.extract_options!.dup)
           set_callback(:validation, :before, *args, options, &block)
         end
 
-        # Define a callback to call before {ActiveInteractor::Base.perform} has been invoked
-        #
+        # Define a callback to call before {Interactor#perform #perform} has been invoked
         # @example
         #  class MyInteractor < ActiveInteractor::Base
         #    before_perform :print_start
@@ -208,6 +201,8 @@ module ActiveInteractor
         #    def perform
         #      puts 'Performing'
         #    end
+        #
+        #    private
         #
         #    def print_start
         #      puts 'Start'
@@ -222,8 +217,7 @@ module ActiveInteractor
           set_callback(:perform, :before, *filters, &block)
         end
 
-        # Define a callback to call before {ActiveInteractor::Base#rollback} has been invoked
-        #
+        # Define a callback to call before {Interactor#rollback #rollback} has been invoked
         # @example
         #  class MyInteractor < ActiveInteractor::Base
         #    before_rollback :print_start
@@ -231,6 +225,8 @@ module ActiveInteractor
         #    def rollback
         #      puts 'Rolling Back'
         #    end
+        #
+        #    private
         #
         #    def print_start
         #      puts 'Start'
@@ -246,14 +242,6 @@ module ActiveInteractor
         #  #=> true
         def before_rollback(*filters, &block)
           set_callback(:rollback, :before, *filters, &block)
-        end
-
-        # Calling this method on an interactor class will invoke
-        #  {ActiveInteractor::Context::Base#clean!} on the interactor's
-        #  context instance after {ActiveInteractor::Base.perform}
-        #  is invoked.
-        def clean_context_on_completion
-          self.__clean_after_perform = true
         end
 
         private

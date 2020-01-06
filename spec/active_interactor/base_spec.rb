@@ -3,26 +3,48 @@
 require 'spec_helper'
 
 RSpec.describe ActiveInteractor::Base do
-  describe "A class that inherits #{described_class} called \"TestInteractor\"" do
-    subject(:interactor) { build_interactor('TestInteractor') }
-    include_examples 'An ActiveInteractor::Base class'
+  let(:interactor_class) { described_class }
+  include_examples 'a class with interactor methods'
+  include_examples 'a class with interactor callback methods'
+  include_examples 'a class with interactor context methods'
 
-    describe 'as an instance' do
-      subject { interactor.new(context) }
+  describe '.contextualize_with' do
+    subject { described_class.contextualize_with(klass) }
 
-      context 'with a `nil` context' do
-        let(:context) { nil }
-        include_examples 'An ActiveInteractor::Base instance'
+    context 'with an class that does not exist' do
+      let(:klass) { 'SomeClassThatDoesNotExist' }
+
+      it { expect { subject }.to raise_error(ActiveInteractor::Error::InvalidContextClass) }
+    end
+
+    context 'with context class TestContext' do
+      before { build_context }
+
+      context 'when passed as a string' do
+        let(:klass) { 'TestContext' }
+
+        it 'assigns the context class' do
+          subject
+          expect(described_class.context_class).to eq TestContext
+        end
       end
 
-      context 'with an empty context' do
-        let(:context) { {} }
-        include_examples 'An ActiveInteractor::Base instance'
+      context 'when passed as a symbol' do
+        let(:klass) { :test_context }
+
+        it 'assigns the context class' do
+          subject
+          expect(described_class.context_class).to eq TestContext
+        end
       end
 
-      context 'with a context having key values' do
-        let(:context) { { test: 'test' } }
-        include_examples 'An ActiveInteractor::Base instance'
+      context 'when passed as a constant' do
+        let(:klass) { TestContext }
+
+        it 'assigns the context class' do
+          subject
+          expect(described_class.context_class).to eq TestContext
+        end
       end
     end
   end

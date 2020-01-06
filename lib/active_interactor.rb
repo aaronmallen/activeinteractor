@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'active_model'
+require 'active_support/dependencies/autoload'
 
 require 'active_interactor/version'
 
@@ -23,46 +23,28 @@ require 'active_interactor/version'
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-#
-# @author Aaron Allen <hello@aaronmallen.me>
-# @since 0.0.1
-# @version 0.2
 module ActiveInteractor
   extend ActiveSupport::Autoload
 
   autoload :Base
-  autoload :Configuration
   autoload :Context
-  autoload :Interactor
   autoload :Organizer
 
   eager_autoload do
     autoload :Error
   end
 
-  class << self
-    # The ActiveInteractor configuration
-    # @return [ActiveInteractor::Configuration] the configuration instance
-    def configuration
-      @configuration ||= Configuration.new
-    end
+  # The ActiveInteractor logger object
+  # @return [Logger] an instance of Logger
+  def self.logger
+    @logger ||= Logger.new(STDOUT)
+  end
 
-    # Configures the ActiveInteractor gem
-    #
-    # @example Configure ActiveInteractor
-    #  ActiveInteractor.configure do |config|
-    #    config.logger = Rails.logger
-    #  end
-    #
-    # @yield [ActiveInteractor#configuration]
-    def configure
-      yield(configuration)
-    end
-
-    # The ActiveInteractor logger object
-    # @return [Logger] the configured logger instance
-    def logger
-      configuration.logger
-    end
+  # Set the ActiveInteractor logger object
+  # @example
+  #   ActiveInteractor.logger = ::Rails.logger
+  # @return [Logger] an instance of Logger
+  def self.logger=(logger)
+    @logger = logger
   end
 end

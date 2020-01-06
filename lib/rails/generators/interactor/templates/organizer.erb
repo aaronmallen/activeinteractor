@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class <%= class_name %> < ActiveInteractor::Organizer
+class <%= class_name %> < ApplicationOrganizer
 
 <%- if interactors.any? -%>
   organize <%= interactors.map(&:classify).join(", ") %>

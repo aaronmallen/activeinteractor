@@ -6,6 +6,7 @@ require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new(:rspec)
 
 begin
+  require 'mdl'
   require 'rubocop/rake_task'
   require 'yard'
 
@@ -14,14 +15,19 @@ begin
   end
 
   task :mdl do
-    puts 'Running Markdown Lint...'
-    system 'mdl *.md' || exit(-1)
+    puts 'Linting markdown documents...'
+    MarkdownLint.run(Dir['*.md'])
+  # MarkdownLint#run calls system exit regardless of status.
+  rescue SystemExit # rubocop:disable Lint/SuppressedException
   end
 
-  YARD::Rake::YardocTask.new(:doc)
+  YARD::Rake::YardocTask.new(:doc) do |t|
+    t.stats_options = ['--list-undoc']
+  end
+
   Rake::Task[:spec].clear.enhance %i[mdl rubocop rspec]
+  task default: %i[spec doc build]
 rescue LoadError
   Rake::Task[:spec].clear.enhance %i[rspec]
+  task default: %i[spec build]
 end
-
-task default: %i[spec build]

@@ -4,11 +4,18 @@ require 'active_support/core_ext/string/inflections'
 
 module Spec
   module Helpers
+    module FactoryCollection
+      def self.factories
+        @factories ||= []
+      end
+    end
+
     module Factories
       def build_class(class_name, parent_class = nil, &block)
         Object.send(:remove_const, class_name.to_sym) if Object.const_defined?(class_name)
         klass = Object.const_set(class_name, Class.new(parent_class))
         klass.class_eval(&block) if block
+        FactoryCollection.factories << klass.name.to_sym
         klass
       end
 
@@ -20,13 +27,14 @@ module Spec
         build_class(class_name, ActiveInteractor::Base, &block)
       end
 
-      def build_interactor_context(class_name = 'TestInteractor', &block)
-        interactor = build_interactor(class_name, &block)
-        interactor.context_class
-      end
-
       def build_organizer(class_name = 'TestOrganizer', &block)
         build_class(class_name, ActiveInteractor::Organizer, &block)
+      end
+
+      def clean_factories!
+        FactoryCollection.factories.each do |factory|
+          Object.send(:remove_const, factory) if Object.const_defined?(factory)
+        end
       end
     end
   end
