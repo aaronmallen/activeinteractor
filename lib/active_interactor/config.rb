@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'logger'
+
 module ActiveInteractor
   # The ActiveInteractor configuration object
   # @author Aaron Allen <hello@aaronmallen.me>
@@ -20,6 +22,18 @@ module ActiveInteractor
     def initialize(options = {})
       DEFAULTS.dup.merge(options).each do |key, value|
         instance_variable_set("@#{key}", value)
+      end
+    end
+
+    # The rails configuration object
+    # @return [Rails::Config|nil] an instance of {Rails::Config} if `Rails` is
+    #  defined or `nil`.
+    def rails
+      @rails ||= begin
+        return unless defined?(::Rails)
+
+        require 'active_interactor/rails/config'
+        Rails::Config.new
       end
     end
   end

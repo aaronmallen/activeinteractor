@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-require 'rails/generators/named_base'
+require_relative '../active_interactor'
 
 module Interactor
   module Generators
-    class OrganizerGenerator < ::Rails::Generators::NamedBase
+    class OrganizerGenerator < NamedBase
       source_root File.expand_path('templates', __dir__)
       desc 'Generate an interactor organizer'
       argument :interactors, type: :array, default: [], banner: 'name name'
 
       def create_organizer
-        template 'organizer.erb', Rails.root.join('app/interactors', File.join(class_path), "#{file_name}.rb")
+        template 'organizer.erb', file_path
       end
 
       def create_context
@@ -18,6 +18,12 @@ module Interactor
       end
 
       hook_for :test_framework, in: :interactor
+
+      private
+
+      def file_path
+        File.join('app', interactor_dir, File.join(class_path), "#{file_name}.rb")
+      end
     end
   end
 end
