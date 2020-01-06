@@ -2,4 +2,7 @@
 
 require 'active_interactor'
 
-ActiveInteractor.logger = ::Rails.logger
+ActiveInteractor.configure do |config|
+  # set the ActiveInteractor logger to rails logger
+  config.logger = ::Rails.logger
+end
