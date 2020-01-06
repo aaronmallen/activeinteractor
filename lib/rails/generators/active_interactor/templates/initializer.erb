@@ -7,7 +7,7 @@ ActiveInteractor.configure do |config|
   config.logger = ::Rails.logger
 
   # set the default directory for interactors
-  <%- of directory != 'interactors' -%>
+  <%- if directory != 'interactors' -%>
   config.rails.directory = '<%= directory %>'
   <%- else -%>
   # config.rails.directory = 'interactors'
