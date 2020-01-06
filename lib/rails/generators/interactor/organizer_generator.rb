@@ -14,6 +14,8 @@ module Interactor
       end
 
       def create_context
+        return if ActiveInteractor.config.rails.generate_context_classes == false
+
         generate :'interactor:context', class_name
       end
 

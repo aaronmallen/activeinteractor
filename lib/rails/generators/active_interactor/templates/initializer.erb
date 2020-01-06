@@ -12,4 +12,8 @@ ActiveInteractor.configure do |config|
   <%- else -%>
   # config.rails.directory = 'interactors'
   <%- end -%>
+
+  # do not automatically generate context classes
+  # when interactors are generated
+  # config.rails.generate_context_classes = false
 end
