@@ -16,16 +16,6 @@ module ActiveInteractor
       def create_application_interactor_and_context
         generate :'active_interactor:application_interactor'
       end
-
-      def autoload_interactors
-        application do
-          <<-CONFIG
-          # autoload interactors
-          config.autoload_paths += ["app/#{directory}"]
-
-          CONFIG
-        end
-      end
     end
   end
 end
