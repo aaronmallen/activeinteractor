@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'rails/generators/named_base'
+require_relative '../active_interactor'
 
-class InteractorGenerator < ::Rails::Generators::NamedBase
+class InteractorGenerator < ActiveInteractor::Generators::NamedBase
   source_root File.expand_path('templates', __dir__)
   desc 'Generate an interactor'
 
   def create_interactor
-    template 'interactor.erb', Rails.root.join('app/interactors', File.join(class_path), "#{file_name}.rb")
+    template 'interactor.erb', file_path
   end
 
   def create_context
@@ -15,4 +15,10 @@ class InteractorGenerator < ::Rails::Generators::NamedBase
   end
 
   hook_for :test_framework, in: :interactor
+
+  private
+
+  def file_path
+    File.join('app', interactor_dir, File.join(class_path), "#{file_name}.rb")
+  end
 end

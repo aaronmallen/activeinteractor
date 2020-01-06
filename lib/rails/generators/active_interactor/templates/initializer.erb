@@ -3,6 +3,13 @@
 require 'active_interactor'
 
 ActiveInteractor.configure do |config|
-  # set the ActiveInteractor logger to rails logger
+  # set ActiveInteractor.logger to Rails.logger
   config.logger = ::Rails.logger
+
+  # set the default directory for interactors
+  <%- if directory != 'interactors' -%>
+  config.rails.directory = '<%= directory %>'
+  <%- else -%>
+  # config.rails.directory = 'interactors'
+  <%- end -%>
 end

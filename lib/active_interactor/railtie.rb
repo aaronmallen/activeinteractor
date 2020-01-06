@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-require 'rails'
+require 'active_interactor'
+require 'active_interactor/rails'
 
 module ActiveInteractor
   class Railtie < ::Rails::Railtie
