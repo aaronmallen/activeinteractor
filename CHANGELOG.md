@@ -7,9 +7,39 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [v1.0.0-beta.1] - 2020-01-06
+
+### Added
+
+- `ActiveInteractor.logger=`
+- `ActiveInteractor::Base#dup`
+- `ActiveInteractor::Context::Loader`
+- `ActiveInteractor::Error::InvalidContextClass`
+- `ActiveInteractor::Interactor::Context#context_fail!`
+- `ActiveInteractor::Interactor::Context#context_rollback!`
+- `ActiveInteractor::Interactor::Context.contextualize_with`
+- `ActiveInteractor::Interactor::Context#finalize_context!`
+
+### Changed
+
+- `ActiveInteractor::Context::Attributes.attributes` now excepts arguments for attributes
+- `ActiveInteractor::Generators` various improvements to rails generators
+- `ActiveInteractor::Interactor::Context.context_class` will now first attempt to find an
+  existing context class, and only create a new context class if a context is not found.
+- `ActiveInteractor::Organizer.organize` now excepts symbols and strings as arguments.
+
 ### Removed
 
-- Aliasing attributes for context classes
+- `ActiveInteractor::Configuration`
+- `ActiveInteractor::Context::Attributes.attributes=` in favor of `ActiveInteractor::Context#attributes`
+- `ActiveInteractor::Context::Attributes.attribute_aliases`
+- `ActiveInteractor::Context::Attributes#clean!`
+- `ActiveInteractor::Context::Attributes#keys`
+- `ActiveInteractor::Interactor#fail_on_invalid_context?`
+- `ActiveInteractor::Interactor#should_clean_context?`
+- `ActiveInteractor::Interactor::Callbacks.clean_context_on_completion`
+- `ActiveInteractor::Interactor::Context.context_attribute_aliases`
+- `ActiveInteractor::Interactor::Execution`
 
 ## [v0.1.7] - 2019-09-10
 
@@ -78,7 +108,8 @@ and this project adheres to [Semantic Versioning].
 
 <!-- versions -->
 
-[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.7..HEAD
+[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.1..HEAD
+[v1.0.0-beta.1]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.7...v1.0.0-beta.1
 [v0.1.7]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.6...v0.1.7
 [v0.1.6]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.5...v0.1.6
 [v0.1.5]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.4...v0.1.5
