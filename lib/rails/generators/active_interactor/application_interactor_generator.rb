@@ -16,6 +16,8 @@ module ActiveInteractor
       end
 
       def create_application_context
+        return if ActiveInteractor.config.rails.generate_context_classes == false
+
         template 'application_context.rb', File.join(target_path, 'application_context.rb')
       end
 
