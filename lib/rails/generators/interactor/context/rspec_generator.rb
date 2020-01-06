@@ -5,7 +5,7 @@ require_relative '../../active_interactor'
 module Interactor
   module Context
     module Generators
-      class RspecGenerator < NamedBase
+      class RspecGenerator < ActiveInteractor::Generators::NamedBase
         source_root File.expand_path('templates', __dir__)
         desc 'Generate an interactor spec'
 

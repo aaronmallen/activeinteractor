@@ -5,7 +5,7 @@ require_relative '../../active_interactor'
 module Interactor
   module Context
     module Generators
-      class TestUnitGenerator < NamedBase
+      class TestUnitGenerator < ActiveInteractor::Generators::NamedBase
         source_root File.expand_path('templates', __dir__)
         desc 'Generate an interactor unit test'
 

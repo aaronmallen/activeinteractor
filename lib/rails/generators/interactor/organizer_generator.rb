@@ -4,7 +4,7 @@ require_relative '../active_interactor'
 
 module Interactor
   module Generators
-    class OrganizerGenerator < NamedBase
+    class OrganizerGenerator < ActiveInteractor::Generators::NamedBase
       source_root File.expand_path('templates', __dir__)
       desc 'Generate an interactor organizer'
       argument :interactors, type: :array, default: [], banner: 'name name'

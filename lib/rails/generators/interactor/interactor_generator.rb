@@ -2,7 +2,7 @@
 
 require_relative '../active_interactor'
 
-class InteractorGenerator < NamedBase
+class InteractorGenerator < ActiveInteractor::Generators::NamedBase
   source_root File.expand_path('templates', __dir__)
   desc 'Generate an interactor'
 
