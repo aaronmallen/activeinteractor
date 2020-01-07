@@ -3,6 +3,7 @@
 class <%= class_name %> < ApplicationOrganizer
 <%- if skip_context? && !context_attributes.empty? -%>
   context_attributes <%= context_attributes.map { |a| ":#{a}" }.join(', ') %>
+
 <%- end -%>
 <%- if interactors.any? -%>
   organize <%= interactors.map(&:classify).join(", ") %>

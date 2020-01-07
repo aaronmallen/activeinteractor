@@ -7,11 +7,11 @@ ActiveInteractor.configure do |config|
   config.logger = ::Rails.logger
 
   # set the default directory for interactors
-  <%- if directory != 'interactors' -%>
+<%- if directory != 'interactors' -%>
   config.rails.directory = '<%= directory %>'
-  <%- else -%>
+<%- else -%>
   # config.rails.directory = 'interactors'
-  <%- end -%>
+<%- end -%>
 
   # do not automatically generate context classes
   # when interactors are generated
