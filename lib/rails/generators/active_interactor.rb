@@ -17,7 +17,7 @@ module ActiveInteractor
       def self.included(base)
         base.class_eval do
           argument :context_attributes, type: :array, default: [], banner: 'attribute attribute'
-          class_option :skip_context, type: :boolean, desc: "Whether or not to generate a context class"
+          class_option :skip_context, type: :boolean, desc: 'Whether or not to generate a context class'
         end
       end
 
