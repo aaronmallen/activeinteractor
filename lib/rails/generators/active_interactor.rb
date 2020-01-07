@@ -8,10 +8,26 @@ module ActiveInteractor
     module Generator
       private
 
-      def interactor_dir
-        @interactor_dir ||= ActiveInteractor.config.rails.directory
+      def interactor_directory
+        @interactor_directory ||= ActiveInteractor.config.rails.directory
       end
     end
+
+    module GeneratesContext
+      def self.included(base)
+        base.class_eval do
+          argument :context_attributes, type: :array, default: [], banner: 'attribute attribute'
+          class_option :skip_context, type: :boolean, desc: 'Whether or not to generate a context class'
+        end
+      end
+
+      private
+
+      def skip_context?
+        options[:skip_context] == true || ActiveInteractor.config.rails.generate_context_classes == false
+      end
+    end
+
     class Base < ::Rails::Generators::Base
       include Generator
     end

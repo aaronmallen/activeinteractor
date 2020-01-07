@@ -5,9 +5,9 @@ require_relative '../active_interactor'
 module Interactor
   module Generators
     class ContextGenerator < ActiveInteractor::Generators::NamedBase
+      include ActiveInteractor::Generators::GeneratesContext
       source_root File.expand_path('templates', __dir__)
       desc 'Generate an interactor context'
-      argument :interactors, type: :array, default: [], banner: 'name name'
 
       def create_context
         template 'context.erb', file_path
@@ -18,7 +18,7 @@ module Interactor
       private
 
       def file_path
-        File.join('app', interactor_dir, File.join(class_path), "#{file_name}_context.rb")
+        File.join('app', interactor_directory, File.join(class_path), "#{file_name}_context.rb")
       end
     end
   end
