@@ -17,14 +17,14 @@ module ActiveInteractor
       def self.included(base)
         base.class_eval do
           argument :context_attributes, type: :array, default: [], banner: 'attribute attribute'
-          class_option :context, type: :boolean
+          class_option :skip_context, type: :boolean
         end
       end
 
       private
 
       def skip_context?
-        options[:context] == false || ActiveInteractor.config.rails.generate_context_classes == false
+        options[:skip_context] == true || ActiveInteractor.config.rails.generate_context_classes == false
       end
     end
 
