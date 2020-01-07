@@ -16,7 +16,7 @@ module Interactor
         private
 
         def file_path
-          File.join('spec', interactor_dir, File.join(class_path), "#{file_name}_context_spec.rb")
+          File.join('spec', interactor_directory, File.join(class_path), "#{file_name}_context_spec.rb")
         end
       end
     end

@@ -3,6 +3,7 @@
 require_relative '../active_interactor'
 
 class InteractorGenerator < ActiveInteractor::Generators::NamedBase
+  include ActiveInteractor::Generators::GeneratesContext
   source_root File.expand_path('templates', __dir__)
   desc 'Generate an interactor'
 
@@ -11,9 +12,9 @@ class InteractorGenerator < ActiveInteractor::Generators::NamedBase
   end
 
   def create_context
-    return if ActiveInteractor.config.rails.generate_context_classes == false
+    return if skip_context?
 
-    generate :'interactor:context', class_name
+    generate :'interactor:context', class_name, *context_attributes
   end
 
   hook_for :test_framework, in: :interactor
@@ -21,6 +22,6 @@ class InteractorGenerator < ActiveInteractor::Generators::NamedBase
   private
 
   def file_path
-    File.join('app', interactor_dir, File.join(class_path), "#{file_name}.rb")
+    File.join('app', interactor_directory, File.join(class_path), "#{file_name}.rb")
   end
 end

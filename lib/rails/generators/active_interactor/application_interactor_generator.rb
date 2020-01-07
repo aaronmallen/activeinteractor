@@ -24,7 +24,7 @@ module ActiveInteractor
       private
 
       def target_path
-        "app/#{interactor_dir}"
+        "app/#{interactor_directory}"
       end
     end
   end

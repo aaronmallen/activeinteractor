@@ -5,6 +5,7 @@ require_relative '../active_interactor'
 module Interactor
   module Generators
     class OrganizerGenerator < ActiveInteractor::Generators::NamedBase
+      include ActiveInteractor::Generators::GeneratesContext
       source_root File.expand_path('templates', __dir__)
       desc 'Generate an interactor organizer'
       argument :interactors, type: :array, default: [], banner: 'name name'
@@ -14,9 +15,9 @@ module Interactor
       end
 
       def create_context
-        return if ActiveInteractor.config.rails.generate_context_classes == false
+        return if skip_context?
 
-        generate :'interactor:context', class_name
+        generate :'interactor:context', class_name, *context_attributes
       end
 
       hook_for :test_framework, in: :interactor
@@ -24,7 +25,7 @@ module Interactor
       private
 
       def file_path
-        File.join('app', interactor_dir, File.join(class_path), "#{file_name}.rb")
+        File.join('app', interactor_directory, File.join(class_path), "#{file_name}.rb")
       end
     end
   end

@@ -2,6 +2,10 @@
 
 class <%= class_name %> < ApplicationInteractor
 
+  <%- if skip_context? && !context_attributes.empty? -%>
+  context_attributes <%= context_attributes.map { |a| ":#{a}" }.join(', ') %>
+  <%- end -%>
+
   def perform
     # TODO implement <%= class_name %> call
   end
