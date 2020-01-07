@@ -9,8 +9,8 @@ module Interactor
       desc 'Generate an interactor organizer'
       argument :interactors, type: :array, default: [], banner: 'interactor interactor'
 
-      class_option :context_attributes, type: :array, default: [], banner: 'attribute attribute'
-      class_option :skip_context, type: :boolean
+      class_option :context_attributes, type: :array, default: [], banner: 'attribute attribute', desc: "Attributes for the context"
+      class_option :skip_context, type: :boolean, desc: "Whether or not to generate a context class"
 
       def create_organizer
         template 'organizer.erb', file_path
