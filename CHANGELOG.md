@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [v1.0.0-beta.2] - 2020-01-07
+
+### Added
+
+- [#102] `ActiveInteractor::Config`
+- [#102] `ActiveInteractor.config`
+- [#103] `ActiveInteractor::Rails`
+- [#103] `ActiveInteractor::Rails::Config`
+- [#102] `ActiveInteractor::Railtie`
+- [#105] interactor, organizer, and context generators now accept context_attributes
+  as arguments.
+
+### Changed
+
+- [#102] `ActiveInteractor.logger` is now part of `ActiveInteractor.config`
+- [#104] Interactor generators will no longer generate separate context classes for
+  interactors if `ActiveInteractor.config.rails.generate_context_classes` is set to `false`
+
+### Fixed
+
+- [#103] various generator fixes
+
+### Removed
+
+- [#102] `ActiveInteractor.logger=` use `ActiveInteractor.config.logger=` instead
+
 ## [v1.0.0-beta.1] - 2020-01-06
 
 ### Added
@@ -108,7 +134,8 @@ and this project adheres to [Semantic Versioning].
 
 <!-- versions -->
 
-[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.1..HEAD
+[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.2...HEAD
+[v1.0.0-beta.2]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.1...v1.0.0-beta.2
 [v1.0.0-beta.1]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.7...v1.0.0-beta.1
 [v0.1.7]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.6...v0.1.7
 [v0.1.6]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.5...v0.1.6
@@ -134,3 +161,7 @@ and this project adheres to [Semantic Versioning].
 [#48]: https://github.com/aaronmallen/activeinteractor/pull/48
 [#51]: https://github.com/aaronmallen/activeinteractor/pull/51
 [#61]: https://github.com/aaronmallen/activeinteractor/pull/61
+[#102]: https://github.com/aaronmallen/activeinteractor/pull/102
+[#103]: https://github.com/aaronmallen/activeinteractor/pull/103
+[#104]: https://github.com/aaronmallen/activeinteractor/pull/104
+[#105]: https://github.com/aaronmallen/activeinteractor/pull/105
