@@ -768,11 +768,14 @@ If you're working with a rails project ActiveInteractor comes bundled with some 
 to help speed up development.  You should first run the install generator with:
 
 ```bash
-rails generate active_interactor:install
+rails generate active_interactor:install [directory]
 ```
 
+The `directory` option allows you to customize what directory interactors will live in within your
+application (defaults to 'interactors').
+
 This will create an initializer a some new classes `ApplicationInteractor`, `ApplicationOrganizer` and
-`ApplicationContext` in the `app/interactors` directory.
+`ApplicationContext` in the `app/<directory>` directory.
 
 You can then automatically generate interactors, organizers, and contexts with:
 

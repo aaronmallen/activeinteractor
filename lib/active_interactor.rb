@@ -3,6 +3,7 @@
 require 'active_support/dependencies/autoload'
 
 require 'active_interactor/version'
+require 'active_interactor/config'
 
 # Copyright (c) 2019 Aaron Allen
 #
@@ -33,18 +34,6 @@ module ActiveInteractor
   eager_autoload do
     autoload :Error
   end
-
-  # The ActiveInteractor logger object
-  # @return [Logger] an instance of Logger
-  def self.logger
-    @logger ||= Logger.new(STDOUT)
-  end
-
-  # Set the ActiveInteractor logger object
-  # @example
-  #   ActiveInteractor.logger = ::Rails.logger
-  # @return [Logger] an instance of Logger
-  def self.logger=(logger)
-    @logger = logger
-  end
 end
+
+require 'active_interactor/railtie' if defined?(::Rails)
