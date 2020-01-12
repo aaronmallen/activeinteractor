@@ -15,6 +15,15 @@ module ActiveInteractor
       include ActiveModel::Validations
       include Attributes
 
+      # @param context [Hash|Context::Base] attributes to assign to the context
+      # @return [Context::Base] a new instance of {Context::Base}
+      def initialize(context = {})
+        merge_errors!(context.errors) if context.respond_to?(:errors)
+        copy_flags!(context)
+        copy_called!(context)
+        super
+      end
+
       # @!method valid?(context = nil)
       # @see
       #   https://github.com/rails/rails/blob/master/activemodel/lib/active_model/validations.rb#L305
@@ -72,6 +81,37 @@ module ActiveInteractor
       end
       alias fail? failure?
 
+      # Merge an instance of context or a hash into an existing context
+      # @since 1.0.0
+      # @example
+      #   class MyInteractor1 < ActiveInteractor::Base
+      #     def perform
+      #       context.first_name = 'Aaron'
+      #     end
+      #   end
+      #
+      #  class MyInteractor2 < ActiveInteractor::Base
+      #    def perform
+      #      context.last_name = 'Allen'
+      #    end
+      #  end
+      #
+      #  result = MyInteractor1.perform
+      #  #=> <#MyInteractor1::Context first_name='Aaron'>
+      #
+      #  result.merge!(MyInteractor2.perform)
+      #  #=> <#MyInteractor1::Context first_name='Aaron' last_name='Allen'>
+      # @param context [Base|Hash] attributes to merge into the context
+      # @return [Base] an instance of {Base}
+      def merge!(context)
+        merge_errors!(context.errors) if context.respond_to?(:errors)
+        copy_flags!(context)
+        context.each_pair do |key, value|
+          self[key] = value
+        end
+        self
+      end
+
       # Roll back an interactor context. Any interactors to which this
       # context has been passed and which have been successfully called are asked
       # to roll themselves back by invoking their
@@ -127,6 +167,18 @@ module ActiveInteractor
 
       def _called
         @_called ||= []
+      end
+
+      def copy_called!(context)
+        value = context.instance_variable_get('@_called') || []
+        instance_variable_set('@_called', value)
+      end
+
+      def copy_flags!(context)
+        %w[_called _failed _rolled_back].each do |flag|
+          value = context.instance_variable_get("@#{flag}")
+          instance_variable_set("@#{flag}", value)
+        end
       end
 
       def merge_errors!(errors)

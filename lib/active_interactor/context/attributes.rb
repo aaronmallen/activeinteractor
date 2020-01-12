@@ -36,14 +36,6 @@ module ActiveInteractor
         end
       end
 
-      # @api private
-      # @param context [Hash|Context::Base] attributes to assign to the context
-      # @return [Context::Base] a new instance of {Context::Base}
-      def initialize(context = {})
-        copy_flags!(context)
-        super
-      end
-
       # Attributes defined on the instance
       # @example Get attributes defined on an instance
       #   class MyInteractor::Context < ActiveInteractor::Context::Base
@@ -63,15 +55,6 @@ module ActiveInteractor
       def attributes
         self.class.attributes.each_with_object({}) do |attribute, hash|
           hash[attribute] = self[attribute] if self[attribute]
-        end
-      end
-
-      private
-
-      def copy_flags!(context)
-        %w[_called _failed _rolled_back].each do |flag|
-          value = context.instance_variable_get("@#{flag}")
-          instance_variable_set("@#{flag}", value)
         end
       end
     end

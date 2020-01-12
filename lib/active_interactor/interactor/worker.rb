@@ -17,24 +17,30 @@ module ActiveInteractor
       end
 
       # Calls {#execute_perform!} and rescues {Error::ContextFailure}
+      # @param options [Hash] execution options for the interactor perform step
+      # @option options [Boolean] skip_rollback whether or not to skip rollback
+      #  on the interactor
       # @return [Context::Base] an instance of {Context::Base}
-      def execute_perform
-        execute_perform!
+      def execute_perform(options = {})
+        execute_perform!(options)
       rescue Error::ContextFailure => e
         ActiveInteractor.logger.error("ActiveInteractor: #{e}")
         context
       end
 
       # Calls {Interactor#perform} with callbacks and context validation
+      # @param options [Hash] execution options for the interactor perform step
+      # @option options [Boolean] skip_rollback whether or not to skip rollback
+      #  on the interactor
       # @raise [Error::ContextFailure] if the context fails
       # @return [Context::Base] an instance of {Context::Base}
-      def execute_perform!
+      def execute_perform!(options = {})
         run_callbacks :perform do
           execute_context!
           @context = interactor.finalize_context!
         rescue StandardError
           @context = interactor.finalize_context!
-          execute_rollback
+          execute_rollback unless options[:skip_rollback]
           raise
         end
       end
