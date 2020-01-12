@@ -175,7 +175,7 @@ module ActiveInteractor
       end
 
       def copy_flags!(context)
-        %w[_called _failed _rolled_back].each do |flag|
+        %w[_failed _rolled_back].each do |flag|
           value = context.instance_variable_get("@#{flag}")
           instance_variable_set("@#{flag}", value)
         end
