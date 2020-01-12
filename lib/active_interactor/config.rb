@@ -2,6 +2,8 @@
 
 require 'logger'
 
+require 'active_interactor/configurable'
+
 module ActiveInteractor
   # The ActiveInteractor configuration object
   # @author Aaron Allen <hello@aaronmallen.me>
@@ -9,21 +11,13 @@ module ActiveInteractor
   # @!attribute [rw] logger
   #  @return [Logger] an instance of Logger
   class Config
-    # @return [Hash{Symbol=>*}] the default configuration options
-    DEFAULTS = {
-      logger: Logger.new(STDOUT)
-    }.freeze
+    include Configurable
+    defaults logger: Logger.new(STDOUT)
 
-    attr_accessor :logger
-
+    # @!method initialize(options = {})
     # @param options [Hash] the options for the configuration
     # @option options [Logger] :logger the configuration logger instance
     # @return [Config] a new instance of {Config}
-    def initialize(options = {})
-      DEFAULTS.dup.merge(options).each do |key, value|
-        instance_variable_set("@#{key}", value)
-      end
-    end
 
     # The rails configuration object
     # @return [Rails::Config|nil] an instance of {Rails::Config} if `Rails` is

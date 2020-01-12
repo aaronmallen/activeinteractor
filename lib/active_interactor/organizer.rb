@@ -11,6 +11,11 @@ module ActiveInteractor
   # @!attribute [r] organized
   #  @!scope class
   #  @return [Array<Base>] the organized interactors
+  # @!attribute [r] parallel
+  #  @since 1.0.0
+  #  @!scope class
+  #  @return [Boolean] whether or not to run the interactors
+  #    in parallel
   # @example a basic organizer
   #  class MyInteractor1 < ActiveInteractor::Base
   #    def perform
@@ -32,6 +37,7 @@ module ActiveInteractor
   #  #=> <MyOrganizer::Context interactor1=true interactor2=true>
   class Organizer < Base
     class_attribute :organized, instance_writer: false, default: []
+    class_attribute :parallel, instance_writer: false, default: false
     define_callbacks :each_perform
 
     # Define a callback to call after each organized interactor's
@@ -183,25 +189,51 @@ module ActiveInteractor
       end.compact
     end
 
+    # Run organized interactors in parallel
+    # @since 1.0.0
+    def self.perform_in_parallel
+      self.parallel = true
+    end
+
     # Invoke the organized interactors. An organizer is
     #  expected not to define its own {Base#perform} method
     #  in favor of this default implementation.
     def perform
-      self.class.organized.each do |interactor|
-        self.context = execute_interactor_perform_with_callbacks!(interactor)
+      if self.class.parallel
+        perform_in_parallel
+      else
+        perform_in_order
       end
-    rescue Error::ContextFailure => e
-      self.context = e.context
-    ensure
-      self.context = self.class.context_class.new(context)
     end
 
     private
 
-    def execute_interactor_perform_with_callbacks!(interactor)
+    def execute_interactor_with_callbacks(interactor, fail_on_error = false, execute_options = {})
       run_callbacks :each_perform do
-        interactor.new(context).execute_perform!
+        instance = interactor.new(context)
+        method = fail_on_error ? :execute_perform! : :execute_perform
+        instance.send(method, execute_options)
       end
+    end
+
+    def merge_contexts(contexts)
+      contexts.each { |context| @context.merge!(context) }
+      context_fail! if contexts.any?(&:failure?)
+    end
+
+    def perform_in_order
+      self.class.organized.each do |interactor|
+        context.merge!(execute_interactor_with_callbacks(interactor, true))
+      end
+    rescue Error::ContextFailure => e
+      context.merge!(e.context)
+    end
+
+    def perform_in_parallel
+      results = self.class.organized.map do |interactor|
+        Thread.new { execute_interactor_with_callbacks(interactor, false, skip_rollback: true) }
+      end
+      merge_contexts(results.map(&:value))
     end
   end
 end

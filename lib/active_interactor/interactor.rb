@@ -14,6 +14,7 @@ module ActiveInteractor
         delegate :execute_perform, :execute_perform!, :execute_rollback, to: :worker
       end
     end
+
     # Interactor class methods.
     module ClassMethods
       # Run an interactor context.  This it the primary API method for
@@ -21,11 +22,11 @@ module ActiveInteractor
       # @example Run an interactor
       #  MyInteractor.perform(name: 'Aaron')
       #  #=> <#MyInteractor::Context name='Aaron'>
-      # @param context [Hash|Context::Base] properties to assign to
-      #  an interactor's context.
+      # @param context [Hash|Context::Base] attributes to assign to the interactor context
+      # @param options [PerformOptions|Hash] execution options for the interactor perform step
       # @return [Context::Base] an instance of context.
-      def perform(context = {})
-        new(context).execute_perform
+      def perform(context = {}, options = PerformOptions.new)
+        new(context).execute_perform(options)
       end
 
       # Run an interactor context. The {.perform!} method behaves identically to
@@ -35,11 +36,12 @@ module ActiveInteractor
       # @example Run an interactor
       #  MyInteractor.perform!(name: 'Aaron')
       #  #=> <#MyInteractor::Context name='Aaron'>
-      # @param context [Hash|Context::Base] properties to assign to the interactor context.
+      # @param context [Hash|Context::Base] attributes to assign to the interactor context
+      # @param options [PerformOptions|Hash] execution options for the interactor perform step
       # @raise [Error::ContextFailure] if the context fails.
       # @return [Context::Base] an instance of context.
-      def perform!(context = {})
-        new(context).execute_perform!
+      def perform!(context = {}, options = PerformOptions.new)
+        new(context).execute_perform!(options)
       end
     end
 

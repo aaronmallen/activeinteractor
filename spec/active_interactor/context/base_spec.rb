@@ -133,14 +133,136 @@ RSpec.describe ActiveInteractor::Context::Base do
     end
   end
 
+  describe '#failure?' do
+    subject { instance.failure? }
+    let(:instance) { described_class.new }
+
+    it { is_expected.to eq false }
+
+    context 'when context has failed' do
+      before { instance.instance_variable_set('@_failed', true) }
+
+      it { is_expected.to eq true }
+    end
+  end
+
+  describe '#merge' do
+    subject { instance.merge!(attributes) }
+
+    context 'with an instance having attributes { :foo => "foo"}' do
+      let(:instance) { described_class.new(foo: 'foo') }
+
+      context 'with a hash having attributes { :bar => "bar"}' do
+        let(:attributes) { { bar: 'bar' } }
+
+        it { is_expected.to be_a described_class }
+        it { is_expected.to have_attributes(foo: 'foo', bar: 'bar') }
+      end
+
+      context 'with a hash having attributes { :foo => "foobar"}' do
+        let(:attributes) { { foo: 'foobar' } }
+
+        it { is_expected.to be_a described_class }
+        it { is_expected.to have_attributes(foo: 'foobar') }
+      end
+
+      context 'with a previous instance having attributes { :bar => "bar" }' do
+        let(:attributes) { described_class.new(bar: 'bar') }
+
+        it { is_expected.to be_a described_class }
+        it { is_expected.to have_attributes(foo: 'foo', bar: 'bar') }
+
+        context 'having errors on :foo' do
+          before { attributes.errors.add(:foo, 'invalid') }
+
+          it 'is expected to have errors on :foo' do
+            expect(subject.errors[:foo]).not_to be_nil
+            expect(subject.errors[:foo]).to include 'invalid'
+          end
+        end
+
+        context 'having instance variable @_failed equal to true' do
+          before { attributes.instance_variable_set('@_failed', true) }
+
+          it { is_expected.to be_a described_class }
+          it { is_expected.to have_attributes(foo: 'foo') }
+          it 'is expected to preserve @_failed instance variable' do
+            expect(subject.instance_variable_get('@_failed')).to eq true
+          end
+        end
+
+        context 'having instance variable @_rolled_back equal to true' do
+          before { attributes.instance_variable_set('@_rolled_back', true) }
+
+          it { is_expected.to be_a described_class }
+          it { is_expected.to have_attributes(foo: 'foo') }
+          it 'is expected to preserve @_rolled_back instance variable' do
+            expect(subject.instance_variable_get('@_rolled_back')).to eq true
+          end
+        end
+      end
+
+      context 'with a previous instance having attributes { :foo => "foobar"}' do
+        let(:attributes) { described_class.new(foo: 'foobar') }
+
+        it { is_expected.to be_a described_class }
+        it { is_expected.to have_attributes(foo: 'foobar') }
+      end
+
+      context 'having errors on :foo' do
+        before { instance.errors.add(:foo, 'invalid') }
+
+        context 'with a previous instance having attributes { :bar => "bar" }' do
+          let(:attributes) { described_class.new(bar: 'bar') }
+
+          it 'is expected to have errors on :foo' do
+            expect(subject.errors[:foo]).not_to be_nil
+            expect(subject.errors[:foo]).to include 'invalid'
+          end
+
+          context 'having errors on :bar' do
+            before { attributes.errors.add(:bar, 'invalid') }
+
+            it 'is expected to have errors on :foo' do
+              expect(subject.errors[:foo]).not_to be_nil
+              expect(subject.errors[:foo]).to include 'invalid'
+            end
+
+            it 'is expected to have errors on :bar' do
+              expect(subject.errors[:bar]).not_to be_nil
+              expect(subject.errors[:bar]).to include 'invalid'
+            end
+          end
+        end
+      end
+    end
+  end
+
   describe '#new' do
     subject { described_class.new(attributes) }
+
+    context 'with a hash having attributes { :foo => "foo"}' do
+      let(:attributes) { { foo: 'foo' } }
+
+      it { is_expected.to be_a described_class }
+      it { is_expected.to have_attributes(foo: 'foo') }
+    end
 
     context 'with a previous instance having attributes { :foo => "foo" }' do
       let(:attributes) { described_class.new(foo: 'foo') }
 
       it { is_expected.to be_a described_class }
       it { is_expected.to have_attributes(foo: 'foo') }
+
+      context 'having errors on :foo' do
+        before { attributes.errors.add(:foo, 'invalid') }
+
+        it { is_expected.to be_a described_class }
+        it 'is expected to have errors on :foo' do
+          expect(subject.errors[:foo]).not_to be_nil
+          expect(subject.errors[:foo]).to include 'invalid'
+        end
+      end
 
       context 'having instance variable @_called equal to ["foo"]' do
         before { attributes.instance_variable_set('@_called', %w[foo]) }
@@ -171,19 +293,6 @@ RSpec.describe ActiveInteractor::Context::Base do
           expect(subject.instance_variable_get('@_rolled_back')).to eq true
         end
       end
-    end
-  end
-
-  describe '#failure?' do
-    subject { instance.failure? }
-    let(:instance) { described_class.new }
-
-    it { is_expected.to eq false }
-
-    context 'when context has failed' do
-      before { instance.instance_variable_set('@_failed', true) }
-
-      it { is_expected.to eq true }
     end
   end
 

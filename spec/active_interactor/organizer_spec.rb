@@ -136,6 +136,7 @@ RSpec.describe ActiveInteractor::Organizer do
         end
 
         it { expect { subject }.not_to raise_error }
+        it { is_expected.to be_failure }
         it { is_expected.to be_a interactor_class.context_class }
         it 'is expected to call #perform on the first interactor' do
           expect_any_instance_of(interactor1).to receive(:perform)
@@ -161,6 +162,7 @@ RSpec.describe ActiveInteractor::Organizer do
         end
 
         it { expect { subject }.not_to raise_error }
+        it { is_expected.to be_failure }
         it { is_expected.to be_a interactor_class.context_class }
         it 'is expected to call #perform on both interactors' do
           expect_any_instance_of(interactor1).to receive(:perform)
@@ -171,6 +173,71 @@ RSpec.describe ActiveInteractor::Organizer do
           expect_any_instance_of(interactor1).to receive(:rollback)
           expect_any_instance_of(interactor2).to receive(:rollback)
           subject
+        end
+      end
+
+      context 'when the organizer is set to perform in parallel' do
+        let(:interactor_class) do
+          build_organizer do
+            perform_in_parallel
+
+            organize TestInteractor1, TestInteractor2
+          end
+        end
+
+        it { is_expected.to be_a interactor_class.context_class }
+        it 'is expected to call #perform on both interactors' do
+          expect_any_instance_of(interactor1).to receive(:perform)
+          expect_any_instance_of(interactor2).to receive(:perform)
+          subject
+        end
+
+        context 'when the first interactor context fails' do
+          let!(:interactor1) do
+            build_interactor('TestInteractor1') do
+              def perform
+                context.fail!
+              end
+            end
+          end
+
+          it { expect { subject }.not_to raise_error }
+          it { is_expected.to be_failure }
+          it { is_expected.to be_a interactor_class.context_class }
+          it 'is expected to call #perform on both interactors' do
+            expect_any_instance_of(interactor1).to receive(:perform)
+            expect_any_instance_of(interactor2).to receive(:perform)
+            subject
+          end
+          it 'is expected to call #rollback both interactors' do
+            expect_any_instance_of(interactor1).to receive(:rollback)
+            expect_any_instance_of(interactor2).to receive(:rollback)
+            subject
+          end
+        end
+
+        context 'when the second interactor context fails' do
+          let!(:interactor2) do
+            build_interactor('TestInteractor2') do
+              def perform
+                context.fail!
+              end
+            end
+          end
+
+          it { expect { subject }.not_to raise_error }
+          it { is_expected.to be_failure }
+          it { is_expected.to be_a interactor_class.context_class }
+          it 'is expected to call #perform on both interactors' do
+            expect_any_instance_of(interactor1).to receive(:perform)
+            expect_any_instance_of(interactor2).to receive(:perform)
+            subject
+          end
+          it 'is expected to call #rollback on both interactors' do
+            expect_any_instance_of(interactor1).to receive(:rollback)
+            expect_any_instance_of(interactor2).to receive(:rollback)
+            subject
+          end
         end
       end
     end
