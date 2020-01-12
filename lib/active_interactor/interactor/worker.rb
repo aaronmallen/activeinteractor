@@ -38,10 +38,8 @@ module ActiveInteractor
         run_callbacks :perform do
           execute_context!
           @context = interactor.finalize_context!
-        rescue StandardError
-          @context = interactor.finalize_context!
-          execute_rollback unless options[:skip_rollback]
-          raise
+        rescue StandardError => e
+          handle_error(e, options)
         end
       end
 
@@ -62,6 +60,12 @@ module ActiveInteractor
         interactor.context_fail! unless validate_context(:calling)
         interactor.perform
         interactor.context_fail! unless validate_context(:called)
+      end
+
+      def handle_error(exception, options)
+        @context = interactor.finalize_context!
+        execute_rollback unless options[:skip_rollback]
+        raise exception
       end
 
       def validate_context(validation_context = nil)
