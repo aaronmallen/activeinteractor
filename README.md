@@ -24,8 +24,9 @@ Ruby interactors with [ActiveModel::Validations] based on the [interactor][colle
     * [Validating the Context](#validating-the-context)
   * [Using Interactors](#using-interactors)
     * [Kinds of Interactors](#kinds-of-interactors)
-    * [Interactors](#interactors)
-    * [Organizers](#organizers)
+      * [Interactors](#interactors)
+      * [Organizers](#organizers)
+      * [Parallel Organizers](#parallel-organizers)
     * [Rollback](#rollback)
     * [Callbacks](#callbacks)
       * [Validation Callbacks](#validation-callbacks)
@@ -346,7 +347,7 @@ Finally, the context (along with any changes made to it) is returned.
 
 There are two kinds of interactors built into the Interactor library: basic interactors and organizers.
 
-#### Interactors
+##### Interactors
 
 A basic interactor is a class that includes Interactor and defines `perform`.\
 
@@ -366,7 +367,7 @@ end
 
 Basic interactors are the building blocks. They are your application's single-purpose units of work.
 
-#### Organizers
+##### Organizers
 
 An organizer is an important variation on the basic interactor. Its single purpose is to run other interactors.
 
@@ -420,6 +421,41 @@ end
 
 The organizer passes its context to the interactors that it organizes, one at a time and in order. Each interactor may
 change that context before it's passed along to the next interactor.
+
+##### Parallel Organizers
+
+Organizers can be told to run their interactors in parallel with the `#perform_in_parallel` class method.  This
+will run each interactor in parallel with one and other only passing the original context to each organizer.
+This means each interactor must be able to perform without dependencies on prior interactor runs.
+
+```ruby
+class CreateNewUser < ActiveInteractor::Base
+  def perform
+    context.user = User.create(
+      first_name: context.first_name,
+      last_name: context.last_name
+    )
+  end
+end
+
+class LogNewUserCreation < ActiveInteractor::Base
+  def perform
+    context.log = Log.create(
+      event: 'new user created',
+      first_name: context.first_name,
+      last_name: context.last_name
+    )
+  end
+end
+
+class CreateUser < ActiveInteractor::Organizer
+  perform_in_parallel
+  organize :create_new_user, :log_new_user_creation
+end
+
+CreateUser.perform(first_name: 'Aaron', last_name: 'Allen')
+#=> <#CreateUser::Context first_name='Aaron' last_name='Allen' user=>#<User ...> log=<#Log ...>>
+```
 
 #### Rollback
 
