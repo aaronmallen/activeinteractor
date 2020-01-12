@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [v1.0.0-beta.3] - 2020-01-12
+
+### Added
+
+- [#109] `ActiveInteractor::Organizer.parallel`
+- [#109] `ActiveInteractor::Organizer.perform_in_parallel`
+- [#109] `ActiveInteractor::Context::Base#merge`
+- [#110] `ActiveInteractor::Interactor::PerformOptions`
+
+### Changed
+
+- [#110] `ActiveInteractor::Interactor.perform` now takes options
+
 ## [v1.0.0-beta.2] - 2020-01-07
 
 ### Added
@@ -134,7 +147,8 @@ and this project adheres to [Semantic Versioning].
 
 <!-- versions -->
 
-[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.2...HEAD
+[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.3...HEAD
+[v1.0.0-beta.3]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.2...v1.0.0-beta.3
 [v1.0.0-beta.2]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.1...v1.0.0-beta.2
 [v1.0.0-beta.1]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.7...v1.0.0-beta.1
 [v0.1.7]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.6...v0.1.7
@@ -165,3 +179,5 @@ and this project adheres to [Semantic Versioning].
 [#103]: https://github.com/aaronmallen/activeinteractor/pull/103
 [#104]: https://github.com/aaronmallen/activeinteractor/pull/104
 [#105]: https://github.com/aaronmallen/activeinteractor/pull/105
+[#109]: https://github.com/aaronmallen/activeinteractor/pull/109
+[#110]: https://github.com/aaronmallen/activeinteractor/pull/110
