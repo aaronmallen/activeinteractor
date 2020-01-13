@@ -29,7 +29,8 @@ see [v0.1.7](https://github.com/aaronmallen/activeinteractor/tree/0-1-stable)**
     * [Kinds of Interactors](#kinds-of-interactors)
       * [Interactors](#interactors)
       * [Organizers](#organizers)
-      * [Parallel Organizers](#parallel-organizers)
+        * [Organizing Interactors Conditionally](#organizing-interactors-conditionally)
+        * [Running Interactors In Parallel](#running-interactors-in-parallel)
     * [Rollback](#rollback)
     * [Callbacks](#callbacks)
       * [Validation Callbacks](#validation-callbacks)
@@ -425,7 +426,27 @@ end
 The organizer passes its context to the interactors that it organizes, one at a time and in order. Each interactor may
 change that context before it's passed along to the next interactor.
 
-##### Parallel Organizers
+###### Organizing Interactors Conditionally
+
+We can also add conditional statements to our organizer by passing a block to the `#organize` method:
+
+```ruby
+class PlaceOrder < ActiveInteractor::Organizer
+  organize do
+    add :create_order, if :user_registered?
+    add :charge_card, if: -> { context.order_number }
+    add :send_thank_you, if: -> { context.order_number }
+  end
+
+  private
+
+  def user_registered?
+    context.user&.registered?
+  end
+end
+```
+
+###### Running Interactors In Parallel
 
 Organizers can be told to run their interactors in parallel with the `#perform_in_parallel` class method.  This
 will run each interactor in parallel with one and other only passing the original context to each organizer.
