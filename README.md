@@ -11,6 +11,9 @@
 
 Ruby interactors with [ActiveModel::Validations] based on the [interactor][collective_idea_interactors] gem.
 
+**ActiveInteractor v1.0.0 is currently in beta.  For documentation on the current stable version please
+see [v0.1.7](https://github.com/aaronmallen/activeinteractor/tree/0-1-stable)**
+
 <!-- TOC -->
 
 * [Getting Started](#getting-started)
@@ -46,7 +49,7 @@ Ruby interactors with [ActiveModel::Validations] based on the [interactor][colle
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'activeinteractor'
+gem 'activeinteractor', '~> 1.0.0.beta.3'
 ```
 
 And then execute:
@@ -58,7 +61,7 @@ bundle
 Or install it yourself as:
 
 ```bash
-gem install activeinteractor
+gem install activeinteractor --pre
 ```
 
 ## What is an Interactor
