@@ -5,9 +5,8 @@
 [![Dependencies](https://img.shields.io/depfu/aaronmallen/activeinteractor.svg?maxAge=300)](https://depfu.com/github/aaronmallen/activeinteractor)
 
 [![Build Status](https://github.com/aaronmallen/activeinteractor/workflows/Build/badge.svg)](https://github.com/aaronmallen/activeinteractor/actions)
-[![Maintainability](https://img.shields.io/codeclimate/maintainability/aaronmallen/activeinteractor.svg?maxAge=300)](https://codeclimate.com/github/aaronmallen/activeinteractor/maintainability)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/be92c4ecf12347da82d266f6a4368b6e)](https://www.codacy.com/manual/aaronmallen/activeinteractor?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=aaronmallen/activeinteractor&amp;utm_campaign=Badge_Grade)
-[![Test Coverage](https://img.shields.io/codeclimate/coverage/aaronmallen/activeinteractor.svg?maxAge=300)](https://codeclimate.com/github/aaronmallen/activeinteractor/test_coverage)
+[![Code Quality](https://api.codacy.com/project/badge/Grade/be92c4ecf12347da82d266f6a4368b6e)](https://www.codacy.com/manual/aaronmallen/activeinteractor?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=aaronmallen/activeinteractor&amp;utm_campaign=Badge_Grade)
+[![Test Coverage](https://api.codacy.com/project/badge/Coverage/be92c4ecf12347da82d266f6a4368b6e)](https://www.codacy.com/manual/aaronmallen/activeinteractor?utm_source=github.com&utm_medium=referral&utm_content=aaronmallen/activeinteractor&utm_campaign=Badge_Coverage)
 
 Ruby interactors with [ActiveModel::Validations] based on the [interactor][collective_idea_interactors] gem.
 
