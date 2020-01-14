@@ -8,8 +8,6 @@ module ActiveInteractor
     # @author Aaron Allen <hello@aaronmallen.me>
     # @since 0.0.2
     class Worker
-      delegate :run_callbacks, to: :interactor
-
       # @param interactor [Base] an instance of interactor
       # @return [Worker] a new instance of {Worker}
       def initialize(interactor)
@@ -60,7 +58,7 @@ module ActiveInteractor
       end
 
       def execute_context_with_callbacks!(options)
-        run_callbacks :perform do
+        interactor.run_callbacks :perform do
           execute_context_with_validation_check!(options)
           @context = interactor.finalize_context!
         end
@@ -81,7 +79,7 @@ module ActiveInteractor
       def execute_interactor_rollback!(options)
         return interactor.context_rollback! if options.skip_rollback_callbacks
 
-        run_callbacks :rollback do
+        interactor.run_callbacks :rollback do
           interactor.context_rollback!
         end
       end
@@ -97,7 +95,7 @@ module ActiveInteractor
       end
 
       def validate_context(validation_context = nil)
-        run_callbacks :validation do
+        interactor.run_callbacks :validation do
           interactor.context_valid?(validation_context)
         end
       end
