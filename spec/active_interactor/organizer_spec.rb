@@ -197,7 +197,7 @@ RSpec.describe ActiveInteractor::Organizer do
             expect_any_instance_of(interactor2).to receive(:perform)
             subject
           end
-          xit 'is expected to call #rollback both interactors' do
+          it 'is expected to call #rollback both interactors' do
             expect_any_instance_of(interactor1).to receive(:rollback)
             expect_any_instance_of(interactor2).to receive(:rollback)
             subject

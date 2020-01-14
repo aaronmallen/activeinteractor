@@ -11,7 +11,8 @@ module ActiveInteractor
       # @param interactor [Base] an instance of interactor
       # @return [Worker] a new instance of {Worker}
       def initialize(interactor)
-        @interactor = interactor.dup
+        options = interactor.options.dup
+        @interactor = interactor.dup.with_options(options)
       end
 
       # Calls {#execute_perform!} and rescues {Error::ContextFailure}
@@ -36,6 +37,8 @@ module ActiveInteractor
       # @return [Boolean] `true` if rolled back successfully or `false` if already
       #  rolled back
       def execute_rollback
+        return if interactor.options.skip_rollback
+
         execute_interactor_rollback!
       end
 
@@ -44,7 +47,11 @@ module ActiveInteractor
       attr_reader :context, :interactor
 
       def execute_context!
-        execute_context_with_callbacks!
+        if interactor.options.skip_perform_callbacks
+          execute_context_with_validation_check!
+        else
+          execute_context_with_callbacks!
+        end
       end
 
       def execute_context_with_callbacks!
@@ -61,10 +68,14 @@ module ActiveInteractor
       end
 
       def execute_context_with_validation_check!
+        return interactor.perform unless interactor.options.validate
+
         execute_context_with_validation!
       end
 
       def execute_interactor_rollback!
+        return interactor.context_rollback! if interactor.options.skip_rollback_callbacks
+
         interactor.run_callbacks :rollback do
           interactor.context_rollback!
         end
@@ -83,10 +94,14 @@ module ActiveInteractor
       end
 
       def validate_on_calling
+        return unless interactor.options.validate_on_calling
+
         interactor.context_fail! unless validate_context(:calling)
       end
 
       def validate_on_called
+        return unless interactor.options.validate_on_called
+
         interactor.context_fail! unless validate_context(:called)
       end
     end

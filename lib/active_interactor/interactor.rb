@@ -24,9 +24,10 @@ module ActiveInteractor
       #  #=> <#MyInteractor::Context name='Aaron'>
       # @param context [Hash|Context::Base] attributes to assign to the interactor context
       # @param options [Hash] execution options for the interactor perform step
+      #   see {PerformOptions}
       # @return [Context::Base] an instance of context.
-      def perform(context = {}, _options = {})
-        new(context).execute_perform
+      def perform(context = {}, options = {})
+        new(context).with_options(options).execute_perform
       end
 
       # Run an interactor context. The {.perform!} method behaves identically to
@@ -38,11 +39,18 @@ module ActiveInteractor
       #  #=> <#MyInteractor::Context name='Aaron'>
       # @param context [Hash|Context::Base] attributes to assign to the interactor context
       # @param options [Hash] execution options for the interactor perform step
+      #   see {PerformOptions}
       # @raise [Error::ContextFailure] if the context fails.
       # @return [Context::Base] an instance of context.
-      def perform!(context = {}, _options = {})
-        new(context).execute_perform!
+      def perform!(context = {}, options = {})
+        new(context).with_options(options).execute_perform!
       end
+    end
+
+    # Options for invokation of {#perform}
+    # @return [PerformOptions] the options
+    def options
+      @options ||= PerformOptions.new
     end
 
     # Invoke an Interactor instance without any hooks, tracking, or rollback
@@ -54,6 +62,14 @@ module ActiveInteractor
     # @abstract Any interactor class that requires undoing upon downstream
     #  failure is expected to overwrite the {#rollback} method.
     def rollback; end
+
+    # Set options for invokation of {#perform}
+    # @param options [PerformOptions|Hash] the perform options
+    # @return [Base] the instance of {Base}
+    def with_options(options)
+      @options = options.is_a?(PerformOptions) ? options : PerformOptions.new(options)
+      self
+    end
 
     private
 
