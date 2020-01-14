@@ -50,7 +50,7 @@ see [v0.1.7](https://github.com/aaronmallen/activeinteractor/tree/0-1-stable)**
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'activeinteractor', '~> 1.0.0.beta.3'
+gem 'activeinteractor', '~> 1.0.0.beta.4'
 ```
 
 And then execute:
@@ -191,9 +191,8 @@ See [Using Interactors](#using-interactors), below, for the recommended usage of
 
 #### Context Attributes
 
-Each context instance have basic attribute assignment methods which can be invoked directly from the interactor.
-You never need to directly interface with an interactor's context class. Assigning attributes to a context is a
-simple way to explicitly defined what properties a context should have after an interactor has done it's work.
+Each context instance has basic attribute assignment methods. Assigning attributes to a context is a simple way to
+explicitly defined what properties a context should have after an interactor has done it's work.
 
 You can see what attributes are defined on a given context with the `#attributes` method:
 
@@ -218,10 +217,10 @@ result.occupation #=> 'Software Dude'
 
 #### Validating the Context
 
-ActiveInteractor delegates all the validation methods provided by [ActiveModel::Validations] onto an interactor's
-context class from the interactor itself. All of the methods found in [ActiveModel::Validations] can be invoked directly
-on your interactor with the prefix `context_`. However this can be confusing and it is recommended to make all validation
-calls on a context class directly.
+All context instances include [ActiveModel::Validations]; additionally ActiveInteractor delegates all the validation methods
+provided by [ActiveModel::Validations] onto an interactor's context class from the interactor itself. All of the methods
+found in [ActiveModel::Validations] can be invoked directly on your interactor with the prefix `context_`.
+However this can be confusing and it is recommended to make all validation calls on a context class directly.
 
 ActiveInteractor provides two validation callback steps:
 
@@ -343,17 +342,17 @@ class AuthenticateUser < ActiveInteractor::Base
 end
 ```
 
-The `perform` class method is the proper way to invoke an interactor. The hash argument is converted to the interactor instance's
-context. The `perform` instance method is invoked along with any callbacks and validations that the interactor might define.
+The `.perform` class method is the proper way to invoke an interactor. The hash argument is converted to the interactor instance's
+context. The `#perform` instance method is invoked along with any callbacks and validations that the interactor might define.
 Finally, the context (along with any changes made to it) is returned.
 
 #### Kinds of Interactors
 
-There are two kinds of interactors built into the Interactor library: basic interactors and organizers.
+There are two kinds of interactors built into ActiveInteractor: basic interactors and organizers.
 
 ##### Interactors
 
-A basic interactor is a class that includes Interactor and defines `perform`.\
+A basic interactor is a class that inherits from `ActiveInteractor::Base` and defines `perform`.
 
 ```ruby
 class AuthenticateUser < ActiveInteractor::Base
@@ -428,14 +427,14 @@ change that context before it's passed along to the next interactor.
 
 ###### Organizing Interactors Conditionally
 
-We can also add conditional statements to our organizer by passing a block to the `#organize` method:
+We can also add conditional statements to our organizer by passing a block to the `.organize` method:
 
 ```ruby
 class PlaceOrder < ActiveInteractor::Organizer
   organize do
     add :create_order, if :user_registered?
-    add :charge_card, if: -> { context.order_number }
-    add :send_thank_you, if: -> { context.order_number }
+    add :charge_card, if: -> { context.order }
+    add :send_thank_you, if: -> { context.order }
   end
 
   private
@@ -448,9 +447,9 @@ end
 
 ###### Running Interactors In Parallel
 
-Organizers can be told to run their interactors in parallel with the `#perform_in_parallel` class method.  This
-will run each interactor in parallel with one and other only passing the original context to each organizer.
-This means each interactor must be able to perform without dependencies on prior interactor runs.
+Organizers can be told to run their interactors in parallel with the `.perform_in_parallel` class method.  This
+will run each interactor in parallel with one and other only passing the original context to each interactor.
+This means each interactor must be able to perform without dependencies on prior interactor invokations.
 
 ```ruby
 class CreateNewUser < ActiveInteractor::Base
@@ -515,7 +514,7 @@ outlined in those two modules.
 
 ##### Validation Callbacks
 
-We can do work before an interactor's context is validated with the `before_context_validation` method:
+We can do work before an interactor's context is validated with the `.before_context_validation` method:
 
 ```ruby
 class MyInteractorContext < ActiveInteractor::Context::Base
@@ -532,7 +531,7 @@ result.valid? #=> true
 result.last_name #=> 'Unknown'
 ```
 
-We can do work after an interactor's context is validated with the `after_context_validation` method:
+We can do work after an interactor's context is validated with the `.after_context_validation` method:
 
 ```ruby
 class MyInteractorContext < ActiveInteractor::Context::Base
@@ -552,7 +551,7 @@ result.email #=> 'hello@aaronmallen.me'
 
 ##### Perform Callbacks
 
-We can do work before `perform` is invoked with the `before_perform` method:
+We can do work before `#perform` is invoked with the `.before_perform` method:
 
 ```ruby
 class MyInteractor < ActiveInteractor::Base
@@ -575,7 +574,7 @@ MyInteractor.perform
 #=> <#MyInteractor::Context...>
 ```
 
-We can do work around `perform` invokation with the `around_perform` method:
+We can do work around `#perform` invokation with the `.around_perform` method:
 
 ```ruby
 class MyInteractor < ActiveInteractor::Base
@@ -599,7 +598,7 @@ result.start_time #=> 2019-01-01 00:00:00 UTC
 result.end_time #=> 2019-01-01 00:00:01 UTC
 ```
 
-We can do work after `perform` is invoked with the `after_perform` method:
+We can do work after `#perform` is invoked with the `.after_perform` method:
 
 ```ruby
 class MyInteractor < ActiveInteractor::Base
@@ -624,7 +623,7 @@ MyInteractor.perform
 
 ##### Rollback Callbacks
 
-We can do work before `rollback` is invoked with the `before_rollback` method:
+We can do work before `#rollback` is invoked with the `.before_rollback` method:
 
 ```ruby
 class MyInteractor < ActiveInteractor::Base
@@ -651,7 +650,7 @@ MyInteractor.perform
 #=> <#MyInteractor::Context...>
 ```
 
-We can do work around `rollback` invokation with the `around_rollback` method:
+We can do work around `#rollback` invokation with the `.around_rollback` method:
 
 ```ruby
 class MyInteractor < ActiveInteractor::Base
@@ -679,7 +678,7 @@ result.start_time #=> 2019-01-01 00:00:00 UTC
 result.end_time #=> 2019-01-01 00:00:01 UTC
 ```
 
-We can do work after `rollback` is invoked with the `after_rollback` method:
+We can do work after `#rollback` is invoked with the `.after_rollback` method:
 
 ```ruby
 class MyInteractor < ActiveInteractor::Base
@@ -708,8 +707,8 @@ MyInteractor.perform
 
 ##### Organizer Callbacks
 
-We can do worker before `perform` is invoked on each interactor in an [Organizer](#organizers) with the
-`before_each_perform` method:
+We can do worker before `#perform` is invoked on each interactor in an [Organizer](#organizers) with the
+`.before_each_perform` method:
 
 ```ruby
 class MyInteractor1 < ActiveInteractor::Base
@@ -744,8 +743,8 @@ MyOrganizer.perform
 #=> <MyOrganizer::Context...>
 ```
 
-We can do worker around `perform` is invokation on each interactor in an [Organizer](#organizers) with the
-`around_each_perform` method:
+We can do worker around `#perform` invokation on each interactor in an [Organizer](#organizers) with the
+`.around_each_perform` method:
 
 ```ruby
  class MyInteractor1 < ActiveInteractor::Base
@@ -786,8 +785,8 @@ MyOrganizer.perform
 #=> <MyOrganizer::Context...>
 ```
 
-We can do worker after `perform` is invoked on each interactor in an [Organizer](#organizers) with the
-`after_each_perform` method:
+We can do worker after `#perform` is invoked on each interactor in an [Organizer](#organizers) with the
+`.after_each_perform` method:
 
 ```ruby
 class MyInteractor1 < ActiveInteractor::Base
