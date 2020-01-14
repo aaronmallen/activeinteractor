@@ -23,10 +23,10 @@ module ActiveInteractor
       #  MyInteractor.perform(name: 'Aaron')
       #  #=> <#MyInteractor::Context name='Aaron'>
       # @param context [Hash|Context::Base] attributes to assign to the interactor context
-      # @param options [PerformOptions|Hash] execution options for the interactor perform step
+      # @param options [Hash] execution options for the interactor perform step
       # @return [Context::Base] an instance of context.
-      def perform(context = {}, options = PerformOptions.new)
-        new(context).execute_perform(options)
+      def perform(context = {}, _options = {})
+        new(context).execute_perform
       end
 
       # Run an interactor context. The {.perform!} method behaves identically to
@@ -37,11 +37,11 @@ module ActiveInteractor
       #  MyInteractor.perform!(name: 'Aaron')
       #  #=> <#MyInteractor::Context name='Aaron'>
       # @param context [Hash|Context::Base] attributes to assign to the interactor context
-      # @param options [PerformOptions|Hash] execution options for the interactor perform step
+      # @param options [Hash] execution options for the interactor perform step
       # @raise [Error::ContextFailure] if the context fails.
       # @return [Context::Base] an instance of context.
-      def perform!(context = {}, options = PerformOptions.new)
-        new(context).execute_perform!(options)
+      def perform!(context = {}, _options = {})
+        new(context).execute_perform!
       end
     end
 
