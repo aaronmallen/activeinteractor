@@ -232,9 +232,16 @@ module ActiveInteractor
 
     private
 
+    def execute_interactor(interface, fail_on_error = false, perform_options = {})
+      interface.perform(self, context, fail_on_error, perform_options)
+    end
+
     def execute_interactor_with_callbacks(interface, fail_on_error = false, perform_options = {})
+      args = [interface, fail_on_error, perform_options]
+      return execute_interactor(*args) if options.skip_each_perform_callbacks
+
       run_callbacks :each_perform do
-        interface.perform(self, context, fail_on_error, perform_options)
+        execute_interactor(*args)
       end
     end
 

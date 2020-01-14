@@ -114,6 +114,22 @@ RSpec.describe ActiveInteractor::Organizer do
         subject
       end
 
+      context 'with options :skip_each_perform_callbacks eq to true' do
+        subject { interactor_class.perform({}, skip_each_perform_callbacks: true) }
+
+        it { is_expected.to be_a interactor_class.context_class }
+        it 'is expected to invoke #perform on both interactors' do
+          expect_any_instance_of(interactor1).to receive(:perform)
+          expect_any_instance_of(interactor2).to receive(:perform)
+          subject
+        end
+        it 'is expected not to invoke #run_callbacks with :each_perform' do
+          expect_any_instance_of(interactor_class).not_to receive(:run_callbacks)
+            .with(:each_perform)
+          subject
+        end
+      end
+
       context 'when the first interactor context fails' do
         let!(:interactor1) do
           build_interactor('TestInteractor1') do

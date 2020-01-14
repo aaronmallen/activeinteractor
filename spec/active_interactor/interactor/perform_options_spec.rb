@@ -5,6 +5,7 @@ require 'spec_helper'
 RSpec.describe ActiveInteractor::Interactor::PerformOptions do
   subject { described_class.new }
 
+  it { is_expected.to respond_to :skip_each_perform_callbacks }
   it { is_expected.to respond_to :skip_perform_callbacks }
   it { is_expected.to respond_to :skip_rollback }
   it { is_expected.to respond_to :skip_rollback_callbacks }
@@ -13,6 +14,7 @@ RSpec.describe ActiveInteractor::Interactor::PerformOptions do
   it { is_expected.to respond_to :validate_on_called }
 
   describe 'defaults' do
+    it { is_expected.to have_attributes(skip_each_perform_callbacks: false) }
     it { is_expected.to have_attributes(skip_perform_callbacks: false) }
     it { is_expected.to have_attributes(skip_rollback: false) }
     it { is_expected.to have_attributes(skip_rollback_callbacks: false) }

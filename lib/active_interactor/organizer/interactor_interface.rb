@@ -38,8 +38,8 @@ module ActiveInteractor
       #  method if conditions are met.
       # @param target [Class] an instance of {Organizer}
       # @param context [Context::Base] the organizer's {Context::Base context} instance
-      # @param fail_on_error [Boolean] if `true` {Interactor::Worker#perform! #perform!}
-      #  will be invoked on the interactor. If `false` {Interactor::Worker#perform #perform}
+      # @param fail_on_error [Boolean] if `true` {Interactor::ClassMethods#perform! .perform!}
+      #  will be invoked on the interactor. If `false` {Interactor::ClassMethods#perform .perform}
       #  will be invokded on the interactor.
       # @param perform_options [Hash{Symbol=>*}] options for perform
       # @return [Context::Base|nil] an instance of {Context::Base} if an interactor's
