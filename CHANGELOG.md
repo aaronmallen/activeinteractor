@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [v1.0.0-beta.4] - 2020-01-14
+
+### Added
+
+- [#114] `ActiveInteractor::Organizer::InteractorInterface`
+- [#114] `ActiveInteractor::Organizer::InteractorInterfaceCollection`
+- [#115] `ActiveInteractor::Interactor#options`
+- [#115] `ActiveInteractor::Interactor#with_options`
+- [#115] `ActiveInteractor::Interactor::PerformOptions#skip_each_perform_callbacks`
+
+### Changed
+
+- [#115] `ActiveInteractor::Interactor::Worker#execute_perform` and `#execute_perform!` no longer accept arguments,
+   use `ActiveInteractor::Interactor#with_options` instead.
+- [#115] `ActiveInteractor::Organizer` can now skip `each_perform` callbacks with
+  the option `skip_each_perform_callbacks`
+
+### Removed
+
+- [#115] `ActiveInteractor::Interactor#execute_rollback`
+- [#115] `ActiveInteractor::Interactor::Worker#run_callbacks`
+
 ## [v1.0.0-beta.3] - 2020-01-12
 
 ### Added
@@ -147,7 +169,8 @@ and this project adheres to [Semantic Versioning].
 
 <!-- versions -->
 
-[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.3...HEAD
+[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.4...HEAD
+[v1.0.0-beta.4]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.3...v1.0.0-beta.4
 [v1.0.0-beta.3]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.2...v1.0.0-beta.3
 [v1.0.0-beta.2]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.1...v1.0.0-beta.2
 [v1.0.0-beta.1]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.7...v1.0.0-beta.1
@@ -181,3 +204,5 @@ and this project adheres to [Semantic Versioning].
 [#105]: https://github.com/aaronmallen/activeinteractor/pull/105
 [#109]: https://github.com/aaronmallen/activeinteractor/pull/109
 [#110]: https://github.com/aaronmallen/activeinteractor/pull/110
+[#114]:https://github.com/aaronmallen/activeinteractor/pull/114
+[#115]: https://github.com/aaronmallen/activeinteractor/pull/115

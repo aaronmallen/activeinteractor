@@ -11,6 +11,9 @@
 
 Ruby interactors with [ActiveModel::Validations] based on the [interactor][collective_idea_interactors] gem.
 
+**ActiveInteractor v1.0.0 is currently in beta.  For documentation on the current stable version please
+see [v0.1.7](https://github.com/aaronmallen/activeinteractor/tree/0-1-stable)**
+
 <!-- TOC -->
 
 * [Getting Started](#getting-started)
@@ -26,7 +29,8 @@ Ruby interactors with [ActiveModel::Validations] based on the [interactor][colle
     * [Kinds of Interactors](#kinds-of-interactors)
       * [Interactors](#interactors)
       * [Organizers](#organizers)
-      * [Parallel Organizers](#parallel-organizers)
+        * [Organizing Interactors Conditionally](#organizing-interactors-conditionally)
+        * [Running Interactors In Parallel](#running-interactors-in-parallel)
     * [Rollback](#rollback)
     * [Callbacks](#callbacks)
       * [Validation Callbacks](#validation-callbacks)
@@ -46,7 +50,7 @@ Ruby interactors with [ActiveModel::Validations] based on the [interactor][colle
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'activeinteractor'
+gem 'activeinteractor', '~> 1.0.0.beta.3'
 ```
 
 And then execute:
@@ -58,7 +62,7 @@ bundle
 Or install it yourself as:
 
 ```bash
-gem install activeinteractor
+gem install activeinteractor --pre
 ```
 
 ## What is an Interactor
@@ -422,7 +426,27 @@ end
 The organizer passes its context to the interactors that it organizes, one at a time and in order. Each interactor may
 change that context before it's passed along to the next interactor.
 
-##### Parallel Organizers
+###### Organizing Interactors Conditionally
+
+We can also add conditional statements to our organizer by passing a block to the `#organize` method:
+
+```ruby
+class PlaceOrder < ActiveInteractor::Organizer
+  organize do
+    add :create_order, if :user_registered?
+    add :charge_card, if: -> { context.order_number }
+    add :send_thank_you, if: -> { context.order_number }
+  end
+
+  private
+
+  def user_registered?
+    context.user&.registered?
+  end
+end
+```
+
+###### Running Interactors In Parallel
 
 Organizers can be told to run their interactors in parallel with the `#perform_in_parallel` class method.  This
 will run each interactor in parallel with one and other only passing the original context to each organizer.

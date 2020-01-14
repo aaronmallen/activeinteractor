@@ -5,6 +5,8 @@ module ActiveInteractor
     # Options object for interactor perform
     # @author Aaron Allen <hello@aaronmallen.me>
     # @since 1.0.0
+    # @!attribute [rw] skip_each_perform_callbacks
+    #   @return [Boolean] whether or not to skip :each_perform callbacks for an {Organizer}
     # @!attribute [rw] skip_perform_callbacks
     #  @return [Boolean] whether or not to skip :perform callbacks
     # @!attribute [rw] skip_rollback
@@ -19,27 +21,9 @@ module ActiveInteractor
     # @!attribute [rw] validate_on_called
     #  @return [Boolean] whether or not to run validation on :called
     class PerformOptions
-      # Default options for interactor perform
-      # @return [Hash{Symbol=>*}] the default options
-      DEFAULTS = {
-        skip_perform_callbacks: false,
-        skip_rollback: false,
-        skip_rollback_callbacks: false,
-        validate: true,
-        validate_on_calling: true,
-        validate_on_called: true
-      }.freeze
-
-      attr_accessor :skip_perform_callbacks, :skip_rollback, :skip_rollback_callbacks,
-                    :validate, :validate_on_calling, :validate_on_called
-
-      # @param options [Hash] the attributes for the {PerformOptions}
-      # @return [PerformOptions] a new instance of {PerformOptions}
-      def initialize(options = {})
-        DEFAULTS.dup.merge(options).each do |key, value|
-          instance_variable_set("@#{key}", value)
-        end
-      end
+      include ActiveInteractor::Configurable
+      defaults skip_each_perform_callbacks: false, skip_perform_callbacks: false, skip_rollback: false,
+               skip_rollback_callbacks: false, validate: true, validate_on_calling: true, validate_on_called: true
     end
   end
 end

@@ -1,16 +1,14 @@
 # frozen_string_literal: true
 
 require 'active_support/core_ext/class/attribute'
-require 'active_support/core_ext/string/inflections'
+
+require 'active_interactor/organizer/interactor_interface_collection'
 
 module ActiveInteractor
   # A base Organizer class.  All organizers should inherit from
   #  {Organizer}.
   # @author Aaron Allen <hello@aaronmallen.me>
   # @since 0.0.1
-  # @!attribute [r] organized
-  #  @!scope class
-  #  @return [Array<Base>] the organized interactors
   # @!attribute [r] parallel
   #  @since 1.0.0
   #  @!scope class
@@ -36,7 +34,6 @@ module ActiveInteractor
   #  MyOrganizer.perform
   #  #=> <MyOrganizer::Context interactor1=true interactor2=true>
   class Organizer < Base
-    class_attribute :organized, instance_writer: false, default: []
     class_attribute :parallel, instance_writer: false, default: false
     define_callbacks :each_perform
 
@@ -83,7 +80,6 @@ module ActiveInteractor
 
     # Define a callback to call around each organized interactor's
     #  {Base.perform} has been invokation
-    #
     # @example
     #  class MyInteractor1 < ActiveInteractor::Base
     #    before_perform :print_name
@@ -129,7 +125,6 @@ module ActiveInteractor
 
     # Define a callback to call before each organized interactor's
     #  {Base.perform} has been invoked
-    #
     # @example
     #  class MyInteractor1 < ActiveInteractor::Base
     #    before_perform :print_name
@@ -172,21 +167,50 @@ module ActiveInteractor
     # Declare Interactors to be invoked as part of the
     #  organizer's invocation. These interactors are invoked in
     #  the order in which they are declared
-    #
-    # @example
-    #   class MyFirstOrganizer < ActiveInteractor::Organizer
-    #     organize InteractorOne, InteractorTwo
+    # @example Basic interactor organization
+    #   class MyOrganizer < ActiveInteractor::Organizer
+    #     organize :interactor_one, :interactor_two
     #   end
-    #
-    #   class MySecondOrganizer < ActiveInteractor::Organizer
-    #     organize [InteractorThree, InteractorFour]
+    # @example Conditional interactor organization with block
+    #   class MyOrganizer < ActiveInteractor::Organizer
+    #     organize do
+    #       add :interactor_one
+    #       add :interactor_two, if: -> { context.valid? }
+    #     end
     #   end
+    # @example Conditional interactor organization with method
+    #   class MyOrganizer < ActiveInteractor::Organizer
+    #     organize do
+    #       add :interactor_one
+    #       add :interactor_two, unless: :invalid_context?
+    #     end
     #
-    # @param interactors [Array<Base>] the interactors to call
-    def self.organize(*interactors)
-      self.organized = interactors.flatten.map do |interactor|
-        interactor.to_s.classify.safe_constantize
-      end.compact
+    #     private
+    #
+    #     def invalid_context?
+    #       !context.valid?
+    #     end
+    #   end
+    # @example Interactor organization with perform options
+    #   class MyOrganizer < ActiveInteractor::Organizer
+    #     organize do
+    #       add :interactor_one, validate: false
+    #       add :interactor_two, skip_perform_callbacks: true
+    #     end
+    #   end
+    # @param interactors [Array<Base|Symbol|String>] the interactors to call
+    # @yield [.organized] if block given
+    # @return [InteractorInterfaceCollection] an instance of {InteractorInterfaceCollection}
+    def self.organize(*interactors, &block)
+      organized.concat(interactors) if interactors
+      organized.instance_eval(&block) if block
+      organized
+    end
+
+    # Organized interactors
+    # @return [InteractorInterfaceCollection] an instance of {InteractorInterfaceCollection}
+    def self.organized
+      @organized ||= InteractorInterfaceCollection.new
     end
 
     # Run organized interactors in parallel
@@ -196,7 +220,7 @@ module ActiveInteractor
     end
 
     # Invoke the organized interactors. An organizer is
-    #  expected not to define its own {Base#perform} method
+    #  expected not to define its own {Interactor#perform #perform} method
     #  in favor of this default implementation.
     def perform
       if self.class.parallel
@@ -208,11 +232,16 @@ module ActiveInteractor
 
     private
 
-    def execute_interactor_with_callbacks(interactor, fail_on_error = false, execute_options = {})
+    def execute_interactor(interface, fail_on_error = false, perform_options = {})
+      interface.perform(self, context, fail_on_error, perform_options)
+    end
+
+    def execute_interactor_with_callbacks(interface, fail_on_error = false, perform_options = {})
+      args = [interface, fail_on_error, perform_options]
+      return execute_interactor(*args) if options.skip_each_perform_callbacks
+
       run_callbacks :each_perform do
-        instance = interactor.new(context)
-        method = fail_on_error ? :execute_perform! : :execute_perform
-        instance.send(method, execute_options)
+        execute_interactor(*args)
       end
     end
 
@@ -222,16 +251,17 @@ module ActiveInteractor
     end
 
     def perform_in_order
-      self.class.organized.each do |interactor|
-        context.merge!(execute_interactor_with_callbacks(interactor, true))
+      self.class.organized.each do |interface|
+        result = execute_interactor_with_callbacks(interface, true)
+        context.merge!(result) if result
       end
     rescue Error::ContextFailure => e
       context.merge!(e.context)
     end
 
     def perform_in_parallel
-      results = self.class.organized.map do |interactor|
-        Thread.new { execute_interactor_with_callbacks(interactor, false, skip_rollback: true) }
+      results = self.class.organized.map do |interface|
+        Thread.new { execute_interactor_with_callbacks(interface, false, skip_rollback: true) }
       end
       merge_contexts(results.map(&:value))
     end

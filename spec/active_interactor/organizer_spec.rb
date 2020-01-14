@@ -51,58 +51,46 @@ RSpec.describe ActiveInteractor::Organizer do
   end
 
   describe '.organize' do
-    subject { interactor_class }
     context 'with two existing interactors' do
       let!(:interactor1) { build_interactor('TestInteractor1') }
       let!(:interactor2) { build_interactor('TestInteractor2') }
 
-      context 'when interactors are passed as contants' do
-        let(:interactor_class) do
-          build_organizer do
-            organize TestInteractor1, TestInteractor2
-          end
-        end
-
-        it { is_expected.to have_attributes(organized: [TestInteractor1, TestInteractor2]) }
-      end
-
-      context 'when interactors are passed as symbols' do
-        let(:interactor_class) do
+      context 'when interactors are passed as args' do
+        let(:organizer) do
           build_organizer do
             organize :test_interactor_1, :test_interactor_2
           end
         end
 
-        it { is_expected.to have_attributes(organized: [TestInteractor1, TestInteractor2]) }
+        describe '.organized' do
+          subject { organizer.organized }
 
-        context 'having a non existance interactor' do
-          let(:interactor_class) do
-            build_organizer do
-              organize :test_interactor_1, :interactor_that_doesnt_exist, :test_interactor_2
-            end
+          it { expect(subject.collection).to all(be_a ActiveInteractor::Organizer::InteractorInterface) }
+          it 'is expected to organize the approriate interactors' do
+            expect(subject.collection.first.interactor_class).to eq TestInteractor1
+            expect(subject.collection.last.interactor_class).to eq TestInteractor2
           end
-
-          it { is_expected.to have_attributes(organized: [TestInteractor1, TestInteractor2]) }
         end
       end
 
-      context 'when interactors are passed as strings' do
-        let(:interactor_class) do
+      context 'when a block is passed' do
+        let(:organizer) do
           build_organizer do
-            organize 'TestInteractor1', 'TestInteractor2'
+            organize do
+              add :test_interactor_1
+              add :test_interactor_2
+            end
           end
         end
 
-        it { is_expected.to have_attributes(organized: [TestInteractor1, TestInteractor2]) }
+        describe '.organized' do
+          subject { organizer.organized }
 
-        context 'having a non existance interactor' do
-          let(:interactor_class) do
-            build_organizer do
-              organize 'TestInteractor1', 'InteractorThatDoesntExist', 'TestInteractor2'
-            end
+          it { expect(subject.collection).to all(be_a ActiveInteractor::Organizer::InteractorInterface) }
+          it 'is expected to organize the approriate interactors' do
+            expect(subject.collection.first.interactor_class).to eq TestInteractor1
+            expect(subject.collection.last.interactor_class).to eq TestInteractor2
           end
-
-          it { is_expected.to have_attributes(organized: [TestInteractor1, TestInteractor2]) }
         end
       end
     end
@@ -124,6 +112,22 @@ RSpec.describe ActiveInteractor::Organizer do
         expect_any_instance_of(interactor1).to receive(:perform)
         expect_any_instance_of(interactor2).to receive(:perform)
         subject
+      end
+
+      context 'with options :skip_each_perform_callbacks eq to true' do
+        subject { interactor_class.perform({}, skip_each_perform_callbacks: true) }
+
+        it { is_expected.to be_a interactor_class.context_class }
+        it 'is expected to invoke #perform on both interactors' do
+          expect_any_instance_of(interactor1).to receive(:perform)
+          expect_any_instance_of(interactor2).to receive(:perform)
+          subject
+        end
+        it 'is expected not to invoke #run_callbacks with :each_perform' do
+          expect_any_instance_of(interactor_class).not_to receive(:run_callbacks)
+            .with(:each_perform)
+          subject
+        end
       end
 
       context 'when the first interactor context fails' do

@@ -8,6 +8,72 @@ RSpec.describe ActiveInteractor::Interactor::Worker do
     before { build_interactor }
     let(:interactor) { TestInteractor.new }
 
+    RSpec.shared_examples 'an interactor with options' do
+      context 'when interactor has options :skip_perform_callbacks eq to true' do
+        let(:interactor) { TestInteractor.new.with_options(skip_perform_callbacks: true) }
+
+        it 'is expected not to invoke #run_callbacks with :perform' do
+          allow_any_instance_of(TestInteractor).to receive(:run_callbacks)
+            .with(:validation).and_call_original
+          expect_any_instance_of(TestInteractor).not_to receive(:run_callbacks)
+            .with(:perform)
+          subject
+        end
+      end
+
+      context 'when interactor has options :validate eq to false' do
+        let(:interactor) { TestInteractor.new.with_options(validate: false) }
+
+        it 'is expected not to invoke #run_callbacks with :validation' do
+          expect_any_instance_of(TestInteractor).not_to receive(:run_callbacks)
+            .with(:validation)
+          subject
+        end
+      end
+
+      context 'when interactor has options :validate_on_calling eq to false' do
+        let(:interactor) { TestInteractor.new.with_options(validate_on_calling: false) }
+
+        before do
+          allow_any_instance_of(TestInteractor).to receive(:context_valid?)
+            .with(:called).and_return(true)
+        end
+
+        it 'is expected not to invoke #context_valid? with :calling' do
+          expect_any_instance_of(TestInteractor).not_to receive(:context_valid?)
+            .with(:calling)
+          subject
+        end
+
+        it 'is expected to invoke #context_valid? with :called' do
+          expect_any_instance_of(TestInteractor).to receive(:context_valid?)
+            .with(:called)
+          subject
+        end
+      end
+
+      context 'when interactor has options :validate_on_called eq to false' do
+        let(:interactor) { TestInteractor.new.with_options(validate_on_called: false) }
+
+        before do
+          allow_any_instance_of(TestInteractor).to receive(:context_valid?)
+            .with(:calling).and_return(true)
+        end
+
+        it 'is expected to invoke #context_valid? with :calling' do
+          expect_any_instance_of(TestInteractor).to receive(:context_valid?)
+            .with(:calling)
+          subject
+        end
+
+        it 'is expected not to invoke #context_valid? with :called' do
+          expect_any_instance_of(TestInteractor).not_to receive(:context_valid?)
+            .with(:called)
+          subject
+        end
+      end
+    end
+
     describe '#execute_perform' do
       subject { described_class.new(interactor).execute_perform }
 
@@ -22,6 +88,8 @@ RSpec.describe ActiveInteractor::Interactor::Worker do
         it { expect { subject }.not_to raise_error }
         it { is_expected.to be_an TestInteractor.context_class }
       end
+
+      include_examples 'an interactor with options'
     end
 
     describe '#execute_perform!' do
@@ -40,23 +108,6 @@ RSpec.describe ActiveInteractor::Interactor::Worker do
         subject
       end
 
-      context 'with options :skip_perform_callbacks eq to true' do
-        subject { described_class.new(interactor).execute_perform!(skip_perform_callbacks: true) }
-
-        it 'is expected not to run perform callbacks on interactor' do
-          allow_any_instance_of(TestInteractor).to receive(:run_callbacks)
-            .with(:validation).and_call_original
-          expect_any_instance_of(TestInteractor).not_to receive(:run_callbacks)
-            .with(:perform)
-          subject
-        end
-
-        it 'calls #perform on interactor instance' do
-          expect_any_instance_of(TestInteractor).to receive(:perform)
-          subject
-        end
-      end
-
       context 'when interactor context is invalid on :calling' do
         before do
           allow_any_instance_of(TestInteractor.context_class).to receive(:valid?)
@@ -71,33 +122,6 @@ RSpec.describe ActiveInteractor::Interactor::Worker do
         it 'rollsback the interactor context' do
           expect_any_instance_of(TestInteractor).to receive(:context_rollback!)
           expect { subject }.to raise_error(ActiveInteractor::Error::ContextFailure)
-        end
-
-        context 'with options :validate eq to false' do
-          subject { described_class.new(interactor).execute_perform!(validate: false) }
-
-          it { expect { subject }.not_to raise_error }
-          it 'is expected not to run validation callbacks on interactor' do
-            expect_any_instance_of(TestInteractor).not_to receive(:run_callbacks)
-              .with(:validation)
-            subject
-          end
-        end
-
-        context 'with options :validate_on_calling eq to false' do
-          subject { described_class.new(interactor).execute_perform!(validate_on_calling: false) }
-
-          it { expect { subject }.not_to raise_error }
-          it 'is expected not to call valid? with :calling' do
-            expect_any_instance_of(TestInteractor.context_class).not_to receive(:valid?)
-              .with(:calling)
-            subject
-          end
-          it 'is expected to call valid? with :called' do
-            expect_any_instance_of(TestInteractor.context_class).to receive(:valid?)
-              .with(:called)
-            subject
-          end
         end
       end
 
@@ -116,34 +140,9 @@ RSpec.describe ActiveInteractor::Interactor::Worker do
           expect_any_instance_of(TestInteractor).to receive(:context_rollback!)
           expect { subject }.to raise_error(ActiveInteractor::Error::ContextFailure)
         end
-
-        context 'with options :validate eq to false' do
-          subject { described_class.new(interactor).execute_perform!(validate: false) }
-
-          it { expect { subject }.not_to raise_error }
-          it 'is expected not to run validation callbacks on interactor' do
-            expect_any_instance_of(TestInteractor).not_to receive(:run_callbacks)
-              .with(:validation)
-            subject
-          end
-        end
-
-        context 'with options :validate_on_called eq to false' do
-          subject { described_class.new(interactor).execute_perform!(validate_on_called: false) }
-
-          it { expect { subject }.not_to raise_error }
-          it 'is expected to call valid? with :calling' do
-            expect_any_instance_of(TestInteractor.context_class).to receive(:valid?)
-              .with(:calling)
-            subject
-          end
-          it 'is expected not to call valid? with :called' do
-            expect_any_instance_of(TestInteractor.context_class).not_to receive(:valid?)
-              .with(:called)
-            subject
-          end
-        end
       end
+
+      include_examples 'an interactor with options'
     end
 
     describe '#execute_rollback' do
@@ -155,31 +154,31 @@ RSpec.describe ActiveInteractor::Interactor::Worker do
         subject
       end
 
-      it 'calls #context_rollback on interactor instance' do
+      it 'is expected to invoke #context_rollback on interactor instance' do
         expect_any_instance_of(TestInteractor).to receive(:context_rollback!)
         subject
       end
 
-      context 'with options :skip_rollback eq to true' do
-        subject { described_class.new(interactor).execute_rollback(skip_rollback: true) }
+      context 'when interactor has options :skip_rollback eq to true' do
+        let(:interactor) { TestInteractor.new.with_options(skip_rollback: true) }
 
-        it 'is expected not to call #context_rollback on interactor instance' do
+        it 'is expected not to invoke #context_rollback on interactor instance' do
           expect_any_instance_of(TestInteractor).not_to receive(:context_rollback!)
           subject
         end
       end
 
-      context 'with options :skip_rollback_callbacks eq to true' do
-        subject { described_class.new(interactor).execute_rollback(skip_rollback_callbacks: true) }
+      context 'when interactor has options :skip_rollback_callbacks eq to true' do
+        let(:interactor) { TestInteractor.new.with_options(skip_rollback_callbacks: true) }
+
+        it 'is expected to invoke #context_rollback on interactor instance' do
+          expect_any_instance_of(TestInteractor).to receive(:context_rollback!)
+          subject
+        end
 
         it 'is expected not to run rollback callbacks on interactor' do
           expect_any_instance_of(TestInteractor).not_to receive(:run_callbacks)
             .with(:rollback)
-          subject
-        end
-
-        it 'calls #context_rollback on interactor instance' do
-          expect_any_instance_of(TestInteractor).to receive(:context_rollback!)
           subject
         end
       end
