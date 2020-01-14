@@ -48,6 +48,7 @@ module ActiveInteractor
     end
 
     # Options for invokation of {#perform}
+    # @since 1.0.0
     # @return [PerformOptions] the options
     def options
       @options ||= PerformOptions.new
@@ -64,6 +65,7 @@ module ActiveInteractor
     def rollback; end
 
     # Set options for invokation of {#perform}
+    # @since 1.0.0
     # @param options [PerformOptions|Hash] the perform options
     # @return [Base] the instance of {Base}
     def with_options(options)
