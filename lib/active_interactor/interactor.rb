@@ -11,7 +11,7 @@ module ActiveInteractor
         extend ClassMethods
         include Callbacks
         include Context
-        delegate :execute_perform, :execute_perform!, :execute_rollback, to: :worker
+        delegate :execute_perform, :execute_perform!, to: :worker
       end
     end
 

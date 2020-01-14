@@ -38,8 +38,8 @@ module ActiveInteractor
       #  method if conditions are met.
       # @param target [Class] an instance of {Organizer}
       # @param context [Context::Base] the organizer's {Context::Base context} instance
-      # @param fail_on_error [Boolean] if `true` {Interactor::Worker#execute_perform! #execute_perform!}
-      #  will be invoked on the interactor. If `false` {Interactor::Worker#execute_perform #execute_perform}
+      # @param fail_on_error [Boolean] if `true` {Interactor::Worker#perform! #perform!}
+      #  will be invoked on the interactor. If `false` {Interactor::Worker#perform #perform}
       #  will be invokded on the interactor.
       # @param perform_options [Hash{Symbol=>*}] additional options to be merged into {#perform_options}
       # @return [Context::Base|nil] an instance of {Context::Base} if an interactor's
@@ -48,9 +48,9 @@ module ActiveInteractor
         return if check_conditionals(target, filters[:if]) == false
         return if check_conditionals(target, filters[:unless]) == true
 
-        method = fail_on_error ? :execute_perform! : :execute_perform
+        method = fail_on_error ? :perform! : :perform
         options = self.perform_options.merge(perform_options)
-        interactor_class.new(context).send(method, options)
+        interactor_class.send(method, context, options)
       end
 
       private
