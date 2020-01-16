@@ -36,7 +36,7 @@ module Interactor
       end
 
       def skip_context?
-        options[:skip_context] == true || ActiveInteractor.config.rails.generate_context_classes == false
+        options[:skip_context] == true || ActiveInteractor::Rails.config.generate_context_classes == false
       end
     end
   end

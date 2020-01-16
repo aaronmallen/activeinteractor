@@ -2,18 +2,16 @@
 
 require 'active_interactor'
 
-ActiveInteractor.configure do |config|
-  # set ActiveInteractor.logger to Rails.logger
-  config.logger = ::Rails.logger
+ActiveInteractor::Rails.configure do |config|
 
   # set the default directory for interactors
 <%- if directory != 'interactors' -%>
-  config.rails.directory = '<%= directory %>'
+  config.directory = '<%= directory %>'
 <%- else -%>
-  # config.rails.directory = 'interactors'
+  # config.directory = 'interactors'
 <%- end -%>
 
   # do not automatically generate context classes
   # when interactors are generated
-  # config.rails.generate_context_classes = false
+  # config.generate_context_classes = false
 end

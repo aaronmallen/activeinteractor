@@ -36,4 +36,4 @@ module ActiveInteractor
   end
 end
 
-require 'active_interactor/railtie' if defined?(::Rails)
+require 'active_interactor/rails' if defined?(::Rails)

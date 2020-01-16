@@ -13,23 +13,6 @@ module ActiveInteractor
   class Config
     include Configurable
     defaults logger: Logger.new(STDOUT)
-
-    # @!method initialize(options = {})
-    # @param options [Hash] the options for the configuration
-    # @option options [Logger] :logger the configuration logger instance
-    # @return [Config] a new instance of {Config}
-
-    # The rails configuration object
-    # @return [Rails::Config|nil] an instance of {Rails::Config} if `Rails` is
-    #  defined or `nil`.
-    def rails
-      @rails ||= begin
-        return unless defined?(::Rails)
-
-        require 'active_interactor/rails/config'
-        Rails::Config.new
-      end
-    end
   end
 
   # The ActiveInteractor configuration
