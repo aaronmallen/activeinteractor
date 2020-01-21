@@ -6,12 +6,11 @@ ActiveInteractor::Rails.configure do |config|
   # ORM configuration
   # Load and configure the ORM. Supports :active_record (default)
   # Other ORMs may be available as additional gems.
-<%- if options[:orm] %>
+<%- if options[:orm] -%>
   require 'active_interactor/rails/orm/<%= options[:orm] %>'
 <%- else -%>
-# require 'active_interactor/rails/orm/<MY_ORM>'
+  # require 'active_interactor/rails/orm/<MY_ORM>'
 <%- end -%>
-
 
   # set the default directory for interactors
 <%- if directory != 'interactors' -%>
@@ -19,7 +18,6 @@ ActiveInteractor::Rails.configure do |config|
 <%- else -%>
   # config.directory = 'interactors'
 <%- end -%>
-
 
   # do not automatically generate context classes
   # when interactors are generated
