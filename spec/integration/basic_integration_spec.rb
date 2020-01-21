@@ -67,7 +67,7 @@ RSpec.describe 'Basic Integration', type: :integration do
       it { expect { subject }.not_to raise_error }
       it { is_expected.to be_a interactor_class.context_class }
       it { is_expected.to be_failure }
-      it 'is expected to #rollback' do
+      it 'is expected to receive #rollback' do
         expect_any_instance_of(interactor_class).to receive(:rollback)
         subject
       end
@@ -158,12 +158,12 @@ RSpec.describe 'Basic Integration', type: :integration do
       it { expect { subject }.not_to raise_error }
       it { is_expected.to be_a interactor_class.context_class }
       it { is_expected.to be_failure }
-      it 'is expected to rollback the first interactor' do
+      it 'is expected to receive #rollback on the first interactor' do
         expect_any_instance_of(test_interactor_1).to receive(:rollback)
           .and_call_original
         subject
       end
-      it 'is expected not to call #perform! on the second interactor' do
+      it 'is expected not to receive #perform! on the second interactor' do
         expect_any_instance_of(test_interactor_2).not_to receive(:perform!)
         subject
       end
@@ -204,7 +204,7 @@ RSpec.describe 'Basic Integration', type: :integration do
       it { expect { subject }.not_to raise_error }
       it { is_expected.to be_a interactor_class.context_class }
       it { is_expected.to be_failure }
-      it 'is expected to rollback all interactors' do
+      it 'is expected to receive #rollback on all interactors' do
         expect_any_instance_of(test_interactor_2).to receive(:rollback)
         expect_any_instance_of(test_interactor_1).to receive(:rollback)
         subject
@@ -285,7 +285,7 @@ RSpec.describe 'Basic Integration', type: :integration do
 
           it { is_expected.to be_a interactor_class.context_class }
           it { is_expected.to be_successful }
-          it 'is expected to invoke #perform on both interactors' do
+          it 'is expected to receive #perform on both interactors' do
             expect_any_instance_of(test_interactor_1).to receive(:perform)
             expect_any_instance_of(test_interactor_2).to receive(:perform)
             subject
@@ -297,12 +297,12 @@ RSpec.describe 'Basic Integration', type: :integration do
 
           it { is_expected.to be_a interactor_class.context_class }
           it { is_expected.to be_successful }
-          it 'is expected to invoke #perform on the first interactor' do
+          it 'is expected to receive #perform on the first interactor' do
             expect_any_instance_of(test_interactor_1).to receive(:perform)
             subject
           end
 
-          it 'is expected not to invoke #perform on the first interactor' do
+          it 'is expected not to receive #perform on the first interactor' do
             expect_any_instance_of(test_interactor_2).not_to receive(:perform)
             subject
           end
@@ -313,12 +313,12 @@ RSpec.describe 'Basic Integration', type: :integration do
 
           it { is_expected.to be_a interactor_class.context_class }
           it { is_expected.to be_successful }
-          it 'is expected not to invoke #perform on the first interactor' do
+          it 'is expected not to receive #perform on the first interactor' do
             expect_any_instance_of(test_interactor_1).not_to receive(:perform)
             subject
           end
 
-          it 'is expected to invoke #perform on the first interactor' do
+          it 'is expected to receive #perform on the first interactor' do
             expect_any_instance_of(test_interactor_2).to receive(:perform)
             subject
           end
@@ -329,12 +329,12 @@ RSpec.describe 'Basic Integration', type: :integration do
 
           it { is_expected.to be_a interactor_class.context_class }
           it { is_expected.to be_successful }
-          it 'is expected not to invoke #perform on the first interactor' do
+          it 'is expected not to receive #perform on the first interactor' do
             expect_any_instance_of(test_interactor_1).not_to receive(:perform)
             subject
           end
 
-          it 'is expected not to invoke #perform on the first interactor' do
+          it 'is expected not to receive #perform on the first interactor' do
             expect_any_instance_of(test_interactor_2).not_to receive(:perform)
             subject
           end
@@ -366,12 +366,12 @@ RSpec.describe 'Basic Integration', type: :integration do
 
           it { is_expected.to be_a interactor_class.context_class }
           it { is_expected.to be_successful }
-          it 'is expected not to invoke #perform on the first interactor' do
+          it 'is expected not to receive #perform on the first interactor' do
             expect_any_instance_of(test_interactor_1).not_to receive(:perform)
             subject
           end
 
-          it 'is expected not to invoke #perform on the second interactor' do
+          it 'is expected not to receive #perform on the second interactor' do
             expect_any_instance_of(test_interactor_2).not_to receive(:perform)
             subject
           end
@@ -382,12 +382,12 @@ RSpec.describe 'Basic Integration', type: :integration do
 
           it { is_expected.to be_a interactor_class.context_class }
           it { is_expected.to be_successful }
-          it 'is expected not to invoke #perform on the first interactor' do
+          it 'is expected not to receive #perform on the first interactor' do
             expect_any_instance_of(test_interactor_1).not_to receive(:perform)
             subject
           end
 
-          it 'is expected to invoke #perform on the second interactor' do
+          it 'is expected to receive #perform on the second interactor' do
             expect_any_instance_of(test_interactor_2).to receive(:perform)
             subject
           end
@@ -398,12 +398,12 @@ RSpec.describe 'Basic Integration', type: :integration do
 
           it { is_expected.to be_a interactor_class.context_class }
           it { is_expected.to be_successful }
-          it 'is expected to invoke #perform on the first interactor' do
+          it 'is expected to receive #perform on the first interactor' do
             expect_any_instance_of(test_interactor_1).to receive(:perform)
             subject
           end
 
-          it 'is expected not to invoke #perform on the second interactor' do
+          it 'is expected not to receive #perform on the second interactor' do
             expect_any_instance_of(test_interactor_2).not_to receive(:perform)
             subject
           end
@@ -414,7 +414,7 @@ RSpec.describe 'Basic Integration', type: :integration do
 
           it { is_expected.to be_a interactor_class.context_class }
           it { is_expected.to be_successful }
-          it 'is expected to invoke #perform on both interactors' do
+          it 'is expected to receive #perform on both interactors' do
             expect_any_instance_of(test_interactor_1).to receive(:perform)
             expect_any_instance_of(test_interactor_2).to receive(:perform)
             subject
@@ -449,7 +449,7 @@ RSpec.describe 'Basic Integration', type: :integration do
 
         it { is_expected.to be_a interactor_class.context_class }
         it { is_expected.to be_successful }
-        it 'is expected to invoke #perform on both interactors' do
+        it 'is expected to receive #perform on both interactors' do
           expect_any_instance_of(test_interactor_1).to receive(:perform)
           expect_any_instance_of(test_interactor_2).to receive(:perform)
           subject
@@ -483,12 +483,12 @@ RSpec.describe 'Basic Integration', type: :integration do
 
         it { is_expected.to be_a interactor_class.context_class }
         it { is_expected.to be_successful }
-        it 'is expected not to invoke #perform on the first interactor' do
+        it 'is expected not to receive #perform on the first interactor' do
           expect_any_instance_of(test_interactor_1).not_to receive(:perform)
           subject
         end
 
-        it 'is expected to invoke #perform on the second interactor' do
+        it 'is expected to receive #perform on the second interactor' do
           expect_any_instance_of(test_interactor_2).to receive(:perform)
           subject
         end
@@ -521,12 +521,12 @@ RSpec.describe 'Basic Integration', type: :integration do
 
         it { is_expected.to be_a interactor_class.context_class }
         it { is_expected.to be_successful }
-        it 'is expected not to invoke #perform on the first interactor' do
+        it 'is expected not to receive #perform on the first interactor' do
           expect_any_instance_of(test_interactor_1).not_to receive(:perform)
           subject
         end
 
-        it 'is expected to invoke #perform on the second interactor' do
+        it 'is expected to receive #perform on the second interactor' do
           expect_any_instance_of(test_interactor_2).to receive(:perform)
           subject
         end
@@ -559,7 +559,7 @@ RSpec.describe 'Basic Integration', type: :integration do
 
         it { is_expected.to be_a interactor_class.context_class }
         it { is_expected.to be_successful }
-        it 'is expected to invoke #perform on both interactors' do
+        it 'is expected to receive #perform on both interactors' do
           expect_any_instance_of(test_interactor_1).to receive(:perform)
           expect_any_instance_of(test_interactor_2).to receive(:perform)
           subject

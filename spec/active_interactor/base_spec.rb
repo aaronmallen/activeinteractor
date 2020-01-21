@@ -23,7 +23,7 @@ RSpec.describe ActiveInteractor::Base do
       context 'when passed as a string' do
         let(:klass) { 'TestContext' }
 
-        it 'assigns the context class' do
+        it 'is expected to assign the appropriate context class' do
           subject
           expect(described_class.context_class).to eq TestContext
         end
@@ -32,7 +32,7 @@ RSpec.describe ActiveInteractor::Base do
       context 'when passed as a symbol' do
         let(:klass) { :test_context }
 
-        it 'assigns the context class' do
+        it 'is expected to assign the appropriate context class' do
           subject
           expect(described_class.context_class).to eq TestContext
         end
@@ -41,7 +41,7 @@ RSpec.describe ActiveInteractor::Base do
       context 'when passed as a constant' do
         let(:klass) { TestContext }
 
-        it 'assigns the context class' do
+        it 'is expected to assign the appropriate context class' do
           subject
           expect(described_class.context_class).to eq TestContext
         end

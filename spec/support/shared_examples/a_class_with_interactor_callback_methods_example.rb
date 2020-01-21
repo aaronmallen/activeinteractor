@@ -5,7 +5,7 @@ RSpec.shared_examples 'a class with interactor callback methods' do
     subject { interactor_class.after_context_validation(*args) }
     let(:args) { :some_method }
 
-    it 'sets after validation callback' do
+    it 'is expected to receive #set_callback with :validation, :after, :some_method, { :prepend => true }' do
       expect(interactor_class).to receive(:set_callback)
         .with(:validation, :after, :some_method, prepend: true)
         .and_return(true)
@@ -17,7 +17,7 @@ RSpec.shared_examples 'a class with interactor callback methods' do
     subject { interactor_class.after_perform(*args) }
     let(:args) { :some_method }
 
-    it 'sets after perform callback' do
+    it 'is expected to receive #set_callback with :perform, :after, :some_method' do
       expect(interactor_class).to receive(:set_callback)
         .with(:perform, :after, :some_method)
         .and_return(true)
@@ -29,7 +29,7 @@ RSpec.shared_examples 'a class with interactor callback methods' do
     subject { interactor_class.after_rollback(*args) }
     let(:args) { :some_method }
 
-    it 'sets after rollback callback' do
+    it 'is expected to receive #set_callback with :rollback, :after, :some_method' do
       expect(interactor_class).to receive(:set_callback)
         .with(:rollback, :after, :some_method)
         .and_return(true)
@@ -41,7 +41,7 @@ RSpec.shared_examples 'a class with interactor callback methods' do
     subject { interactor_class.around_perform(*args) }
     let(:args) { :some_method }
 
-    it 'sets around perform callback' do
+    it 'is expected to receive #set_callback with :perform, :around, :some_method' do
       expect(interactor_class).to receive(:set_callback)
         .with(:perform, :around, :some_method)
         .and_return(true)
@@ -53,7 +53,7 @@ RSpec.shared_examples 'a class with interactor callback methods' do
     subject { interactor_class.around_rollback(*args) }
     let(:args) { :some_method }
 
-    it 'sets around rollback callback' do
+    it 'is expected to receive #set_callback with :rollback, :around, :some_method' do
       expect(interactor_class).to receive(:set_callback)
         .with(:rollback, :around, :some_method)
         .and_return(true)
@@ -65,7 +65,7 @@ RSpec.shared_examples 'a class with interactor callback methods' do
     subject { interactor_class.before_context_validation(*args) }
     let(:args) { :some_method }
 
-    it 'sets before validation callback' do
+    it 'is expected to receive #set_callback with :validation, :before, :some_method' do
       expect(interactor_class).to receive(:set_callback)
         .with(:validation, :before, :some_method, {})
         .and_return(true)
@@ -77,7 +77,7 @@ RSpec.shared_examples 'a class with interactor callback methods' do
     subject { interactor_class.before_perform(*args) }
     let(:args) { :some_method }
 
-    it 'sets before perform callback' do
+    it 'is expected to receive #set_callback with :perform, :before, :some_method' do
       expect(interactor_class).to receive(:set_callback)
         .with(:perform, :before, :some_method)
         .and_return(true)
@@ -89,7 +89,7 @@ RSpec.shared_examples 'a class with interactor callback methods' do
     subject { interactor_class.before_rollback(*args) }
     let(:args) { :some_method }
 
-    it 'sets before rollback callback' do
+    it 'is expected to receive #set_callback with :rollback, :before, :some_method' do
       expect(interactor_class).to receive(:set_callback)
         .with(:rollback, :before, :some_method)
         .and_return(true)

@@ -43,7 +43,7 @@ begin
       end
     end
 
-    context 'after ActiveSupport.run_load_hooks has been invoked with :active_record' do
+    context 'after ActiveSupport.run_load_hooks has been received with :active_record' do
       before { ActiveSupport.run_load_hooks(:active_record, active_record_base_mock) }
 
       describe 'an ActiveRecord model class with .acts_as_context' do
@@ -81,7 +81,7 @@ begin
             subject
           end
 
-          it 'is expected to invoke super on parent class with nil attributes' do
+          it 'is expected to receive super on parent class with nil attributes' do
             expect(active_record_base_mock).to receive(:new).with(nil)
             subject
           end
@@ -101,7 +101,7 @@ begin
               subject
             end
 
-            it 'is expected to invoke super on parent class with { :foo => "foo" }' do
+            it 'is expected to receive super on parent class with { :foo => "foo" }' do
               expect(active_record_base_mock).to receive(:new).with(foo: 'foo')
               subject
             end
@@ -122,7 +122,7 @@ begin
             context 'with _rolled_back equal to true on previous instance' do
               before { previous_instance.instance_variable_set('@_rolled_back', true) }
 
-              it 'is expected to have instance_variable @_rolled_back eq to true' do
+              it 'is expected to have instance variable @_rolled_back eq to true' do
                 expect(subject.instance_variable_get('@_rolled_back')).to eq true
               end
             end
@@ -130,7 +130,7 @@ begin
             context 'with _called eq to ["foo"] on previous instance' do
               before { previous_instance.instance_variable_set('@_called', %w[foo]) }
 
-              it 'is expected to have instance_variable @_called eq to ["foo"]' do
+              it 'is expected to have instance variable @_called eq to ["foo"]' do
                 expect(subject.instance_variable_get('@_called')).to eq %w[foo]
               end
             end
@@ -156,7 +156,7 @@ begin
               context 'with _rolled_back equal to true on merging instance' do
                 before { merge_instance.instance_variable_set('@_rolled_back', true) }
 
-                it 'is expected to have instance_variable @_rolled_back eq to true' do
+                it 'is expected to have instance variable @_rolled_back eq to true' do
                   expect(subject.instance_variable_get('@_rolled_back')).to eq true
                 end
               end
@@ -180,7 +180,7 @@ begin
               context 'with _rolled_back equal to true on merging instance' do
                 before { merge_instance.instance_variable_set('@_rolled_back', true) }
 
-                it 'is expected to have instance_variable @_rolled_back eq to true' do
+                it 'is expected to have instance variable @_rolled_back eq to true' do
                   expect(subject.instance_variable_get('@_rolled_back')).to eq true
                 end
               end
@@ -253,7 +253,7 @@ begin
             it { expect { subject }.not_to raise_error }
             it { is_expected.to be_a model_mock }
             it { is_expected.to be_failure }
-            it 'is expected to #rollback' do
+            it 'is expected to receive #rollback' do
               expect_any_instance_of(interactor_class).to receive(:rollback)
               subject
             end

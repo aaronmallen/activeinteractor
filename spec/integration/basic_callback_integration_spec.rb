@@ -93,7 +93,7 @@ RSpec.describe 'Basic Callback Integration', type: :integration do
 
       it { is_expected.to be_a interactor_class.context_class }
       it { is_expected.to be_successful }
-      it 'is expected to call #test_after_perform' do
+      it 'is expected to receive #test_after_perform' do
         expect_any_instance_of(interactor_class).to receive(:test_after_perform)
         subject
       end
@@ -123,7 +123,7 @@ RSpec.describe 'Basic Callback Integration', type: :integration do
       subject { interactor_class.perform }
 
       it { is_expected.to be_a interactor_class.context_class }
-      it 'is expected to call #test_after_rollback' do
+      it 'is expected to receive #test_after_rollback' do
         expect_any_instance_of(interactor_class).to receive(:test_after_rollback)
         subject
       end
@@ -218,7 +218,7 @@ RSpec.describe 'Basic Callback Integration', type: :integration do
 
       it { is_expected.to be_a interactor_class.context_class }
       it { is_expected.to be_successful }
-      it 'is expected to call #test_before_perform' do
+      it 'is expected to receive #test_before_perform' do
         expect_any_instance_of(interactor_class).to receive(:test_before_perform)
         subject
       end
@@ -248,7 +248,7 @@ RSpec.describe 'Basic Callback Integration', type: :integration do
       subject { interactor_class.perform }
 
       it { is_expected.to be_a interactor_class.context_class }
-      it 'is expected to call #test_before_rollback' do
+      it 'is expected to receive #test_before_rollback' do
         expect_any_instance_of(interactor_class).to receive(:test_before_rollback)
         subject
       end
@@ -278,7 +278,7 @@ RSpec.describe 'Basic Callback Integration', type: :integration do
       subject { interactor_class.perform }
 
       it { is_expected.to be_a interactor_class.context_class }
-      it 'is expected to call #test_after_each_perform twice' do
+      it 'is expected to receive #test_after_each_perform twice' do
         expect_any_instance_of(interactor_class).to receive(:test_after_each_perform)
           .exactly(:twice)
         subject
@@ -345,7 +345,7 @@ RSpec.describe 'Basic Callback Integration', type: :integration do
       subject { interactor_class.perform }
 
       it { is_expected.to be_a interactor_class.context_class }
-      it 'is expected to call #test_before_each_perform twice' do
+      it 'is expected to receive #test_before_each_perform twice' do
         expect_any_instance_of(interactor_class).to receive(:test_before_each_perform)
           .exactly(:twice)
         subject
