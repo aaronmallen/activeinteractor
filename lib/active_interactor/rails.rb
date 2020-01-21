@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require 'active_interactor'
-require 'active_interactor/rails/active_record'
 require 'active_interactor/rails/config'
+require 'active_interactor/rails/models'
 require 'active_interactor/rails/railtie'
 
 module ActiveInteractor

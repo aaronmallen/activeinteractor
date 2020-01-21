@@ -2,18 +2,11 @@
 
 module ActiveInteractor
   module Rails
-    # ActiveRecord helper methods
+    # Model helper methods
     # @author Aaron Allen <hello@aaronmallen.me>
     # @since 1.0.0
-    module ActiveRecord
-      # Include ActiveRecord helper methods on load
-      def self.include_helpers
-        ActiveSupport.on_load(:active_record_base) do
-          extend ClassMethods
-        end
-      end
-
-      # ActiveRecord class helper methods
+    module Models
+      # Model class helper methods
       # @author Aaron Allen <hello@aaronmallen.me>
       # @since 1.0.0
       module ClassMethods
@@ -27,19 +20,21 @@ module ActiveInteractor
         end
       end
 
+      # Model instance helper methods
+      # @author Aaron Allen <hello@aaronmallen.me>
+      # @since 1.0.0
       module InstanceMethods
-        # Override ActiveRecord's initialize method to ensure
+        # Override initialize method to ensure
         #  context flags are copied to the new instance
-        # @param context [Hash|nil] attributes to assign to the class
-        # @param options [Hash|nil] options for the class
-        def initialize(context = nil, options = {})
-          copy_flags!(context) if context
-          copy_called!(context) if context
-          attributes = context.to_h if context
-          super(attributes, options)
+        # @param attributes [Hash|nil] attributes to assign to the class
+        def initialize(attributes = nil)
+          copy_flags!(attributes) if attributes
+          copy_called!(attributes) if attributes
+          attributes_as_hash = attributes_as_hash(attributes)
+          super(attributes_as_hash)
         end
 
-        # Merge an ActiveRecord::Base instance and ensure
+        # Merge an instance and ensure
         #  context flags are copied to the new instance
         # @param context [*] the instance to be merged
         # @return [*] the merged instance
@@ -49,6 +44,13 @@ module ActiveInteractor
             self[key] = value
           end
           self
+        end
+
+        private
+
+        def attributes_as_hash(attributes)
+          return attributes.to_h if attributes&.respond_to?(:to_h)
+          return attributes.attributes.to_h if attributes.respond_to?(:attributes)
         end
       end
     end
