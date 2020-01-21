@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [v1.0.0-beta.5] - 2020-01-21
+
+### Added
+
+- [#122] `ActiveInteractor::Rails::Railtie`
+- [#122] `ActiveInteractor::Rails.config`
+- [#122] `ActiveInteractor::Rails.configure`
+
+### Removed
+
+- [#122] `ActiveInteractor::Railtie` use `ActiveInteractor::Rails::Railtie` instead
+- [#122] `ActiveInteractor::Config#rails` use `ActiveInteractor::Rails.configure` instead
+
 ## [v1.0.0-beta.4] - 2020-01-14
 
 ### Added
@@ -169,7 +182,8 @@ and this project adheres to [Semantic Versioning].
 
 <!-- versions -->
 
-[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.4...HEAD
+[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.5...HEAD
+[v1.0.0-beta.5]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.4...v1.0.0-beta.5
 [v1.0.0-beta.4]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.3...v1.0.0-beta.4
 [v1.0.0-beta.3]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.2...v1.0.0-beta.3
 [v1.0.0-beta.2]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.1...v1.0.0-beta.2
@@ -206,3 +220,4 @@ and this project adheres to [Semantic Versioning].
 [#110]: https://github.com/aaronmallen/activeinteractor/pull/110
 [#114]:https://github.com/aaronmallen/activeinteractor/pull/114
 [#115]: https://github.com/aaronmallen/activeinteractor/pull/115
+[#122]: https://github.com/aaronmallen/activeinteractor/pull/122
