@@ -14,6 +14,10 @@ module ActiveInteractor
 
       config.eager_load_namespaces << ActiveInteractor
 
+      initializer 'active_interactor.active_record_helpers' do
+        ActiveInteractor::Rails::ActiveRecord.include_helpers
+      end
+
       config.to_prepare do
         ActiveInteractor.configure do |c|
           c.logger = ::Rails.logger

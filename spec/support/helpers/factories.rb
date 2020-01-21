@@ -13,7 +13,7 @@ module Spec
     module Factories
       def build_class(class_name, parent_class = nil, &block)
         Object.send(:remove_const, class_name.to_sym) if Object.const_defined?(class_name)
-        klass = Object.const_set(class_name, Class.new(parent_class))
+        klass = create_class(class_name, parent_class)
         klass.class_eval(&block) if block
         FactoryCollection.factories << klass.name.to_sym
         klass
@@ -35,6 +35,14 @@ module Spec
         FactoryCollection.factories.each do |factory|
           Object.send(:remove_const, factory) if Object.const_defined?(factory)
         end
+      end
+
+      private
+
+      def create_class(class_name, parent_class = nil)
+        return Object.const_set(class_name, Class.new) unless parent_class
+
+        Object.const_set(class_name, Class.new(parent_class))
       end
     end
   end
