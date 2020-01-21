@@ -27,11 +27,11 @@ module ActiveInteractor
         # Override initialize method to ensure
         #  context flags are copied to the new instance
         # @param attributes [Hash|nil] attributes to assign to the class
-        # @param options [Hash|nil] options for the class
-        def initialize(attributes = nil, options = {})
+        def initialize(attributes = nil)
           copy_flags!(attributes) if attributes
           copy_called!(attributes) if attributes
-          super(attributes.to_h, options)
+          attributes_as_hash = attributes&.to_h
+          super(attributes_as_hash)
         end
 
         # Merge an instance and ensure
