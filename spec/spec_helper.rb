@@ -1,18 +1,6 @@
 # frozen_string_literal: true
 
-begin
-  require 'codacy-coverage'
-  require 'simplecov'
-
-  Codacy::Reporter.start if ENV['CODACY_PROJECT_TOKEN']
-  SimpleCov.start do
-    track_files '/lib/**/*.rb'
-    add_filter '/spec/'
-    add_filter '/lib/rails/**'
-  end
-rescue LoadError
-  puts 'Not reporting coverage...'
-end
+require_relative 'support/coverage'
 
 require 'bundler/setup'
 require 'active_interactor'
