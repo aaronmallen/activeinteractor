@@ -28,7 +28,18 @@ module ActiveInteractor
   extend ActiveSupport::Autoload
 
   autoload :Base
-  autoload :Context
+
+  # ActiveInteractor::Context classes
+  # @author Aaron Allen <hello@aaronmallen.me>
+  # @since 0.0.1
+  module Context
+    extend ActiveSupport::Autoload
+
+    autoload :Base
+    autoload :Loader
+    autoload :Status
+  end
+
   autoload :Organizer
 
   eager_autoload do
