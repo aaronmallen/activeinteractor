@@ -24,7 +24,7 @@ RSpec.describe ActiveInteractor::Organizer do
       context 'when passed as a string' do
         let(:klass) { 'TestContext' }
 
-        it 'assigns the context class' do
+        it 'is expected to assign the appropriate context class' do
           subject
           expect(described_class.context_class).to eq TestContext
         end
@@ -33,7 +33,7 @@ RSpec.describe ActiveInteractor::Organizer do
       context 'when passed as a symbol' do
         let(:klass) { :test_context }
 
-        it 'assigns the context class' do
+        it 'is expected to assign the appropriate context class' do
           subject
           expect(described_class.context_class).to eq TestContext
         end
@@ -42,7 +42,7 @@ RSpec.describe ActiveInteractor::Organizer do
       context 'when passed as a constant' do
         let(:klass) { TestContext }
 
-        it 'assigns the context class' do
+        it 'is expected to assign the appropriate context class' do
           subject
           expect(described_class.context_class).to eq TestContext
         end
@@ -108,7 +108,7 @@ RSpec.describe ActiveInteractor::Organizer do
       end
 
       it { is_expected.to be_a interactor_class.context_class }
-      it 'is expected to call #perform on both interactors' do
+      it 'is expected to receive #perform on both interactors' do
         expect_any_instance_of(interactor1).to receive(:perform)
         expect_any_instance_of(interactor2).to receive(:perform)
         subject
@@ -118,12 +118,12 @@ RSpec.describe ActiveInteractor::Organizer do
         subject { interactor_class.perform({}, skip_each_perform_callbacks: true) }
 
         it { is_expected.to be_a interactor_class.context_class }
-        it 'is expected to invoke #perform on both interactors' do
+        it 'is expected to receive #perform on both interactors' do
           expect_any_instance_of(interactor1).to receive(:perform)
           expect_any_instance_of(interactor2).to receive(:perform)
           subject
         end
-        it 'is expected not to invoke #run_callbacks with :each_perform' do
+        it 'is expected not to receive #run_callbacks with :each_perform' do
           expect_any_instance_of(interactor_class).not_to receive(:run_callbacks)
             .with(:each_perform)
           subject
@@ -142,15 +142,15 @@ RSpec.describe ActiveInteractor::Organizer do
         it { expect { subject }.not_to raise_error }
         it { is_expected.to be_failure }
         it { is_expected.to be_a interactor_class.context_class }
-        it 'is expected to call #perform on the first interactor' do
+        it 'is expected to receive #perform on the first interactor' do
           expect_any_instance_of(interactor1).to receive(:perform)
           subject
         end
-        it 'is expected to not call #perform on the second interactor' do
+        it 'is expected not to receive #perform on the second interactor' do
           expect_any_instance_of(interactor2).not_to receive(:perform)
           subject
         end
-        it 'is expected to call #rollback on the first interactor' do
+        it 'is expected to receive #rollback on the first interactor' do
           expect_any_instance_of(interactor1).to receive(:rollback)
           subject
         end
@@ -168,12 +168,12 @@ RSpec.describe ActiveInteractor::Organizer do
         it { expect { subject }.not_to raise_error }
         it { is_expected.to be_failure }
         it { is_expected.to be_a interactor_class.context_class }
-        it 'is expected to call #perform on both interactors' do
+        it 'is expected to receive #perform on both interactors' do
           expect_any_instance_of(interactor1).to receive(:perform)
           expect_any_instance_of(interactor2).to receive(:perform)
           subject
         end
-        it 'is expected to call #rollback on both interactors' do
+        it 'is expected to receive #rollback on both interactors' do
           expect_any_instance_of(interactor1).to receive(:rollback)
           expect_any_instance_of(interactor2).to receive(:rollback)
           subject
@@ -190,7 +190,7 @@ RSpec.describe ActiveInteractor::Organizer do
         end
 
         it { is_expected.to be_a interactor_class.context_class }
-        it 'is expected to call #perform on both interactors' do
+        it 'is expected to receive #perform on both interactors' do
           expect_any_instance_of(interactor1).to receive(:perform)
           expect_any_instance_of(interactor2).to receive(:perform)
           subject
@@ -208,12 +208,12 @@ RSpec.describe ActiveInteractor::Organizer do
           it { expect { subject }.not_to raise_error }
           it { is_expected.to be_failure }
           it { is_expected.to be_a interactor_class.context_class }
-          it 'is expected to call #perform on both interactors' do
+          it 'is expected to receive #perform on both interactors' do
             expect_any_instance_of(interactor1).to receive(:perform)
             expect_any_instance_of(interactor2).to receive(:perform)
             subject
           end
-          it 'is expected to call #rollback both interactors' do
+          it 'is expected to receive #rollback both interactors' do
             expect_any_instance_of(interactor1).to receive(:rollback)
             expect_any_instance_of(interactor2).to receive(:rollback)
             subject
@@ -232,12 +232,12 @@ RSpec.describe ActiveInteractor::Organizer do
           it { expect { subject }.not_to raise_error }
           it { is_expected.to be_failure }
           it { is_expected.to be_a interactor_class.context_class }
-          it 'is expected to call #perform on both interactors' do
+          it 'is expected to receive #perform on both interactors' do
             expect_any_instance_of(interactor1).to receive(:perform)
             expect_any_instance_of(interactor2).to receive(:perform)
             subject
           end
-          it 'is expected to call #rollback on both interactors' do
+          it 'is expected to receive #rollback on both interactors' do
             expect_any_instance_of(interactor1).to receive(:rollback)
             expect_any_instance_of(interactor2).to receive(:rollback)
             subject
