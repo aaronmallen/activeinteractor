@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [v1.0.0-beta.7] - 2020-01-21
+
+### Added
+
+- [#127] `ActiveInteractor::Rails::Models`
+
+### Fixed
+
+- [#127] #126 `act_as_context` not working
+
+### Removed
+
+- [#127] `ActiveInteractor::Rails::ActiveRecord`
+
 ## [v1.0.0-beta.6] - 2020-01-21
 
 ### Added
@@ -194,7 +208,8 @@ and this project adheres to [Semantic Versioning].
 
 <!-- versions -->
 
-[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.6...HEAD
+[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.7...HEAD
+[v1.0.0-beta.7]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.6...v1.0.0-beta.7
 [v1.0.0-beta.6]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.5...v1.0.0-beta.6
 [v1.0.0-beta.5]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.4...v1.0.0-beta.5
 [v1.0.0-beta.4]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.3...v1.0.0-beta.4
@@ -235,3 +250,4 @@ and this project adheres to [Semantic Versioning].
 [#115]: https://github.com/aaronmallen/activeinteractor/pull/115
 [#122]: https://github.com/aaronmallen/activeinteractor/pull/122
 [#124]: https://github.com/aaronmallen/activeinteractor/pull/124
+[#127]: https://github.com/aaronmallen/activeinteractor/pull/127
