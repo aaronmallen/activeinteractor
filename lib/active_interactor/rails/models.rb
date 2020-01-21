@@ -30,7 +30,7 @@ module ActiveInteractor
         def initialize(attributes = nil)
           copy_flags!(attributes) if attributes
           copy_called!(attributes) if attributes
-          attributes_as_hash = attributes&.respond_to?(:to_h) ? attributes.to_h : attributes.attributes&.to_h
+          attributes_as_hash = attributes_as_hash(attributes)
           super(attributes_as_hash)
         end
 
@@ -44,6 +44,13 @@ module ActiveInteractor
             self[key] = value
           end
           self
+        end
+
+        private
+
+        def attributes_as_hash(attributes)
+          return attributes.to_h if attributes&.respond_to?(:to_h)
+          return attributes.attributes.to_h if attributes.respond_to?(:attributes)
         end
       end
     end
