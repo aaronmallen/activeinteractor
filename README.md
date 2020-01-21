@@ -37,6 +37,8 @@ see [v0.1.7](https://github.com/aaronmallen/activeinteractor/tree/0-1-stable)**
       * [Rollback Callbacks](#rollback-callbacks)
       * [Organizer Callbacks](#organizer-callbacks)
 * [Working With Rails](#working-with-rails)
+  * [Generators](#generators)
+  * [ActiveRecord Helper Methods](#activerecord-helper-methods)
 * [Development](#development)
 * [Contributing](#contributing)
 * [Acknowledgements](#acknowledgements)
@@ -835,7 +837,10 @@ application (defaults to 'interactors').
 This will create an initializer a some new classes `ApplicationInteractor`, `ApplicationOrganizer` and
 `ApplicationContext` in the `app/<directory>` directory.
 
-You can then automatically generate interactors, organizers, and contexts with:
+### Generators
+
+ActiveInteractor comes bundled with some rails generators to automatically generate interactors,
+organizers, and contexts with:
 
 ```bash
 rails generate interactor MyInteractor
@@ -850,6 +855,32 @@ rails generate interactor:context MyContext
 ```
 
 These generators will automatically create the approriate classes and matching spec or test files.
+
+### ActiveRecord Helper Methods
+
+In some instances you may want to use an `ActiveRecord` model as a context for an interactor.  You can
+do this by calling the `acts_as_context` method on any `ActiveRecord` model, and then simply call the
+`contextualize_with` method on your interactor or organizer to point it to the approriate class.
+
+```ruby
+# app/models/user
+class User < ApplicationRecord
+  acts_as_context
+end
+
+# app/interactors/create_user
+class CreateUser < ApplicationInteractor
+  contextualize_with :user
+
+  def perform
+    context.email&.downcase!
+    context.save
+  end
+end
+
+CreateUser.perform(email: 'HELLO@AARONMALLEN.ME')
+#=> <#User id=1 email='hello@aaronmallen.me'>
+```
 
 ## Development
 
