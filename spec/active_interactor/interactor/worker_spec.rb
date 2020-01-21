@@ -103,7 +103,7 @@ RSpec.describe ActiveInteractor::Interactor::Worker do
         subject
       end
 
-      it 'calls #perform on interactor instance' do
+      it 'is expected to receive #perform on interactor instance' do
         expect_any_instance_of(TestInteractor).to receive(:perform)
         subject
       end

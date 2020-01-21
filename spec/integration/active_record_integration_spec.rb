@@ -5,7 +5,7 @@ begin
   require 'active_interactor/rails'
   require 'active_interactor/rails/orm/active_record'
 
-  RSpec.describe 'ActiveRecord Integration', type: :integration do
+  RSpec.describe 'ActiveRecord integration', type: :integration do
     let!(:active_record_base_mock) do
       build_class('ActiveRecordBaseMock') do
         def self.attr_accessor(*attributes)
