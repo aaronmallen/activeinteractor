@@ -26,13 +26,12 @@ module ActiveInteractor
       module InstanceMethods
         # Override initialize method to ensure
         #  context flags are copied to the new instance
-        # @param context [Hash|nil] attributes to assign to the class
+        # @param attributes [Hash|nil] attributes to assign to the class
         # @param options [Hash|nil] options for the class
-        def initialize(context = nil, options = {})
-          copy_flags!(context) if context
-          copy_called!(context) if context
-          attributes = context.to_h if context
-          super(attributes, options)
+        def initialize(attributes = nil, options = {})
+          copy_flags!(attributes) if attributes
+          copy_called!(attributes) if attributes
+          super(attributes.to_h, options)
         end
 
         # Merge an instance and ensure
