@@ -2,6 +2,14 @@
 
 require_relative 'support/coverage'
 
+Spec::Coverage::Runner.start do
+  add_formatter :simple_cov_html
+  add_formatter :codacy
+  track '/lib/**/*.rb'
+  filter '/spec/'
+  filter '/lib/rails/**'
+end
+
 require 'bundler/setup'
 require 'active_interactor'
 
