@@ -49,7 +49,7 @@ see [v0.1.7](https://github.com/aaronmallen/activeinteractor/tree/0-1-stable)**
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'activeinteractor', '~> 1.0.0.beta.5'
+gem 'activeinteractor', '~> 1.0.0.beta.6'
 ```
 
 And then execute:

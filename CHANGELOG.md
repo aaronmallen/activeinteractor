@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [v1.0.0-beta.6] - 2020-01-21
+
+### Added
+
+- [#124] `ActiveInteractor::Context::Status`
+- [#124] `ActiveInteractor::Rails::ActiveRecord`
+
+### Changed
+
+- [#124] Abstracted status methods from `ActiveInteractor::Context::Base`
+  into `ActiveInteractor::Context::Status`
+
 ## [v1.0.0-beta.5] - 2020-01-21
 
 ### Added
@@ -182,7 +194,8 @@ and this project adheres to [Semantic Versioning].
 
 <!-- versions -->
 
-[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.5...HEAD
+[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.6...HEAD
+[v1.0.0-beta.6]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.5...v1.0.0-beta.6
 [v1.0.0-beta.5]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.4...v1.0.0-beta.5
 [v1.0.0-beta.4]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.3...v1.0.0-beta.4
 [v1.0.0-beta.3]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0-beta.2...v1.0.0-beta.3
@@ -218,6 +231,7 @@ and this project adheres to [Semantic Versioning].
 [#105]: https://github.com/aaronmallen/activeinteractor/pull/105
 [#109]: https://github.com/aaronmallen/activeinteractor/pull/109
 [#110]: https://github.com/aaronmallen/activeinteractor/pull/110
-[#114]:https://github.com/aaronmallen/activeinteractor/pull/114
+[#114]: https://github.com/aaronmallen/activeinteractor/pull/114
 [#115]: https://github.com/aaronmallen/activeinteractor/pull/115
 [#122]: https://github.com/aaronmallen/activeinteractor/pull/122
+[#124]: https://github.com/aaronmallen/activeinteractor/pull/124
