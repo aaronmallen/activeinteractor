@@ -2,18 +2,11 @@
 
 module ActiveInteractor
   module Rails
-    # ActiveRecord helper methods
+    # Model helper methods
     # @author Aaron Allen <hello@aaronmallen.me>
     # @since 1.0.0
-    module ActiveRecord
-      # Include ActiveRecord helper methods on load
-      def self.include_helpers
-        ActiveSupport.on_load(:active_record_base) do
-          extend ClassMethods
-        end
-      end
-
-      # ActiveRecord class helper methods
+    module Models
+      # Model class helper methods
       # @author Aaron Allen <hello@aaronmallen.me>
       # @since 1.0.0
       module ClassMethods
@@ -27,8 +20,11 @@ module ActiveInteractor
         end
       end
 
+      # Model instance helper methods
+      # @author Aaron Allen <hello@aaronmallen.me>
+      # @since 1.0.0
       module InstanceMethods
-        # Override ActiveRecord's initialize method to ensure
+        # Override initialize method to ensure
         #  context flags are copied to the new instance
         # @param context [Hash|nil] attributes to assign to the class
         # @param options [Hash|nil] options for the class
@@ -39,7 +35,7 @@ module ActiveInteractor
           super(attributes, options)
         end
 
-        # Merge an ActiveRecord::Base instance and ensure
+        # Merge an instance and ensure
         #  context flags are copied to the new instance
         # @param context [*] the instance to be merged
         # @return [*] the merged instance

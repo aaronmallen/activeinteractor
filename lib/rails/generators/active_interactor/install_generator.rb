@@ -6,7 +6,9 @@ module ActiveInteractor
   module Generators
     class InstallGenerator < Base
       source_root File.expand_path('templates', __dir__)
+
       desc 'Install ActiveInteractor'
+      class_option :orm
       argument :directory, type: :string, default: 'interactors', banner: 'directory'
 
       def create_initializer
