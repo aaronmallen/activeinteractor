@@ -30,7 +30,7 @@ module ActiveInteractor
         def initialize(attributes = nil)
           copy_flags!(attributes) if attributes
           copy_called!(attributes) if attributes
-          attributes_as_hash = attributes&.to_h
+          attributes_as_hash = attributes && attributes.respond_to?(:to_h) ? attributes.to_h : attributes.attributes&.to_h
           super(attributes_as_hash)
         end
 
