@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 begin
   require 'codacy-coverage'
   require 'simplecov'
@@ -5,9 +7,9 @@ begin
   Codacy::Reporter.start
 
   SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
-    SimpleCov::Formatter::HTMLFormatter,
-    Codacy::Formatter
-  ])
+                                                                   SimpleCov::Formatter::HTMLFormatter,
+                                                                   Codacy::Formatter
+                                                                 ])
 
   SimpleCov.start do
     track_files '/lib/**/*.rb'
