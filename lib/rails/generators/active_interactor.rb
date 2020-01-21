@@ -9,7 +9,7 @@ module ActiveInteractor
       private
 
       def interactor_directory
-        @interactor_directory ||= ActiveInteractor.config.rails.directory
+        @interactor_directory ||= ActiveInteractor::Rails.config.directory
       end
     end
 
@@ -24,7 +24,7 @@ module ActiveInteractor
       private
 
       def skip_context?
-        options[:skip_context] == true || ActiveInteractor.config.rails.generate_context_classes == false
+        options[:skip_context] == true || ActiveInteractor::Rails.config.generate_context_classes == false
       end
     end
 

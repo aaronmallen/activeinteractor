@@ -23,5 +23,23 @@ module ActiveInteractor
       #   generate_context_class property.
       # @return [Config] a new instance of {Config}
     end
+
+    # The {ActiveInteractor::Rails} configuration
+    # @since 1.0.0
+    # @return [ActiveInteractor::Config] the configuration instance
+    def self.config
+      @config ||= Config.new
+    end
+
+    # Configures {ActiveInteractor::Rails}
+    # @since 1.0.0
+    # @example Configure ActiveInteractor
+    #  ActiveInteractor.configure do |config|
+    #    config.logger = Rails.logger
+    #  end
+    # @yield [ActiveInteractor::Rails#config]
+    def self.configure
+      yield config
+    end
   end
 end

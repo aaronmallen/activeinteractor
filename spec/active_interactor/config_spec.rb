@@ -13,18 +13,4 @@ RSpec.describe ActiveInteractor::Config do
       expect(subject[:logger]).to be_a Logger
     end
   end
-
-  describe '.rails' do
-    subject { described_class.new.rails }
-
-    context 'with ::Rails not defined' do
-      it { is_expected.to be_nil }
-    end
-
-    context 'with ::Rails defined' do
-      before { stub_const('::Rails', 'Rails') }
-
-      it { is_expected.not_to be_nil }
-    end
-  end
 end
