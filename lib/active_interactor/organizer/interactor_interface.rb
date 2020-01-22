@@ -1,49 +1,61 @@
 # frozen_string_literal: true
 
-require 'active_support/core_ext/string/inflections'
-
 module ActiveInteractor
-  class Organizer < ActiveInteractor::Base
+  module Organizer
+    # An interface object to facilitate conditionally calling {Interactor::Perform::ClassMethods#perform .perform} on
+    # an {ActiveInteractor::Base interactor}
+    #
     # @api private
-    # An interface for an interactor's to allow conditional invokation of an
-    #  interactor's {Interactor#perform #perform} method.
     # @author Aaron Allen <hello@aaronmallen.me>
     # @since 1.0.0
+    #
     # @!attribute [r] filters
-    #  @return [Hash{Symbol=>*}] conditional filters for an interactor's
-    #    {Interactor#perform #perform} invocation.
+    #  Conditional options for the {ActiveInteractor::Base interactor} class
+    #
+    #  @return [Hash{Symbol=>Proc, Symbol}] conditional options for the {ActiveInteractor::Base interactor} class
+    #
     # @!attribute [r] interactor_class
-    #  @return [Class] an interactor class
+    #  An {ActiveInteractor::Base interactor} class
+    #
+    #  @return [Const] an {ActiveInteractor::Base interactor} class
+    #
     # @!attribute [r] perform_options
-    #  @return [Hash{Symbol=>*}] perform options to use for an interactor's
-    #    {Interactor#perform #perform} invocation.
+    #  {Interactor::Perform::Options} for the {ActiveInteractor::Base interactor} {Interactor::Perform#perform #perform}
+    #
+    #  @see Interactor::Perform::Options
+    #
+    #  @return [Hash{Symbol=>*}] {Interactor::Perform::Options} for the {ActiveInteractor::Base interactor}
+    #   {Interactor::Perform#perform #perform}
     class InteractorInterface
       attr_reader :filters, :interactor_class, :perform_options
 
-      # @return [Array<Symbol>] keywords that indicate an option is a
-      #  conditional.
+      # Keywords for conditional filters
+      # @return [Array<Symbol>]
       CONDITIONAL_FILTERS = %i[if unless].freeze
 
-      # @param interactor_class [Class|Symbol|String] the {.interactor_class}
-      # @param options [Hash{Symbol=>*}] the {.filters} and {.perform_options}
-      # @return [InteractorInterface|nil] a new instance of {InteractorInterface} if
-      #  the {#interactor_class} exists
+      # Initialize a new instance of {InteractorInterface}
+      #
+      # @param interactor_class [Const] an {ActiveInteractor::Base interactor} class
+      # @param options [Hash] options to use for the {ActiveInteractor::Base interactor's}
+      #  {Interactor::Perform::ClassMethods#perform .perform}. See {Interactor::Perform::Options}.
+      # @return [InteractorInterface] a new instance of {InteractorInterface}
       def initialize(interactor_class, options = {})
         @interactor_class = interactor_class.to_s.classify.safe_constantize
         @filters = options.select { |key, _value| CONDITIONAL_FILTERS.include?(key) }
         @perform_options = options.reject { |key, _value| CONDITIONAL_FILTERS.include?(key) }
       end
 
-      # Check conditional filters on an interactor and invoke it's {Interactor#perform #perform}
-      #  method if conditions are met.
-      # @param target [Class] an instance of {Organizer}
-      # @param context [Context::Base] the organizer's {Context::Base context} instance
-      # @param fail_on_error [Boolean] if `true` {Interactor::ClassMethods#perform! .perform!}
-      #  will be invoked on the interactor. If `false` {Interactor::ClassMethods#perform .perform}
-      #  will be invokded on the interactor.
-      # @param perform_options [Hash{Symbol=>*}] options for perform
-      # @return [Context::Base|nil] an instance of {Context::Base} if an interactor's
-      #   {Interactor#perform #perform} is invoked
+      # Call the {#interactor_class} {Interactor::Perform::ClassMethods#perform .perform} or
+      # {Interactor::Perform::ClassMethods#perform! .perform!} method if all conditions in {#filters} are properly met.
+      #
+      # @param target [Class] the calling {Base organizer} instance
+      # @param context [Class] an instance of {Context::Base context}
+      # @param fail_on_error [Boolean] if `true` {Interactor::Perform::ClassMethods#perform! .perform!} will be called
+      #  on the {#interactor_class} other wise {Interactor::Perform::ClassMethods#perform .perform} will be called.
+      # @param perform_options [Hash] additional {Interactor::Perform::Options} to merge with {#perform_options}
+      # @raise [Error::ContextFailure] if `fail_on_error` is `true` and the {#interactor_class}
+      #  {Context::Status#fail! fails} its {Context::Base context}.
+      # @return [Class] an instance of {Context::Base context}
       def perform(target, context, fail_on_error = false, perform_options = {})
         return if check_conditionals(target, filters[:if]) == false
         return if check_conditionals(target, filters[:unless]) == true

@@ -2,24 +2,26 @@
 
 module ActiveInteractor
   module Context
-    # Context status methods included by all {Context::Base}
+    # Context status methods. Because {Status} is a module classes should include {Status} rather than inherit from it.
+    #
     # @author Aaron Allen <hello@aaronmallen.me>
     # @since 1.0.0
     module Status
-      # @api private
-      # Track that an Interactor has been called. The {#called!} method
-      #  is used by the interactor being invoked with this context. After an
-      #  interactor is successfully called, the interactor instance is tracked in
-      #  the context for the purpose of potential future rollback
-      # @param interactor [ActiveInteractor::Base] the called interactor
-      # @return [Array<ActiveInteractor::Base>] all called interactors
+      # Add an instance of {ActiveInteractor::Base interactor} to the list of {ActiveInteractor::Base interactors}
+      # called on the {Base context}. This list is used when {#rollback!} is called on a {Base context} instance.
+      #
+      # @since 0.1.0
+      #
+      # @param interactor [Class] an {ActiveInteractor::Base interactor} instance
+      # @return [Array<Class>] the list of called {ActiveInteractor::Base interactors}
       def called!(interactor)
         _called << interactor
       end
 
-      # Fail the context instance. Failing a context raises an error
-      #  that may be rescued by the calling interactor. The context is also flagged
-      #  as having failed
+      # Fail the {Base context} instance. Failing an instance raises an error that may be rescued by the calling
+      # {ActiveInteractor::Base interactor}. The instance is also flagged as having failed.
+      #
+      # @since 0.1.0
       #
       # @example Fail an interactor context
       #   class MyInteractor < ActiveInteractor::Base
@@ -29,60 +31,42 @@ module ActiveInteractor
       #   end
       #
       #   MyInteractor.perform!
-      #   #=> ActiveInteractor::Error::ContextFailure: <#MyInteractor::Context>
-      # @param errors [ActiveModel::Errors|nil] errors to add to the context on failure
+      #   ActiveInteractor::Error::ContextFailure "<#MyInteractor::Context>"
+      #
+      # @param errors [ActiveModel::Errors, String] error messages for the failure
       # @see https://api.rubyonrails.org/classes/ActiveModel/Errors.html ActiveModel::Errors
       # @raise [Error::ContextFailure]
       def fail!(errors = nil)
         merge_errors!(errors) if errors
         @_failed = true
-        raise Error::ContextFailure, self
+        raise ActiveInteractor::Error::ContextFailure, self
       end
 
-      # Whether the context instance has failed. By default, a new
-      # context is successful and only changes when explicitly failed
+      # Whether the {Base context} instance has {#fail! failed}. By default, a new instance is successful and only
+      # changes when explicitly {#fail! failed}.
+      #
+      # @since 0.1.0
       # @note The {#failure?} method is the inverse of the {#success?} method
+      #
       # @example Check if a context has failed
-      #   class MyInteractor < ActiveInteractor::Base
-      #     def perform; end
-      #   end
-      #
       #   result = MyInteractor.perform
-      #   #=> <#MyInteractor::Context>
-      #
       #   result.failure?
       #   #=> false
-      # @return [Boolean] `false` by default or `true` if failed
+      #
+      # @return [Boolean] `false` by default or `true` if {#fail! failed}.
       def failure?
         @_failed || false
       end
       alias fail? failure?
 
-      # Roll back an interactor context. Any interactors to which this
-      # context has been passed and which have been successfully called are asked
-      # to roll themselves back by invoking their
-      # {ActiveInteractor::Base#rollback} instance methods.
-      # @example Rollback an interactor's context
-      #   class MyInteractor < ActiveInteractor::Base
-      #     def perform
-      #       context.fail!
-      #     end
+      # {#rollback! Rollback} an instance of {Base context}. Any {ActiveInteractor::Base interactors} the instance has
+      # been passed via the {#called!} method are asked to roll themselves back by invoking their
+      # {Interactor::Perform#rollback #rollback} methods. The instance is also flagged as rolled back.
       #
-      #     def rollback
-      #       context.user&.destroy
-      #     end
-      #   end
+      # @since 0.1.0
       #
-      #   user = User.create
-      #   #=> <#User>
-      #
-      #   result = MyInteractor.perform(user: user)
-      #   #=> <#MyInteractor::Context user=<#User>>
-      #
-      #   result.user.destroyed?
-      #   #=> true
-      # @return [Boolean] `true` if rolled back successfully or `false` if already
-      #  rolled back
+      # @return [Boolean] `true` if {#rollback! rolled back} successfully or `false` if already
+      #  {#rollback! rolled back}
       def rollback!
         return false if @_rolled_back
 
@@ -90,20 +74,18 @@ module ActiveInteractor
         @_rolled_back = true
       end
 
-      # Whether the context instance is successful. By default, a new
-      # context is successful and only changes when explicitly failed
-      # @note the {#success?} method is the inverse of the {#failure?} method
-      # @example Check if a context is successful
-      #   class MyInteractor < ActiveInteractor::Base
-      #     def perform; end
-      #   end
+      # Whether the {Base context} instance is successful. By default, a new instance is successful and only changes
+      # when explicitly {#fail! failed}.
       #
+      # @since 0.1.0
+      # @note The {#success?} method is the inverse of the {#failure?} method
+      #
+      # @example Check if a context has failed
       #   result = MyInteractor.perform
-      #   #=> <#MyInteractor::Context>
-      #
       #   result.success?
       #   #=> true
-      # @return [Boolean] `true` by default or `false` if failed
+      #
+      # @return [Boolean] `true` by default or `false` if {#fail! failed}
       def success?
         !failure?
       end

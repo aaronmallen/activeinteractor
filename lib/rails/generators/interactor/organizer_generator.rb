@@ -1,20 +1,24 @@
 # frozen_string_literal: true
 
-require_relative '../active_interactor'
+require 'rails/generators/active_interactor/base'
+require 'rails/generators/interactor/generates_context'
 
 module Interactor
   module Generators
     class OrganizerGenerator < ActiveInteractor::Generators::NamedBase
-      source_root File.expand_path('templates', __dir__)
+      include GeneratesContext
       desc 'Generate an interactor organizer'
       argument :interactors, type: :array, default: [], banner: 'interactor interactor'
 
       class_option :context_attributes, type: :array, default: [], banner: 'attribute attribute',
                                         desc: 'Attributes for the context'
-      class_option :skip_context, type: :boolean, desc: 'Whether or not to generate a context class'
+
+      def generate_application_organizer
+        generate :'active_interactor:application_organizer'
+      end
 
       def create_organizer
-        template 'organizer.erb', file_path
+        template 'organizer.erb', active_interactor_file
       end
 
       def create_context
@@ -29,14 +33,6 @@ module Interactor
 
       def context_attributes
         options[:context_attributes]
-      end
-
-      def file_path
-        File.join('app', interactor_directory, File.join(class_path), "#{file_name}.rb")
-      end
-
-      def skip_context?
-        options[:skip_context] == true || ActiveInteractor::Rails.config.generate_context_classes == false
       end
     end
   end

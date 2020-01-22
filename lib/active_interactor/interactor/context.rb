@@ -1,130 +1,322 @@
 # frozen_string_literal: true
 
-require 'active_model'
-require 'active_support/core_ext/string/inflections'
-
 module ActiveInteractor
   module Interactor
-    # Interactor context methods included by all {Base}
+    # Interactor context methods. Because {Context} is a module classes should include {Context} rather than inherit
+    # from it.
+    #
     # @author Aaron Allen <hello@aaronmallen.me>
-    # @since 0.0.1
-    # @!attribute [rw] context
-    #  @api private
-    #  @return [Context::Base] an instance of the interactor's context class
+    # @since 0.1.0
     module Context
-      # @!method context_fail!(errors = nil)
-      # Fail the interactor's context
-      # @since 1.0.0
-      # @see ActiveInteractor::Context::Base#fail!
-
-      # @!method context_rollback!
-      # Rollback the interactor's context
-      # @since 1.0.0
-      # @see ActiveInteractor::Context::Base#rollback!
-
-      # @!method context_valid?(context = nil)
-      # Whether or not the interactor's context is valid
-      # @since 1.0.0
-      # @see ActiveInteractor::Context::Base#valid?
-      def self.included(base)
-        base.class_eval do
-          extend ClassMethods
-          delegate :fail!, :rollback!, to: :context, prefix: true
-          delegate(*ActiveModel::Validations.instance_methods, to: :context, prefix: true)
-          delegate(*ActiveModel::Validations::HelperMethods.instance_methods, to: :context, prefix: true)
-
-          private
-
-          attr_accessor :context
-        end
-      end
-
-      # Interactor context class methods extended by all {Base}
+      # Interactor context class methods. Because {ClassMethods} is a module classes should extend {ClassMethods}
+      # rather than inherit from it.
+      #
+      # @author Aaron Allen <hello@aaronmallen.me>
+      # @since 0.1.0
       module ClassMethods
-        delegate(*ActiveModel::Validations::ClassMethods.instance_methods, to: :context_class, prefix: :context)
-        delegate(*ActiveModel::Validations::HelperMethods.instance_methods, to: :context_class, prefix: :context)
         # @!method context_attributes(*attributes)
-        # Set or get attributes defined on the interactor's context class
-        # @since 0.0.1
-        # @see ActiveInteractor::Context::Attributes#attributes
+        #  Call {ActiveInteractor::Context::Attributes#attributes .attributes} on the {Base interactor} class'
+        #  {#context_class context class}
+        #
+        #  @since 0.1.0
+        #
+        #  @example
+        #    class MyInteractor < ActiveInteractor::Base
+        #      context_attributes :first_name, :last_name
+        #    end
+        #
+        #    MyInteractor.context_class.attributes
+        #    #=> [:first_name, :last_name]
         delegate :attributes, to: :context_class, prefix: :context
 
-        # The context class of the interactor
-        # @note If a context class is not defined on the interactor
-        #  with {#contextualize_with} ActiveInteractor will attempt
-        #  to find a class with the naming conventions:
-        #    `MyInteractor::Context` or `MyInteractorContext`
-        #  if no matching context class is found a context class
-        #  will be created with the naming convention: `MyInteractor::Context`.
-        # @example With an existing class named `MyInteractor::Context`
-        #  class MyInteractor::Context < ActiveInteractor::Context::Base
-        #  end
+        # @!method context_attribute_method?(attribute)
+        #  Call {ActiveInteractor::Context::Base.attribute_method? .attribute_method?} on the {Base interactor} class'
+        #  {#context_class context class}
         #
-        #  class MyInteractor < ActiveInteractor::Base
-        #  end
+        #  @since 0.1.0
         #
-        #  MyInteractor.context_class
-        #  #=> MyInteractor::Context
-        # @example With an existing class named `MyInteractorContext`
-        #  class MyInteractorContext < ActiveInteractor::Context::Base
-        #  end
+        # @!method context_clear_validators!(attribute)
+        #  Call {ActiveInteractor::Context::Base.clear_validators! .clear_validators!} on the {Base interactor} class'
+        #  {#context_class context class}
         #
-        #  class MyInteractor < ActiveInteractor::Base
-        #  end
+        #  @since 0.1.0
         #
-        #  MyInteractor.context_class
-        #  #=> MyInteractorContext
-        # @example With no existing context class
-        #  class MyInteractor < ActiveInteractor::Base
-        #  end
+        # @!method context_validate(*args, &block)
+        #  Call {ActiveInteractor::Context::Base.validate .validate} on the {Base interactor} class'
+        #  {#context_class context class}
         #
-        #  MyInteractor.context_class
-        #  #=> MyInteractor::Context
-        # @return [Class] the interactor's context class
+        #  @since 0.1.0
+        #
+        # @!method context_validates(*attributes)
+        #  Call {ActiveInteractor::Context::Base.validates .validates} on the {Base interactor} class'
+        #  {#context_class context class}
+        #
+        #  @since 0.1.0
+        #
+        # @!method context_validates!(*attributes)
+        #  Call {ActiveInteractor::Context::Base.validates! .validates!} on the {Base interactor} class'
+        #  {#context_class context class}
+        #
+        #  @since 0.1.0
+        #
+        # @!method context_validates_each(*attr_names, &block)
+        #  Call {ActiveInteractor::Context::Base.validates_each .validates_each} on the {Base interactor} class'
+        #  {#context_class context class}
+        #
+        #  @since 0.1.0
+        #
+        # @!method context_validates_with(*args, &block)
+        #  Call {ActiveInteractor::Context::Base.validates_with .validates_with} on the {Base interactor} class'
+        #  {#context_class context class}
+        #
+        #  @since 0.1.0
+        #
+        # @!method context_validators
+        #  Call {ActiveInteractor::Context::Base.validators .validators} on the {Base interactor} class'
+        #  {#context_class context class}
+        #
+        #  @since 0.1.0
+        #
+        # @!method context_validators_on(*attributes)
+        #  Call {ActiveInteractor::Context::Base.validators_on .validators_on} on the {Base interactor} class'
+        #  {#context_class context class}
+        #
+        #  @since 0.1.0
+        delegate(*ActiveModel::Validations::ClassMethods.instance_methods, to: :context_class, prefix: :context)
+
+        # @!method context_validates_absence_of(*attr_names)
+        #  Call {ActiveInteractor::Context::Base.validates_absence_of .validates_absence_of} on the {Base interactor}
+        #  class' {#context_class context class}
+        #
+        #  @since 0.1.0
+        #
+        # @!method context_validates_acceptance_of(*attr_names)
+        #  Call {ActiveInteractor::Context::Base.validates_acceptance_of .validates_acceptance_of} on the
+        #  {Base interactor} class' {#context_class context class}
+        #
+        #  @since 0.1.0
+        #
+        # @!method context_validates_confirmation_of(*attr_names)
+        #  Call {ActiveInteractor::Context::Base.validates_confirmation_of .validates_confirmation_of} on the
+        #  {Base interactor} class' {#context_class context class}
+        #
+        #  @since 0.1.0
+        #
+        # @!method context_validates_exclusion_of(*attr_names)
+        #  Call {ActiveInteractor::Context::Base.validates_exclusion_of .validates_exclusion_of} on the
+        #  {Base interactor} class' {#context_class context class}
+        #
+        #  @since 0.1.0
+        #
+        # @!method context_validates_format_of(*attr_names)
+        #  Call {ActiveInteractor::Context::Base.validates_format_of .validates_format_of} on the {Base interactor}
+        #  class' {#context_class context class}
+        #
+        #  @since 0.1.0
+        #
+        # @!method context_validates_inclusion_of(*attr_names)
+        #  Call {ActiveInteractor::Context::Base.validates_inclusion_of .validates_inclusion_of} on the
+        #  {Base interactor} class' {#context_class context class}
+        #
+        #  @since 0.1.0
+        #
+        # @!method context_validates_length_of(*attr_names)
+        #  Call {ActiveInteractor::Context::Base.validates_length_of .validates_length_of} on the {Base interactor}
+        #  class' {#context_class context class}
+        #
+        #  @since 0.1.0
+        #
+        # @!method context_validates_numericality_of(*attr_names)
+        #  Call {ActiveInteractor::Context::Base.validates_numericality_of .validates_numericality_of} on the
+        #  {Base interactor} class' {#context_class context class}
+        #
+        #  @since 0.1.0
+        #
+        # @!method context_validates_presence_of(*attr_names)
+        #  Call {ActiveInteractor::Context::Base.validates_presence_of .validates_presence_of} on the {Base interactor}
+        #  class' {#context_class context class}
+        #
+        #  @since 0.1.0
+        #
+        # @!method context_validates_size_of(*attr_names)
+        #  Call {ActiveInteractor::Context::Base.validates_size_of .validates_size_of} on the {Base interactor} class'
+        #  {#context_class context class}
+        #
+        #  @since 0.1.0
+        delegate(*ActiveModel::Validations::HelperMethods.instance_methods, to: :context_class, prefix: :context)
+
+        # Get the {Base interactor} class' {ActiveInteractor::Context::Base context} class. If no class is found or no
+        # class is set via the {#contextualize_with} method a new class is created.
+        #
+        # @see ActiveInteractor::Context::Loader.find_or_create
+        #
+        # @return [Const] the {Base interactor} class' {ActiveInteractor::Context::Base context} class
         def context_class
           @context_class ||= ActiveInteractor::Context::Loader.find_or_create(self)
         end
 
-        # Manual define an interactor's context class
+        # Set the {Base interactor} class' {#context_class context class}
+        #
         # @since 1.0.0
+        #
         # @example
-        #   class AGenericContext < ActiveInteractor::Context::Base
+        #   class User < ActiveRecord::Base
         #   end
         #
         #   class MyInteractor < ActiveInteractor::Base
-        #     contextualize_with :a_generic_context
+        #     contextualize_with :user
         #   end
         #
         #   MyInteractor.context_class
-        #   #=> AGenericContext
-        # @param klass [String|Symbol|Class] the context class
-        # @raise [Error::InvalidContextClass] if no matching class can be found
-        # @return [Class] the context class
+        #   #=> User
+        #
+        # @param klass [Const, Symbol, String] the class to use as context
+        # @raise [Error::InvalidContextClass] if the class can not be found.
+        # @return [Const] the {Base interactor} class' {ActiveInteractor::Context::Base context} class
         def contextualize_with(klass)
           @context_class = begin
             context_class = klass.to_s.classify.safe_constantize
-            raise(Error::InvalidContextClass, klass) unless context_class
+            raise(ActiveInteractor::Error::InvalidContextClass, klass) unless context_class
 
             context_class
           end
         end
       end
 
-      # @api private
-      # @param context [Context::Base|Hash] attributes to assign to the context
-      # @return [Base] a new instane of {Base}
+      # @!method context_fail!(errors = nil)
+      #  Call {ActiveInteractor::Context::Status#fail! #fail!} on the {Base interactor} instance's
+      #  {ActiveInteractor::Context::Base context} instance
+      #
+      #  @since 1.0.0
+      #
+      # @!method context_rollback!
+      #  Call {ActiveInteractor::Context::Status#rollback! #rollback!} on the {Base interactor} instance's
+      #  {ActiveInteractor::Context::Base context} instance
+      #
+      #  @since 1.0.0
+      delegate :fail!, :rollback!, to: :context, prefix: true
+
+      # @!method context_errors
+      #  Call {ActiveInteractor::Context::Base#errors #errors} on the {Base interactor} instance's
+      #  {ActiveInteractor::Context::Base context} instance
+      #
+      #  @since 0.1.0
+      #
+      # @!method context_invalid?(context = nil)
+      #  Call {ActiveInteractor::Context::Base#invalid? #invalid?} on the {Base interactor} instance's
+      #  {ActiveInteractor::Context::Base context} instance
+      #
+      #  @since 0.1.0
+      #
+      # @!method context_valid?(context = nil)
+      #  Call {ActiveInteractor::Context::Base#valid? #valid?} on the {Base interactor} instance's
+      #  {ActiveInteractor::Context::Base context} instance
+      #
+      #  @since 0.1.0
+      #
+      # @!method context_validate(context = nil)
+      #  Call {ActiveInteractor::Context::Base#validate #validate} on the {Base interactor} instance's
+      #  {ActiveInteractor::Context::Base context} instance
+      #
+      #  @since 0.1.0
+      #
+      # @!method context_validate!(context = nil)
+      #  Call {ActiveInteractor::Context::Base#validate! #validate!} on the {Base interactor} instance's
+      #  {ActiveInteractor::Context::Base context} instance
+      #
+      #  @since 0.1.0
+      #
+      # @!method context_validates_with(*args, &block)
+      #  Call {ActiveInteractor::Context::Base#validates_with #validates_with} on the {Base interactor} instance's
+      #  {ActiveInteractor::Context::Base context} instance
+      #
+      #  @since 0.1.0
+      delegate(*ActiveModel::Validations.instance_methods, to: :context, prefix: true)
+
+      # @!method context_validates_absence_of(*attr_names)
+      #  Call {ActiveInteractor::Context::Base#validates_absence_of #validates_absence_of} on the {Base interactor}
+      #  instance's {ActiveInteractor::Context::Base context} instance
+      #
+      #  @since 0.1.0
+      #
+      # @!method context_validates_acceptance_of(*attr_names)
+      #  Call {ActiveInteractor::Context::Base#validates_acceptance_of #validates_acceptance_of} on the
+      #  {Base interactor} instance's {ActiveInteractor::Context::Base context} instance
+      #
+      #  @since 0.1.0
+      #
+      # @!method context_validates_confirmation_of(*attr_names)
+      #  Call {ActiveInteractor::Context::Base#validates_confirmation_of #validates_confirmation_of} on the
+      #  {Base interactor} instance's {ActiveInteractor::Context::Base context} instance
+      #
+      #  @since 0.1.0
+      #
+      # @!method context_validates_exclusion_of(*attr_names)
+      #  Call {ActiveInteractor::Context::Base#validates_exclusion_of #validates_exclusion_of} on the {Base interactor}
+      #  instance's {ActiveInteractor::Context::Base context} instance
+      #
+      #  @since 0.1.0
+      #
+      # @!method context_validates_format_of(*attr_names)
+      #  Call {ActiveInteractor::Context::Base#validates_format_of #validates_format_of} on the {Base interactor}
+      #  instance's {ActiveInteractor::Context::Base context} instance
+      #
+      #  @since 0.1.0
+      #
+      # @!method context_validates_inclusion_of(*attr_names)
+      #  Call {ActiveInteractor::Context::Base#validates_inclusion_of #validates_inclusion_of}  on the
+      #  {Base interactor} instance's {ActiveInteractor::Context::Base context} instance
+      #
+      #  @since 0.1.0
+      #
+      # @!method context_validates_length_of(*attr_names)
+      #  Call {ActiveInteractor::Context::Base#validates_length_of #validates_length_of} on the {Base interactor}
+      #  instance's {ActiveInteractor::Context::Base context} instance
+      #
+      #  @since 0.1.0
+      #
+      # @!method context_validates_numericality_of(*attr_names)
+      #  Call {ActiveInteractor::Context::Base#validates_numericality_of #validates_numericality_of} on the
+      #  {Base interactor} instance's {ActiveInteractor::Context::Base context} instance
+      #
+      #  @since 0.1.0
+      #
+      # @!method context_validates_presence_of(*attr_names)
+      #  Call {ActiveInteractor::Context::Base#validates_presence_of #validates_presence_of} on the {Base interactor}
+      #  instance's {ActiveInteractor::Context::Base context} instance
+      #
+      #  @since 0.1.0
+      #
+      # @!method context_validates_size_of(*attr_names)
+      #  Call {ActiveInteractor::Context::Base#validates_size_of #validates_size_of} on the {Base interactor}
+      #  instance's {ActiveInteractor::Context::Base context} instance
+      #
+      #  @since 0.1.0
+      delegate(*ActiveModel::Validations::HelperMethods.instance_methods, to: :context, prefix: true)
+
+      # Initialize a new instance of {Base}
+      #
+      # @param context [Hash, Class] attributes to assign to the {Base interactor} instance's
+      #  {ActiveInteractor::Context::Base context} instance
+      # @return [Base] a new instance of {Base}
       def initialize(context = {})
         @context = self.class.context_class.new(context)
       end
 
-      # @api private
-      # Mark the interactor's context as called and return the context
+      # Mark the {Base interactor} instance as called on the instance's {ActiveInteractor::Context::Base context}
+      # instance and return the {ActiveInteractor::Context::Base context} instance.
+      #
       # @since 1.0.0
-      # @return [Context::Base] an instance of the interactor's context class
+      #
+      # @return [Class] the {ActiveInteractor::Context::Base context} instance
       def finalize_context!
         context.called!(self)
         context
       end
+
+      private
+
+      attr_accessor :context
     end
   end
 end

@@ -1,31 +1,36 @@
 # frozen_string_literal: true
 
-require 'active_support/core_ext/string/inflections'
-
 module ActiveInteractor
   module Context
+    # Find or create {Base context} classes for a given {ActiveInteractor::Base interactor}
+    #
     # @api private
-    # Load, find or create {Context::Base} classes for a given interactor.
-    # @author Aaron Allen <hello@aaronmallen.me>
+    # @author Aaron Allen <hello@aaronmallen>
     # @since 1.0.0
     module Loader
-      # @return [Array<Class>] ActiveInteractor base classes
-      BASE_CLASSES = [ActiveInteractor::Base, ActiveInteractor::Organizer].freeze
-      # @return [Class] the base context class
+      # ActiveInteractor base classes
+      # @return [Array<Const>]
+      BASE_CLASSES = [ActiveInteractor::Base, ActiveInteractor::Organizer::Base].freeze
+      # The {ActiveInteractor::Context::Base} class
+      # @return [Const]
       BASE_CONTEXT = ActiveInteractor::Context::Base
 
-      # Create a new context class on an interactor
-      # @param context_class_name [String] the name of the class to create
-      # @param interactor_class [Class] the interactor class to create the context for
-      # @return [Class] the created context class
+      # Create a {Base context} class for a given {ActiveInteractor::Base interactor}
+      #
+      # @param context_class_name [Symbol, String] the class name of the
+      #   {Base context} class to create
+      # @param interactor_class [Const] an {ActiveInteractor::Base interactor} class
+      # @return [Const] a class that inherits from {Base}
       def self.create(context_class_name, interactor_class)
         interactor_class.const_set(context_class_name.to_s.classify, Class.new(BASE_CONTEXT))
       end
 
-      # Find or create a new context class for an interactor
-      # @note the loader will attempt to find an existing context given the naming conventions:
-      #   `MyInteractor::Context` or `MyInteractorContext`
-      # @param interactor_class [Class] the interactor class to find or create the context for
+      # Find or create a {Base context} class for a given {ActiveInteractor::Base interactor}. If a class exists
+      # following the pattern of `InteractorNameContext` or `InteractorName::Context` then that class will be returned
+      # otherwise a new class will be created with the pattern `InteractorName::Context`.
+      #
+      # @param interactor_class [Const] an {ActiveInteractor::Base interactor} class
+      # @return [Const] a class that inherits from {Base}
       def self.find_or_create(interactor_class)
         return BASE_CONTEXT if BASE_CLASSES.include?(interactor_class)
 

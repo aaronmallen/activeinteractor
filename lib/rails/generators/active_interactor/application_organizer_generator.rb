@@ -4,17 +4,17 @@ require 'rails/generators/active_interactor/base'
 
 module ActiveInteractor
   module Generators
-    class ApplicationInteractorGenerator < Base
-      def create_application_interactor
+    class ApplicationOrganizerGenerator < Base
+      def create_application_organizer
         return if File.exist?(file_path)
 
-        template 'application_interactor.rb', file_path
+        template 'application_organizer.rb', file_path
       end
 
       private
 
       def file_path
-        "app/#{active_interactor_directory}/application_interactor.rb"
+        "app/#{active_interactor_directory}/application_organizer.rb"
       end
     end
   end
