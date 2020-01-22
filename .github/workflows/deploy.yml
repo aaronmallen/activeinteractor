@@ -15,11 +15,11 @@ jobs:
         with:
           ruby-version: 2.6
           architecture: x64
-      - name: Install Dependencies
-        run: gem install bundler && bundler install --jobs 20  --retry 5
-      - name: Run Specs
+      - name: Bundle install
+        run: gem install bundler && bundler install --jobs 4  --retry 3
+      - name: Rake specs
         run: bundle exec rake spec
-      - name: Build Gem
+      - name: Rake build
         run: bundle exec rake build
   publish:
     name: Publish

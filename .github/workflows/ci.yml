@@ -4,13 +4,15 @@ on:
   pull_request:
     branches:
       - master
-      - /.*-(alpha|beta|stable)/
-      - /^v\d+\.\d+\.\d+.*/
+      - .*-alpha
+      - .*-beta
+      - .*-stable
   push:
     branches:
       - master
-      - /.*-(alpha|beta|stable)/
-      - /^v\d+\.\d+\.\d+.*/
+      - .*-alpha
+      - .*-beta
+      - .*-stable
 
 jobs:
   test:
@@ -26,21 +28,31 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           architecture: x64
-      - name: Install Dependencies
-        run: gem install bundler && bundler install --jobs 20  --retry 5
-      - name: Install Code Climate Test Reporter
+      - uses: actions/cache@v1
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+      - name: Bundle install
+        run: |
+          gem install bundler
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+      - name: Setup Code Climate test reporter
         run: |
           curl -L curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
           chmod +x ./cc-test-reporter
           ./cc-test-reporter before-build
-      - name: Run Specs
+      - name: Rake spec
         run: bundle exec rake spec
-      - name: Build Gem
+      - name: Rake build
         run: bundle exec rake build
-      - name: Reporting Coverage to Code Climate
+      - name: Report coverage to Code Climate
         run: ./cc-test-reporter after-build --exit-code $?
     strategy:
       matrix:
         ruby:
           - '2.5'
           - '2.6'
+          - '2.7'
