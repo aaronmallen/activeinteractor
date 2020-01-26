@@ -12,15 +12,12 @@ An implementation of the [command pattern] for Ruby with [ActiveModel::Validatio
 [interactor][collective_idea_interactors] gem. Rich support for attributes, callbacks, and validations,
 and thread safe performance methods.
 
-**ActiveInteractor v1.0.0 is currently in beta.  For documentation on the current stable version please
-see [v0.1.7](https://github.com/aaronmallen/activeinteractor/tree/0-1-stable)**
-
 ## Getting Started
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'activeinteractor', '~> 1.0.0.beta.7'
+gem 'activeinteractor'
 ```
 
 And then execute:
@@ -32,12 +29,13 @@ bundle
 Or install it yourself as:
 
 ```bash
-gem install activeinteractor --pre
+gem install activeinteractor
 ```
 
 ## Usage
 
 Be sure to read the [wiki] for detailed information on how to use ActiveInteractor.
+
 For technical documentation please see the gem's [ruby docs].
 
 ## Development
