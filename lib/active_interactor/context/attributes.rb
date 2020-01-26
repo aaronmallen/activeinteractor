@@ -110,8 +110,9 @@ module ActiveInteractor
       private
 
       def merge_attribute_values(context)
-        values = context.respond_to?(:attributes) ? context.attributes : context
+        return unless context
 
+        values = context.respond_to?(:attributes) ? context.attributes : context
         values.each { |key, value| public_send("#{key}=", value) }
       end
 
