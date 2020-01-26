@@ -27,7 +27,32 @@ module ActiveInteractor
         #
         #    MyInteractor.context_class.attributes
         #    #=> [:first_name, :last_name]
-        delegate :attributes, to: :context_class, prefix: :context
+        #
+        # @!method context_attribute_missing(match, *args, &block)
+        #  Call {ActiveInteractor::Context::Base.attribute_missing .attribute_missing} on the {Base interactor} class'
+        #  {#context_class context class}
+        #
+        #  @since unreleased
+        #
+        # @!method context_respond_to_without_attributes?(method, include_private_methods = false)
+        #  Call {ActiveInteractor::Context::Base.respond_to_without_attributes? .respond_to_without_attributes?} on the
+        #  {Base interactor} class' {#context_class context class}
+        #
+        #  @since unreleased
+        delegate :attributes, :attribute_missing, :respond_to_without_attributes?, to: :context_class, prefix: :context
+
+        # @!method context_attribute(name, type=Type::Value.new, **options)
+        #  Call {ActiveInteractor::Context::Base.attribute .attribute} on the {Base interactor} class'
+        #  {#context_class context class}
+        #
+        #  @since unreleased
+        #
+        # @!method context_attribute_names
+        #  Call {ActiveInteractor::Context::Base.attribute_names .attribute_names} on the {Base interactor} class'
+        #  {#context_class context class}
+        #
+        #  @since unreleased
+        delegate(*ActiveModel::Attributes::ClassMethods.instance_methods, to: :context_class, prefix: :context)
 
         # @!method context_attribute_method?(attribute)
         #  Call {ActiveInteractor::Context::Base.attribute_method? .attribute_method?} on the {Base interactor} class'
@@ -183,18 +208,37 @@ module ActiveInteractor
         end
       end
 
+      # @!method context_attribute_missing(match, *args, &block)
+      #  Call {ActiveInteractor::Context::Base#attribute_missing #attribute_missing} on the {Base interactor} instance's
+      #  {ActiveInteractor::Context::Base context} instance
+      #
+      #  @since unreleased
+      #
+      # @!method context_attribute_names
+      #  Call {ActiveInteractor::Context::Base#attribute_names #attribute_names} on the {Base interactor} instance's
+      #  {ActiveInteractor::Context::Base context} instance
+      #
+      #  @since unreleased
+      #
       # @!method context_fail!(errors = nil)
       #  Call {ActiveInteractor::Context::Status#fail! #fail!} on the {Base interactor} instance's
       #  {ActiveInteractor::Context::Base context} instance
       #
       #  @since 1.0.0
       #
+      # @!method context_respond_to_without_attributes?(method, include_private_methods = false)
+      #  Call {ActiveInteractor::Context::Base#respond_to_without_attributes? #respond_to_without_attributes?} on the
+      #  {Base interactor} instance's {ActiveInteractor::Context::Base context} instance
+      #
+      #  @since unreleased
+      #
       # @!method context_rollback!
       #  Call {ActiveInteractor::Context::Status#rollback! #rollback!} on the {Base interactor} instance's
       #  {ActiveInteractor::Context::Base context} instance
       #
       #  @since 1.0.0
-      delegate :fail!, :rollback!, to: :context, prefix: true
+      delegate :attribute_missing, :attribute_names, :fail!, :respond_to_without_attributes?, :rollback!,
+               to: :context, prefix: true
 
       # @!method context_errors
       #  Call {ActiveInteractor::Context::Base#errors #errors} on the {Base interactor} instance's

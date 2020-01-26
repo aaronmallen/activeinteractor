@@ -37,6 +37,7 @@ module ActiveInteractor
         def attribute?(attr_name)
           attribute_types.key?(attr_name.to_s)
         end
+        alias has_attribute? attribute?
       end
 
       # Initialize a new instance of {Base}
@@ -49,7 +50,7 @@ module ActiveInteractor
         copy_called!(context)
         super
 
-        merge_values(context)
+        merge_attribute_values(context)
       end
 
       # Get values defined on the instance of {Base context} whose keys are defined on the {Base context} class'
@@ -74,6 +75,17 @@ module ActiveInteractor
         super.symbolize_keys
       end
 
+      # Check if the {Base context} instance has an attribute
+      #
+      # @since unreleased
+      #
+      # @param attr_name [Symbol, String] the name of the attribute to check
+      # @return [Boolean] whether or not the {Base context} instance has the attribute
+      def attribute?(attr_name)
+        @attributes.key?(attr_name.to_s)
+      end
+      alias has_attribute? attribute?
+
       # Merge an instance of {Base context} into the calling {Base context} instance
       #
       # @since 1.0.0
@@ -95,11 +107,13 @@ module ActiveInteractor
         self
       end
 
-      def attribute?(attr_name)
-        @attributes.key?(attr_name.to_s)
-      end
-
       private
+
+      def merge_attribute_values(context)
+        values = context.respond_to?(:attributes) ? context.attributes : context
+
+        values.each { |key, value| public_send("#{key}=", value) }
+      end
 
       def merge_errors!(errors)
         if errors.is_a? String
@@ -107,12 +121,6 @@ module ActiveInteractor
         else
           self.errors.merge!(errors)
         end
-      end
-
-      def merge_values(context)
-        values = context.respond_to?(:attributes) ? context.attributes : context
-
-        values.each { |key, value| public_send("#{key}=", value) }
       end
     end
   end

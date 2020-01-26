@@ -36,6 +36,38 @@ RSpec.describe ActiveInteractor::Context::Base do
     end
   end
 
+  describe '#attribute?' do
+    subject { instance.attribute?(attribute) }
+
+    context 'with class attributes []' do
+      let(:instance) { build_context.new }
+      let(:attribute) { :foo }
+
+      it { is_expected.to eq false }
+    end
+
+    context 'with class attributes [:foo]' do
+      let!(:context_class) do
+        build_context do
+          attributes :foo
+        end
+      end
+      let(:instance) { context_class.new }
+
+      context 'checking attribute :foo' do
+        let(:attribute) { :foo }
+
+        it { is_expected.to eq true }
+      end
+
+      context 'checking attribute :bar' do
+        let(:attribute) { :bar }
+
+        it { is_expected.to eq false }
+      end
+    end
+  end
+
   describe '#attributes' do
     subject { instance.attributes }
 
