@@ -238,6 +238,7 @@ module ActiveInteractor
     class Base < OpenStruct
       extend ActiveInteractor::Context::Attributes::ClassMethods
 
+      include ActiveModel::Attributes
       include ActiveModel::Validations
       include ActiveInteractor::Context::Attributes
       include ActiveInteractor::Context::Status
