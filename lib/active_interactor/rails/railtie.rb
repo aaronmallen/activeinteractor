@@ -2,23 +2,20 @@
 
 require 'rails'
 
-require 'active_interactor'
-
 module ActiveInteractor
+  # Rails classes and modules.
+  #
+  # @author Aaron Allen <hello@aaronmallen.me>
+  # @since 1.0.0
   module Rails
-    # Configure ActiveInteractor for rails
+    # The ActiveInteractor Railtie
+    #
     # @author Aaron Allen <hello@aaronmallen.me>
     # @since 1.0.0
+    #
+    # @see https://api.rubyonrails.org/classes/Rails/Railtie.html
     class Railtie < ::Rails::Railtie
-      config.active_interactor = ActiveInteractor::Rails.config
-
       config.eager_load_namespaces << ActiveInteractor
-
-      config.to_prepare do
-        ActiveInteractor.configure do |c|
-          c.logger = ::Rails.logger
-        end
-      end
     end
   end
 end

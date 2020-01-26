@@ -1,22 +1,15 @@
 # frozen_string_literal: true
 
-require_relative '../../active_interactor'
+require 'rails/generators/active_interactor/base'
 
 module Interactor
   module Context
     module Generators
       class RspecGenerator < ActiveInteractor::Generators::NamedBase
-        source_root File.expand_path('templates', __dir__)
-        desc 'Generate an interactor spec'
+        desc 'Generate an interactor context spec'
 
         def create_spec
-          template 'rspec.erb', file_path
-        end
-
-        private
-
-        def file_path
-          File.join('spec', interactor_directory, File.join(class_path), "#{file_name}_context_spec.rb")
+          template 'context_spec.erb', active_interactor_file(parent_dir: 'spec', suffix: 'context_spec')
         end
       end
     end

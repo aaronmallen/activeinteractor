@@ -1,75 +1,246 @@
 # frozen_string_literal: true
 
-require 'active_model'
-require 'ostruct'
-
-require 'active_interactor/context/attributes'
-
 module ActiveInteractor
   module Context
-    # The base context class.  All interactor contexts should inherit from
-    #  {Context::Base}.
+    # The base {Base context} class all {Base context} objects should inherit from.
+    #
     # @author Aaron Allen <hello@aaronmallen.me>
-    # @since 0.0.1
+    # @since 0.1.0
+    #
+    # @!method attribute_method?(attribute)
+    #  @!scope class
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations/ClassMethods.html#method-i-attribute_method-3F
+    #   ActiveModel::Validations::ClassMethods#attribute_method?
+    #
+    # @!method clear_validators!(attribute)
+    #  @!scope class
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations/ClassMethods.html#method-i-clear_validators-21
+    #   ActiveModel::Validations::ClassMethods#clear_validators!
+    #
+    # @!method validate(*args, &block)
+    #  @!scope class
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations/ClassMethods.html#method-i-validate
+    #   ActiveModel::Validations::ClassMethods#validate
+    #
+    # @!method validates(*attributes)
+    #  @!scope class
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations/ClassMethods.html#method-i-validates
+    #   ActiveModel::Validations::ClassMethods#validates
+    #
+    # @!method validates!(*attributes)
+    #  @!scope class
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations/ClassMethods.html#method-i-validates-21
+    #   ActiveModel::Validations::ClassMethods#validates!
+    #
+    # @!method validates_absence_of(*attr_names)
+    #  @!scope class
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations/HelperMethods.html#method-i-validates_absence_of
+    #   ActiveModel::Validations::HelperMethods#validates_absence_of
+    #
+    # @!method validates_acceptance_of(*attr_names)
+    #  @!scope class
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations/HelperMethods.html#method-i-validates_acceptance_of
+    #   ActiveModel::Validations::HelperMethods#validates_acceptance_of
+    #
+    # @!method validates_confirmation_of(*attr_names)
+    #  @!scope class
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations/HelperMethods.html#method-i-validates_confirmation_of
+    #   ActiveModel::Validations::HelperMethods#validates_confirmation_of
+    #
+    # @!method validates_each(*attr_names, &block)
+    #  @!scope class
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations/ClassMethods.html#method-i-validates_each
+    #   ActiveModel::Validations::ClassMethods#validates_each
+    #
+    # @!method validates_exclusion_of(*attr_names)
+    #  @!scope class
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations/HelperMethods.html#method-i-validates_exclusion_of
+    #   ActiveModel::Validations::HelperMethods#validates_exclusion_of
+    #
+    # @!method validates_format_of(*attr_names)
+    #  @!scope class
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations/HelperMethods.html#method-i-validates_format_of
+    #   ActiveModel::Validations::HelperMethods#validates_format_of
+    #
+    # @!method validates_inclusion_of(*attr_names)
+    #  @!scope class
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations/HelperMethods.html#method-i-validates_inclusion_of
+    #   ActiveModel::Validations::HelperMethods#validates_inclusion_of
+    #
+    # @!method validates_length_of(*attr_names)
+    #  @!scope class
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations/HelperMethods.html#method-i-validates_length_of
+    #   ActiveModel::Validations::HelperMethods#validates_length_of
+    #
+    # @!method validates_numericality_of(*attr_names)
+    #  @!scope class
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations/HelperMethods.html#method-i-validates_numericality_of
+    #   ActiveModel::Validations::HelperMethods#validates_numericality_of
+    #
+    # @!method validates_presence_of(*attr_names)
+    #  @!scope class
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations/HelperMethods.html#method-i-validates_presence_of
+    #   ActiveModel::Validations::HelperMethods#validates_presence_of
+    #
+    # @!method validates_size_of(*attr_names)
+    #  @!scope class
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations/HelperMethods.html#method-i-validates_size_of
+    #   ActiveModel::Validations::HelperMethods#validates_size_of
+    #
+    # @!method validates_with(*args, &block)
+    #  @!scope class
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations/ClassMethods.html#method-i-validates_with
+    #   ActiveModel::Validations::ClassMethods#validates_with
+    #
+    # @!method validators
+    #  @!scope class
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations/ClassMethods.html#method-i-validators
+    #   ActiveModel::Validations::ClassMethods#validators
+    #
+    # @!method validators_on(*attributes)
+    #  @!scope class
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations/ClassMethods.html#method-i-validators_on
+    #   ActiveModel::Validations::ClassMethods#validators_on
+    #
+    # @!method errors
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations.html#method-i-errors
+    #   ActiveModel::Validations#errors
+    #
+    # @!method invalid?(context = nil)
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations.html#method-i-invalid-3F
+    #   ActiveModel::Validations#invalid?
+    #
+    # @!method valid?(context = nil)
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations.html#method-i-valid-3F
+    #   ActiveModel::Validations#valid?
+    #
+    # @!method validate(context = nil)
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations.html#method-i-validate
+    #   ActiveModel::Validations#validate
+    #
+    # @!method validate!(context = nil)
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations.html#method-i-validate-21
+    #   ActiveModel::Validations#validate!
+    #
+    # @!method validates_absence_of(*attr_names)
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations/HelperMethods.html#method-i-validates_absence_of
+    #   ActiveModel::Validations::HelperMethods#validates_absence_of
+    #
+    # @!method validates_acceptance_of(*attr_names)
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations/HelperMethods.html#method-i-validates_acceptance_of
+    #   ActiveModel::Validations::HelperMethods#validates_acceptance_of
+    #
+    # @!method validates_confirmation_of(*attr_names)
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations/HelperMethods.html#method-i-validates_confirmation_of
+    #   ActiveModel::Validations::HelperMethods#validates_confirmation_of
+    #
+    # @!method validates_exclusion_of(*attr_names)
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations/HelperMethods.html#method-i-validates_exclusion_of
+    #   ActiveModel::Validations::HelperMethods#validates_exclusion_of
+    #
+    # @!method validates_format_of(*attr_names)
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations/HelperMethods.html#method-i-validates_format_of
+    #   ActiveModel::Validations::HelperMethods#validates_format_of
+    #
+    # @!method validates_inclusion_of(*attr_names)
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations/HelperMethods.html#method-i-validates_inclusion_of
+    #   ActiveModel::Validations::HelperMethods#validates_inclusion_of
+    #
+    # @!method validates_length_of(*attr_names)
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations/HelperMethods.html#method-i-validates_length_of
+    #   ActiveModel::Validations::HelperMethods#validates_length_of
+    #
+    # @!method validates_numericality_of(*attr_names)
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations/HelperMethods.html#method-i-validates_numericality_of
+    #   ActiveModel::Validations::HelperMethods#validates_numericality_of
+    #
+    # @!method validates_presence_of(*attr_names)
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations/HelperMethods.html#method-i-validates_presence_of
+    #   ActiveModel::Validations::HelperMethods#validates_presence_of
+    #
+    # @!method validates_size_of(*attr_names)
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations/HelperMethods.html#method-i-validates_size_of
+    #   ActiveModel::Validations::HelperMethods#validates_size_of
+    #
+    # @!method validates_with(*args, &block)
+    #  @since 0.1.0
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Validations.html#method-i-validates_with
+    #   ActiveModel::Validations#validates_with
     class Base < OpenStruct
+      extend ActiveInteractor::Context::Attributes::ClassMethods
+
       include ActiveModel::Validations
-      include Attributes
-      include Status
-
-      # @param context [Hash|Context::Base] attributes to assign to the context
-      # @return [Context::Base] a new instance of {Context::Base}
-      def initialize(context = {})
-        merge_errors!(context.errors) if context.respond_to?(:errors)
-        copy_flags!(context)
-        copy_called!(context)
-        super
-      end
-
-      # @!method valid?(context = nil)
-      # @see
-      #   https://github.com/rails/rails/blob/master/activemodel/lib/active_model/validations.rb#L305
-      #   ActiveModel::Validations#valid?
-
-      # Merge an instance of context or a hash into an existing context
-      # @since 1.0.0
-      # @example
-      #   class MyInteractor1 < ActiveInteractor::Base
-      #     def perform
-      #       context.first_name = 'Aaron'
-      #     end
-      #   end
-      #
-      #  class MyInteractor2 < ActiveInteractor::Base
-      #    def perform
-      #      context.last_name = 'Allen'
-      #    end
-      #  end
-      #
-      #  result = MyInteractor1.perform
-      #  #=> <#MyInteractor1::Context first_name='Aaron'>
-      #
-      #  result.merge!(MyInteractor2.perform)
-      #  #=> <#MyInteractor1::Context first_name='Aaron' last_name='Allen'>
-      # @param context [Base|Hash] attributes to merge into the context
-      # @return [Base] an instance of {Base}
-      def merge!(context)
-        merge_errors!(context.errors) if context.respond_to?(:errors)
-        copy_flags!(context)
-        context.each_pair do |key, value|
-          self[key] = value
-        end
-        self
-      end
-
-      private
-
-      def merge_errors!(errors)
-        if errors.is_a? String
-          self.errors.add(:context, errors)
-        else
-          self.errors.merge!(errors)
-        end
-      end
+      include ActiveInteractor::Context::Attributes
+      include ActiveInteractor::Context::Status
     end
   end
 end

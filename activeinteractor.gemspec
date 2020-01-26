@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.version       = version
   spec.summary       = 'Ruby interactors with ActiveModel::Validations'
   spec.description   = <<~DESC
-    Ruby interactors with ActiveModel::Validations based on the interactors gem.
+    An implementation of the Command Pattern for Ruby with ActiveModel::Validations based on the interactors gem.
     Rich support for attributes, callbacks, and validations, and thread safe performance methods.
   DESC
 
@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['hello@aaronmallen.me']
   spec.homepage      = 'https://github.com/aaronmallen/activeinteractor'
 
-  spec.files         = Dir['CHANGELOG.md', 'LICENSE', 'README.md', 'lib/**/*']
+  spec.files         = Dir['.yardopts', 'CHANGELOG.md', 'LICENSE', 'README.md', 'lib/**/*']
   spec.require_paths = ['lib']
   spec.test_files    = Dir['spec/**/*']
 

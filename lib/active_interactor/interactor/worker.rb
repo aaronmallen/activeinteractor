@@ -2,21 +2,24 @@
 
 module ActiveInteractor
   module Interactor
+    # A worker class to call {Base interactor} {Interactor::Perform#perform #perform} and
+    # {Interactor::Perform#rollback #rollback} methods in a thread safe manner.
+    #
     # @api private
-    # Thread safe execution of interactor {Interactor#perform #perform} and
-    #  {Interactor#rollback #rollback} methods.
     # @author Aaron Allen <hello@aaronmallen.me>
-    # @since 0.0.2
+    # @since 0.1.0
     class Worker
-      # @param interactor [Base] an instance of interactor
+      # Initialize a new instance of {Worker}
+      #
+      # @param interactor [Base] an {Base interactor} instance
       # @return [Worker] a new instance of {Worker}
       def initialize(interactor)
-        options = interactor.options.dup
-        @interactor = interactor.dup.with_options(options)
+        @interactor = interactor.deep_dup
       end
 
-      # Calls {#execute_perform!} and rescues {Error::ContextFailure}
-      # @return [Context::Base] an instance of {Context::Base}
+      # Run the {Base interactor} instance's {Interactor::Perform#perform #perform} with callbacks and validation.
+      #
+      # @return [Class] a {ActiveInteractor::Context::Base context} instance
       def execute_perform
         execute_perform!
       rescue Error::ContextFailure => e
@@ -24,18 +27,20 @@ module ActiveInteractor
         context
       end
 
-      # Calls {Interactor#perform} with callbacks and context validation
-      # @raise [Error::ContextFailure] if the context fails
-      # @return [Context::Base] an instance of {Context::Base}
+      # Run the {Base interactor} instance's {Interactor::Perform#perform #perform} with callbacks and validation
+      # without rescuing {Error::ContextFailure}.
+      #
+      # @raise [Error::ContextFailure] if the {Base interactor} fails it's {ActiveInteractor::Context::Base context}
+      # @return [Class] a {ActiveInteractor::Context::Base context} instance
       def execute_perform!
         execute_context!
       rescue StandardError => e
         handle_error(e)
       end
 
-      # Calls {Interactor#rollback} with callbacks
-      # @return [Boolean] `true` if rolled back successfully or `false` if already
-      #  rolled back
+      # Run the {Base interactor} instance's {Interactor::Perform#rollback #rollback} with callbacks
+      #
+      # @return [Boolean] `true` if context was successfully rolled back
       def execute_rollback
         return if interactor.options.skip_rollback
 

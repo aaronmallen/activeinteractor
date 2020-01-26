@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe ActiveInteractor::Organizer do
+RSpec.describe ActiveInteractor::Organizer::Base do
   let(:interactor_class) { described_class }
   include_examples 'a class with interactor methods'
   include_examples 'a class with interactor callback methods'
@@ -94,6 +94,16 @@ RSpec.describe ActiveInteractor::Organizer do
         end
       end
     end
+  end
+
+  describe '.perform_in_parallel' do
+    subject do
+      build_organizer do
+        perform_in_parallel
+      end
+    end
+
+    it { should have_attributes(parallel: true) }
   end
 
   describe '#perform' do

@@ -28,7 +28,7 @@ module Spec
       end
 
       def build_organizer(class_name = 'TestOrganizer', &block)
-        build_class(class_name, ActiveInteractor::Organizer, &block)
+        build_class(class_name, ActiveInteractor::Organizer::Base, &block)
       end
 
       def clean_factories!

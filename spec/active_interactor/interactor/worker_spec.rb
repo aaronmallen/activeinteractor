@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'active_interactor/interactor/worker'
 
 RSpec.describe ActiveInteractor::Interactor::Worker do
   context 'with interactor class TestInteractor' do

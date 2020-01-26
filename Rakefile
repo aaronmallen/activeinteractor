@@ -2,6 +2,7 @@
 
 require 'bundler/gem_tasks'
 require 'rspec/core/rake_task'
+require 'active_interactor/version'
 
 RSpec::Core::RakeTask.new(:rspec)
 
@@ -21,9 +22,7 @@ begin
   rescue SystemExit # rubocop:disable Lint/SuppressedException
   end
 
-  YARD::Rake::YardocTask.new(:doc) do |t|
-    t.stats_options = ['--list-undoc']
-  end
+  YARD::Rake::YardocTask.new(:doc)
 
   Rake::Task[:spec].clear.enhance %i[mdl rubocop rspec]
   task default: %i[spec doc build]

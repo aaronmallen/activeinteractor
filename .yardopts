@@ -5,6 +5,7 @@
 --exclude lib/rails
 --protected
 --no-private
+--embed-mixins
 lib/**/*.rb
 -
 CHANGELOG.md

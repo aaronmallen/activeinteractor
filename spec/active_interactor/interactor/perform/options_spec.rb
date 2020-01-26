@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe ActiveInteractor::Interactor::PerformOptions do
+RSpec.describe ActiveInteractor::Interactor::Perform::Options do
   subject { described_class.new }
 
   it { is_expected.to respond_to :skip_each_perform_callbacks }

@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
-require 'active_support/core_ext/class/attribute'
-
 module ActiveInteractor
-  # Methods for configurable objects
+  # Configurable object methods. Because {Configurable} is a module classes should include {Configurable} rather than
+  # inherit from it.
+  #
+  # @api private
   # @author Aaron Allen <hello@aaronmallen.me>
   # @since 1.0.0
   module Configurable
@@ -13,11 +14,18 @@ module ActiveInteractor
       end
     end
 
-    # Class methods for configuable objects
+    # Configurable object class methods. Because {ClassMethods} is a module classes should extend {ClassMethods} rather
+    # than inherit from it.
+    #
+    # @api private
+    # @author Aaron Allen <hello@aaronmallen.me>
+    # @since 1.0.0
     module ClassMethods
-      # Set or get default options for a configurable object
-      # @param options [Hash] the options to set for defaults
-      # @return [Hash] the defaults
+      # Get or Set the default attributes for a {Configurable} class. This method will create an `attr_accessor` on
+      # the configurable class as well as set a default value for the attribute.
+      #
+      # @param options [Hash{Symbol=>*}, nil] the default options to set on the {Configurable} class
+      # @return [Hash{Symbol=>*}] the passed options or the set defaults if no options are passed.
       def defaults(options = {})
         return __defaults if options.empty?
 
@@ -34,8 +42,8 @@ module ActiveInteractor
       end
     end
 
-    # @param options [Hash] the options for the configuration
-    # @return [Configurable] a new instance of {Configurable}
+    # nodoc #
+    # @private
     def initialize(options = {})
       self.class.defaults.merge(options).each do |key, value|
         instance_variable_set("@#{key}", value)
