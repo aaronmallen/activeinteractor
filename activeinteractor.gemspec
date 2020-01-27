@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.version       = version
   spec.summary       = 'Ruby interactors with ActiveModel::Validations'
   spec.description   = <<~DESC
-    An implementation of the Command Pattern for Ruby with ActiveModel::Validations based on the interactors gem.
+    An implementation of the Command Pattern for Ruby with ActiveModel::Validations inspired by the interactor gem.
     Rich support for attributes, callbacks, and validations, and thread safe performance methods.
   DESC
 

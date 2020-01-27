@@ -22,7 +22,10 @@ require 'active_interactor/version'
 # {Base interactor} needs to do its work. When an {Base interactor} does its single purpose, it affects its given
 # {Context::Base context}.
 #
-# @see https://github.com/aaronmallen/activeinteractor/wiki Usage
+# @see https://medium.com/@aaronmallen/activeinteractor-8557c0dc78db Basic Usage
+# @see https://github.com/aaronmallen/activeinteractor/wiki Advanced Usage
+# @see https://github.com/aaronmallen/activeinteractor Source Code
+# @see https://github.com/aaronmallen/activeinteractor/issues Issues
 #
 # ## License
 #
