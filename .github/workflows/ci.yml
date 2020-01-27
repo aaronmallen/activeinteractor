@@ -51,7 +51,7 @@ jobs:
         run: bundle exec rake build
       - name: Report coverage to Code Climate
         run: |
-          export GIT_BRANCH=$GITHUB_HEAD_REF
+          export GIT_BRANCH=$GITHUB_REF
           export GIT_COMMIT_SHA=$GITHUB_SHA
           export CI_BUILD_ID=$GITHUB_RUN_NUMBER
           export CI_BUILD_URL="https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
