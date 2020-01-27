@@ -3,8 +3,6 @@
 require 'spec_helper'
 
 RSpec.describe ActiveInteractor::Context::Base do
-  after(:each) { described_class.instance_variable_set('@__attributes', []) }
-
   describe '.attributes' do
     context 'when no arguments are passed' do
       subject { context_class.attributes }
