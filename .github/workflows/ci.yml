@@ -22,7 +22,9 @@ jobs:
       CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
       CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
       CODACY_RUN_LOCAL: true
+      CI_NAME: github-actions
     steps:
+      - uses: managedkaos/print-env@master
       - uses: actions/checkout@v1
       - uses: actions/setup-ruby@v1
         with:
@@ -49,7 +51,12 @@ jobs:
       - name: Rake build
         run: bundle exec rake build
       - name: Report coverage to Code Climate
-        run: ./cc-test-reporter after-build --exit-code $?
+        run: |
+          export GIT_BRANCH=$GITHUB_HEAD_REF
+          export GIT_COMMIT_SHA=$GITHUB_SHA
+          export CI_BUILD_ID=$GITHUB_RUN_NUMBER
+          export CI_BUILD_URL="https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          ./cc-test-reporter after-build --exit-code $?
     strategy:
       matrix:
         ruby:
