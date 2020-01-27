@@ -24,7 +24,6 @@ jobs:
       CODACY_RUN_LOCAL: true
       CI_NAME: github-actions
     steps:
-      - uses: managedkaos/print-env@master
       - uses: actions/checkout@v1
       - uses: actions/setup-ruby@v1
         with:
