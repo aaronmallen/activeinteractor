@@ -5,32 +5,70 @@ require 'spec_helper'
 RSpec.describe ActiveInteractor::Context::Base do
   after(:each) { described_class.instance_variable_set('@__attributes', []) }
 
-  describe '#attributes' do
+  describe '.attributes' do
     context 'when no arguments are passed' do
-      subject { described_class.attributes }
+      subject { context_class.attributes }
+      let!(:context_class) { build_context }
       it { is_expected.to eq [] }
 
       context 'when an attribute :foo was previously defined' do
-        before { described_class.instance_variable_set('@__attributes', %i[foo]) }
+        let!(:context_class) do
+          build_context do
+            attributes :foo
+          end
+        end
 
         it { is_expected.to eq %i[foo] }
       end
     end
 
     context 'when given arguments :foo and :bar' do
-      subject { described_class.attributes(:foo, :bar) }
+      subject { context_class.attributes(:foo, :bar) }
+      let!(:context_class) { build_context }
 
       it { is_expected.to eq %i[bar foo] }
 
       context 'when an attribute :foo was previously defined' do
-        before { described_class.instance_variable_set('@__attributes', %i[foo]) }
+        before { TestContext.attributes(:foo) }
 
         it { is_expected.to eq %i[bar foo] }
       end
     end
   end
 
-  describe '.attributes' do
+  describe '#attribute?' do
+    subject { instance.attribute?(attribute) }
+
+    context 'with class attributes []' do
+      let(:instance) { build_context.new }
+      let(:attribute) { :foo }
+
+      it { is_expected.to eq false }
+    end
+
+    context 'with class attributes [:foo]' do
+      let!(:context_class) do
+        build_context do
+          attributes :foo
+        end
+      end
+      let(:instance) { context_class.new }
+
+      context 'checking attribute :foo' do
+        let(:attribute) { :foo }
+
+        it { is_expected.to eq true }
+      end
+
+      context 'checking attribute :bar' do
+        let(:attribute) { :bar }
+
+        it { is_expected.to eq false }
+      end
+    end
+  end
+
+  describe '#attributes' do
     subject { instance.attributes }
 
     context 'with class attributes []' do
@@ -43,13 +81,23 @@ RSpec.describe ActiveInteractor::Context::Base do
     end
 
     context 'with class attributes [:foo, :bar, :baz]' do
-      before { described_class.attributes(:foo, :bar, :baz) }
+      before { build_context.attributes(:foo, :bar) }
 
-      context 'with an instance having attributes { :foo => "foo", :bar => "bar", :baz => "baz" }' do
-        let(:instance) { described_class.new(foo: 'foo', bar: 'bar', baz: 'baz') }
+      context 'with an instance having attributes { :foo => "foo", :bar => "bar" }' do
+        let(:instance) { TestContext.new(foo: 'foo', bar: 'bar') }
 
         it { is_expected.to be_a Hash }
-        it { is_expected.to eq(bar: 'bar', baz: 'baz', foo: 'foo') }
+        it { is_expected.to eq(bar: 'bar', foo: 'foo') }
+      end
+
+      context 'with an instance having attributes { :foo => "foo", :bar => "bar", :baz => "baz" }' do
+        let(:instance) { TestContext.new(foo: 'foo', bar: 'bar', baz: 'baz') }
+
+        it { is_expected.to be_a Hash }
+        it { is_expected.to eq(bar: 'bar', foo: 'foo') }
+        it 'is expected to assign :baz' do
+          expect(instance.baz).to eq 'baz'
+        end
       end
     end
   end

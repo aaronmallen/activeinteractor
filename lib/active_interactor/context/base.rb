@@ -7,6 +7,14 @@ module ActiveInteractor
     # @author Aaron Allen <hello@aaronmallen.me>
     # @since 0.1.0
     #
+    # @!method attribute(name, type=Type::Value.new, **options)
+    #  @!scope class
+    #  @since unreleased
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Attributes/ClassMethods.html#method-i-attribute
+    #   ActiveModel::Attributes::ClassMethods#attribute
+    #
+    #
     # @!method attribute_method?(attribute)
     #  @!scope class
     #  @since 0.1.0
@@ -14,12 +22,47 @@ module ActiveInteractor
     #   https://api.rubyonrails.org/classes/ActiveModel/Validations/ClassMethods.html#method-i-attribute_method-3F
     #   ActiveModel::Validations::ClassMethods#attribute_method?
     #
+    # @!method attribute_missing(match, *args, &block)
+    #  @!scope class
+    #  @since unreleased
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/AttributeMethods.html#method-i-attribute_missing
+    #   ActiveModel::AttributeMethods#attribute_missing
+    #
+    # @!method attribute_names
+    #  @!scope class
+    #  @since unreleased
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Attributes/ClassMethods.html#method-i-attribute_names
+    #   ActiveModel::Attributes::ClassMethods#attribute_names
+    #
     # @!method clear_validators!(attribute)
     #  @!scope class
     #  @since 0.1.0
     #  @see
     #   https://api.rubyonrails.org/classes/ActiveModel/Validations/ClassMethods.html#method-i-clear_validators-21
     #   ActiveModel::Validations::ClassMethods#clear_validators!
+    #
+    # @!method method_missing(method, *args, &block)
+    #  @scope class
+    #  @since unreleased
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/AttributeMethods.html#method-i-method_missing
+    #   ActiveModel::AttributeMethods#method_missing
+    #
+    # @!method respond_to?(method, include_private_methods = false)
+    #  @scope class
+    #  @since unreleased
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/AttributeMethods.html#method-i-respond_to-3F
+    #   ActiveModel::AttributeMethods#respond_to?
+    #
+    # @!method respond_to_without_attributes?(method, include_private_methods = false)
+    #  @scope class
+    #  @since unreleased
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/AttributeMethods.html#method-i-respond_to_without_attributes-3F
+    #   ActiveModel::AttributeMethods#respond_to_without_attributes?
     #
     # @!method validate(*args, &block)
     #  @!scope class
@@ -140,6 +183,18 @@ module ActiveInteractor
     #   https://api.rubyonrails.org/classes/ActiveModel/Validations/ClassMethods.html#method-i-validators_on
     #   ActiveModel::Validations::ClassMethods#validators_on
     #
+    # @!method attribute_missing(match, *args, &block)
+    #  @since unreleased
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/AttributeMethods.html#method-i-attribute_missing
+    #   ActiveModel::AttributeMethods#attribute_missing
+    #
+    # @!method attribute_names
+    #  @since unreleased
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/Attributes/ClassMethods.html#method-i-attribute_names
+    #   ActiveModel::Attributes::ClassMethods#attribute_names
+    #
     # @!method errors
     #  @since 0.1.0
     #  @see
@@ -151,6 +206,24 @@ module ActiveInteractor
     #  @see
     #   https://api.rubyonrails.org/classes/ActiveModel/Validations.html#method-i-invalid-3F
     #   ActiveModel::Validations#invalid?
+    #
+    # @!method method_missing(method, *args, &block)
+    #  @since unreleased
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/AttributeMethods.html#method-i-method_missing
+    #   ActiveModel::AttributeMethods#method_missing
+    #
+    # @!method respond_to?(method, include_private_methods = false)
+    #  @since unreleased
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/AttributeMethods.html#method-i-respond_to-3F
+    #   ActiveModel::AttributeMethods#respond_to?
+    #
+    # @!method respond_to_without_attributes?(method, include_private_methods = false)
+    #  @since unreleased
+    #  @see
+    #   https://api.rubyonrails.org/classes/ActiveModel/AttributeMethods.html#method-i-respond_to_without_attributes-3F
+    #   ActiveModel::AttributeMethods#respond_to_without_attributes?
     #
     # @!method valid?(context = nil)
     #  @since 0.1.0
@@ -238,6 +311,7 @@ module ActiveInteractor
     class Base < OpenStruct
       extend ActiveInteractor::Context::Attributes::ClassMethods
 
+      include ActiveModel::Attributes
       include ActiveModel::Validations
       include ActiveInteractor::Context::Attributes
       include ActiveInteractor::Context::Status
