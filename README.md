@@ -8,7 +8,7 @@
 [![Code Quality](https://api.codacy.com/project/badge/Grade/be92c4ecf12347da82d266f6a4368b6e)](https://www.codacy.com/manual/aaronmallen/activeinteractor?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=aaronmallen/activeinteractor&amp;utm_campaign=Badge_Grade)
 [![Test Coverage](https://api.codacy.com/project/badge/Coverage/be92c4ecf12347da82d266f6a4368b6e)](https://www.codacy.com/manual/aaronmallen/activeinteractor?utm_source=github.com&utm_medium=referral&utm_content=aaronmallen/activeinteractor&utm_campaign=Badge_Coverage)
 
-An implementation of the [command pattern] for Ruby with [ActiveModel::Validations] based on the
+An implementation of the [command pattern] for Ruby with [ActiveModel::Validations] inspired by the
 [interactor][collective_idea_interactors] gem. Rich support for attributes, callbacks, and validations,
 and thread safe performance methods.
 
