@@ -17,7 +17,7 @@ and thread safe performance methods.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'activeinteractor'
+gem 'activeinteractor', require: 'active_interactor
 ```
 
 And then execute:
