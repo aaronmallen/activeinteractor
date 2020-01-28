@@ -82,7 +82,7 @@ module ActiveInteractor
 
       # Check if the {Base context} instance has an attribute
       #
-      # @since unreleased
+      # @since 1.0.1
       #
       # @param attr_name [Symbol, String] the name of the attribute to check
       # @return [Boolean] whether or not the {Base context} instance has the attribute
