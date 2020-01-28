@@ -28,6 +28,17 @@ module ActiveInteractor
         #    MyInteractor.context_class.attributes
         #    #=> [:first_name, :last_name]
         #
+        # @example Setting default values on the {ActiveInteractor::Context::Base context} class
+        #    class MyInteractor < ActiveInteractor::Base
+        #      context_attribute :first_name, default: -> { 'Aaron' }
+        #    end
+        #
+        #    MyInteractor.perform
+        #    #=> <#MyInteractor::Context first_name='Aaron'>
+        #
+        #   MyInteractor.perform(first_name: 'Bob')
+        #   #=> <#MyInteractor::Context first_name='Bob'>
+        #
         # @!method context_attribute_missing(match, *args, &block)
         #  Call {ActiveInteractor::Context::Base.attribute_missing .attribute_missing} on the {Base interactor} class'
         #  {#context_class context class}
