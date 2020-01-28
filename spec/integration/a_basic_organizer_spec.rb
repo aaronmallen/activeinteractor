@@ -94,4 +94,28 @@ RSpec.describe 'A basic organizer', type: :integration do
       end
     end
   end
+
+  # https://github.com/aaronmallen/activeinteractor/issues/151
+  context 'with an interactor having a predefined context with attributes [:foo]' do
+    let!(:test_context_class) do
+      build_context('TestInteractor1Context') do
+        attributes :foo
+      end
+    end
+    let!(:test_interactor_1) { build_interactor('TestInteractor1') }
+    let(:interactor_class) do
+      build_organizer do
+        organize :test_interactor_1
+      end
+    end
+
+    context 'when passing a context argument { :foo => "foo" }' do
+      let(:context_attributes) { { foo: 'foo' } }
+
+      describe '.perform' do
+        subject { interactor_class.perform(context_attributes) }
+        it { is_expected.to have_attributes(foo: 'foo') }
+      end
+    end
+  end
 end
