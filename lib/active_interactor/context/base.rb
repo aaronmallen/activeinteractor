@@ -10,6 +10,18 @@ module ActiveInteractor
     # @!method attribute(name, type=Type::Value.new, **options)
     #  @!scope class
     #  @since unreleased
+    #
+    #  @example Setting default values on the {Base context} class
+    #    class MyContext < ActiveInteractor::Context::Base
+    #      attribute :first_name, default: -> { 'Aaron' }
+    #    end
+    #
+    #    MyContext.new
+    #    #=> <#MyContext first_name='Aaron'>
+    #
+    #    MyContext.new(first_name: 'Bob')
+    #    #=> <#MyContext first_name='Bob'>
+    #
     #  @see
     #   https://api.rubyonrails.org/classes/ActiveModel/Attributes/ClassMethods.html#method-i-attribute
     #   ActiveModel::Attributes::ClassMethods#attribute

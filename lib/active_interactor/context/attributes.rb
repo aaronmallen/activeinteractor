@@ -25,6 +25,11 @@ module ActiveInteractor
         #   MyContext.attributes
         #   #=> [:first_name, :last_name]
         #
+        # @example Set defaults for attributes on a {Base context} class
+        #   class MyContext < ActiveInteractor::Context::Base
+        #     attributes first_name: { default: -> { 'Aaron' } }, last_name: { default: -> { 'Allen' } }
+        #   end
+        #
         # @return [Array<Symbol>] the defined attributes
         def attributes(*attributes)
           attributes.compact.uniq.each { |attr| attribute(attr) }
