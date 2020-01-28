@@ -130,10 +130,45 @@ RSpec.describe 'A basic organizer', type: :integration do
         it { is_expected.to have_attributes(foo: 'foo', bar: 'bar') }
 
         it 'is expected to copy all attributes in the contexts to each interactor' do
-          expect(result.has_foo_as_method).to be true
-          expect(result.has_foo_as_element).to be true
-          expect(result.has_bar_as_method).to be true
-          expect(result.has_bar_as_element).to be true
+          expect(subject.has_foo_as_method).to be true
+          expect(subject.has_foo_as_element).to be true
+          expect(subject.has_bar_as_method).to be true
+          expect(subject.has_bar_as_element).to be true
+        end
+
+        describe '#attributes' do
+          subject { result.attributes }
+
+          it { is_expected.to be_a Hash }
+          it { is_expected.to be_empty }
+        end
+      end
+
+      context 'with attributes [:foo] on the organizer context class' do
+        let!(:interactor_class) do
+          build_organizer do
+            context_attributes :foo
+            organize :test_interactor_1
+          end
+        end
+
+        describe '.perform' do
+          subject(:result) { interactor_class.perform(context_attributes) }
+          it { is_expected.to have_attributes(foo: 'foo', bar: 'bar') }
+
+          it 'is expected to copy all attributes in the contexts to each interactor' do
+            expect(subject.has_foo_as_method).to be true
+            expect(subject.has_foo_as_element).to be true
+            expect(subject.has_bar_as_method).to be true
+            expect(subject.has_bar_as_element).to be true
+          end
+
+          describe '#attributes' do
+            subject { result.attributes }
+
+            it { is_expected.to be_a Hash }
+            it { is_expected.to eq(foo: 'foo') }
+          end
         end
       end
     end
