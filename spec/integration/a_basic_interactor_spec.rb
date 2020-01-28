@@ -103,4 +103,28 @@ RSpec.describe 'A basic interactor', type: :integration do
       end
     end
   end
+
+  context 'having default context attributes {:foo => "foo"}' do
+    let(:interactor_class) do
+      build_interactor do
+        context_attribute :foo, default: -> { 'foo' }
+      end
+    end
+
+    describe '.perform' do
+      subject { interactor_class.perform(context_attributes) }
+
+      context 'when no context is passed' do
+        let(:context_attributes) { {} }
+
+        it { is_expected.to have_attributes(foo: 'foo') }
+      end
+
+      context 'when context {:foo => "bar"} is passed' do
+        let(:context_attributes) { { foo: 'bar' } }
+
+        it { is_expected.to have_attributes(foo: 'bar') }
+      end
+    end
+  end
 end
