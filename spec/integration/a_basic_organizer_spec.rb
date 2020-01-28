@@ -94,4 +94,83 @@ RSpec.describe 'A basic organizer', type: :integration do
       end
     end
   end
+
+  # https://github.com/aaronmallen/activeinteractor/issues/151
+  context 'with an interactor class having a predefined context class with attributes [:foo]' do
+    let!(:test_context_class) do
+      build_context('TestInteractor1Context') do
+        attributes :foo
+      end
+    end
+
+    # rubocop:disable Metrics/AbcSize
+    let!(:test_interactor_1) do
+      build_interactor('TestInteractor1') do
+        def perform
+          context.has_foo_as_method = context.foo.present?
+          context.has_foo_as_element = context[:foo].present?
+          context.has_bar_as_method = context.bar.present?
+          context.has_bar_as_element = context[:bar].present?
+        end
+      end
+    end
+    # rubocop:enable Metrics/AbcSize
+
+    let(:interactor_class) do
+      build_organizer do
+        organize :test_interactor_1
+      end
+    end
+
+    context 'when passing a context argument { :foo => "foo", :bar => "bar" }' do
+      let(:context_attributes) { { foo: 'foo', bar: 'bar' } }
+
+      describe '.perform' do
+        subject(:result) { interactor_class.perform(context_attributes) }
+        it { is_expected.to have_attributes(foo: 'foo', bar: 'bar') }
+
+        it 'is expected to copy all attributes in the contexts to each interactor' do
+          expect(subject.has_foo_as_method).to be true
+          expect(subject.has_foo_as_element).to be true
+          expect(subject.has_bar_as_method).to be true
+          expect(subject.has_bar_as_element).to be true
+        end
+
+        describe '#attributes' do
+          subject { result.attributes }
+
+          it { is_expected.to be_a Hash }
+          it { is_expected.to be_empty }
+        end
+      end
+
+      context 'with attributes [:foo] on the organizer context class' do
+        let!(:interactor_class) do
+          build_organizer do
+            context_attributes :foo
+            organize :test_interactor_1
+          end
+        end
+
+        describe '.perform' do
+          subject(:result) { interactor_class.perform(context_attributes) }
+          it { is_expected.to have_attributes(foo: 'foo', bar: 'bar') }
+
+          it 'is expected to copy all attributes in the contexts to each interactor' do
+            expect(subject.has_foo_as_method).to be true
+            expect(subject.has_foo_as_element).to be true
+            expect(subject.has_bar_as_method).to be true
+            expect(subject.has_bar_as_element).to be true
+          end
+
+          describe '#attributes' do
+            subject { result.attributes }
+
+            it { is_expected.to be_a Hash }
+            it { is_expected.to eq(foo: 'foo') }
+          end
+        end
+      end
+    end
+  end
 end

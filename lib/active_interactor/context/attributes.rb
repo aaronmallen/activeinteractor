@@ -107,7 +107,7 @@ module ActiveInteractor
         merge_errors!(context.errors) if context.respond_to?(:errors)
         copy_flags!(context)
         context.each_pair do |key, value|
-          self[key] = value unless value.nil?
+          public_send("#{key}=", value) unless value.nil?
         end
         self
       end
@@ -117,8 +117,9 @@ module ActiveInteractor
       def merge_attribute_values(context)
         return unless context
 
-        values = context.respond_to?(:attributes) ? context.attributes : context
-        values.each { |key, value| public_send("#{key}=", value) }
+        context.each_pair do |key, value|
+          public_send("#{key}=", value)
+        end
       end
 
       def merge_errors!(errors)
