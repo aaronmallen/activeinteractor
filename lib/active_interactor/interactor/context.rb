@@ -32,20 +32,20 @@ module ActiveInteractor
         #  Call {ActiveInteractor::Context::Base.attribute_missing .attribute_missing} on the {Base interactor} class'
         #  {#context_class context class}
         #
-        #  @since unreleased
+        #  @since 1.0.1
         #
         # @!method context_respond_to_without_attributes?(method, include_private_methods = false)
         #  Call {ActiveInteractor::Context::Base.respond_to_without_attributes? .respond_to_without_attributes?} on the
         #  {Base interactor} class' {#context_class context class}
         #
-        #  @since unreleased
+        #  @since 1.0.1
         delegate :attributes, :attribute_missing, :respond_to_without_attributes?, to: :context_class, prefix: :context
 
         # @!method context_attribute(name, type=Type::Value.new, **options)
         #  Call {ActiveInteractor::Context::Base.attribute .attribute} on the {Base interactor} class'
         #  {#context_class context class}
         #
-        #  @since unreleased
+        #  @since 1.0.1
         #
         # @example Setting default values on the {ActiveInteractor::Context::Base context} class
         #    class MyInteractor < ActiveInteractor::Base
@@ -62,7 +62,7 @@ module ActiveInteractor
         #  Call {ActiveInteractor::Context::Base.attribute_names .attribute_names} on the {Base interactor} class'
         #  {#context_class context class}
         #
-        #  @since unreleased
+        #  @since 1.0.1
         delegate(*ActiveModel::Attributes::ClassMethods.instance_methods, to: :context_class, prefix: :context)
 
         # @!method context_attribute_method?(attribute)
@@ -223,13 +223,13 @@ module ActiveInteractor
       #  Call {ActiveInteractor::Context::Base#attribute_missing #attribute_missing} on the {Base interactor} instance's
       #  {ActiveInteractor::Context::Base context} instance
       #
-      #  @since unreleased
+      #  @since 1.0.1
       #
       # @!method context_attribute_names
       #  Call {ActiveInteractor::Context::Base#attribute_names #attribute_names} on the {Base interactor} instance's
       #  {ActiveInteractor::Context::Base context} instance
       #
-      #  @since unreleased
+      #  @since 1.0.1
       #
       # @!method context_fail!(errors = nil)
       #  Call {ActiveInteractor::Context::Status#fail! #fail!} on the {Base interactor} instance's
@@ -241,7 +241,7 @@ module ActiveInteractor
       #  Call {ActiveInteractor::Context::Base#respond_to_without_attributes? #respond_to_without_attributes?} on the
       #  {Base interactor} instance's {ActiveInteractor::Context::Base context} instance
       #
-      #  @since unreleased
+      #  @since 1.0.1
       #
       # @!method context_rollback!
       #  Call {ActiveInteractor::Context::Status#rollback! #rollback!} on the {Base interactor} instance's

@@ -7,21 +7,23 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [v1.0.1] - 2020-01-28
+
 ### Added
 
 - `ActiveInteractor::Context::Attributes#attribute?`
 - `ActiveInteractor::Context::Attributes#has_attribute?`
-- `ActiveInteractor::Context::Base#attribute_missing`
-- `ActiveInteractor::Context::Base#attribute_names`
-- `ActiveInteractor::Context::Base#method_missing`
-- `ActiveInteractor::Context::Base#respond_to?`
-- `ActiveInteractor::Context::Base#respond_to_without_attributes?`
 - `ActiveInteractor::Context::Base.attribute`
 - `ActiveInteractor::Context::Base.attribute_missing`
 - `ActiveInteractor::Context::Base.attribute_names`
 - `ActiveInteractor::Context::Base.method_missing`
 - `ActiveInteractor::Context::Base.respond_to?`
 - `ActiveInteractor::Context::Base.respond_to_without_attributes?`
+- `ActiveInteractor::Context::Base#attribute_missing`
+- `ActiveInteractor::Context::Base#attribute_names`
+- `ActiveInteractor::Context::Base#method_missing`
+- `ActiveInteractor::Context::Base#respond_to?`
+- `ActiveInteractor::Context::Base#respond_to_without_attributes?`
 - `ActiveInteractor::Interactor::Context#context_attribute_missing`
 - `ActiveInteractor::Interactor::Context#context_attribute_names`
 - `ActiveInteractor::Interactor::Context#context_respond_to_without_attributes?`
@@ -157,7 +159,8 @@ and this project adheres to [Semantic Versioning].
 
 <!-- versions -->
 
-[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.1...HEAD
+[v1.0.1]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0...v1.0.1
 [v1.0.0]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.7...v1.0.0
 [v0.1.7]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.6...v0.1.7
 [v0.1.6]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.5...v0.1.6
