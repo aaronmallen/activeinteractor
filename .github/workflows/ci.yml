@@ -19,10 +19,8 @@ jobs:
     name: Ruby ${{ matrix.ruby }}
     runs-on: ubuntu-latest
     env:
-      CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
       CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
       CODACY_RUN_LOCAL: true
-      CI_NAME: github-actions
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-ruby@v1
@@ -40,22 +38,10 @@ jobs:
           gem install bundler
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
-      - name: Setup Code Climate test reporter
-        run: |
-          curl -L curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-          chmod +x ./cc-test-reporter
-          ./cc-test-reporter before-build
       - name: Rake spec
         run: bundle exec rake spec
       - name: Rake build
         run: bundle exec rake build
-      - name: Report coverage to Code Climate
-        run: |
-          export GIT_BRANCH=$GITHUB_REF
-          export GIT_COMMIT_SHA=$GITHUB_SHA
-          export CI_BUILD_ID=$GITHUB_RUN_NUMBER
-          export CI_BUILD_URL="https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-          ./cc-test-reporter after-build --exit-code $?
     strategy:
       matrix:
         ruby:
