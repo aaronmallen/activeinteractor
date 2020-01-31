@@ -1,13 +1,24 @@
 # frozen_string_literal: true
 
-require_relative 'support/coverage'
+begin
+  require 'codacy-coverage'
+  require 'simplecov'
 
-Spec::Coverage::Runner.start do
-  add_formatter :simple_cov_html
-  add_formatter :codacy
-  track '/lib/**/*.rb'
-  filter '/spec/'
-  filter '/lib/rails/**'
+  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(
+    [
+      SimpleCov::Formatter::HTMLFormatter,
+      Codacy::Formatter
+    ]
+  )
+
+  SimpleCov.start do
+    enable_coverage :branch
+    add_filter '/spec/'
+    add_filter '/lib/rails/**/*.rb'
+    track_files '/lib/**/*.rb'
+  end
+rescue LoadError
+  puts 'Skipping coverage...'
 end
 
 require 'bundler/setup'
