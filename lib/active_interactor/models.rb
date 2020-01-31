@@ -29,7 +29,7 @@ module ActiveInteractor
       def merge!(context)
         copy_flags!(context)
         context.each_pair do |key, value|
-          self[key] = value unless value.nil?
+          public_send("#{key}=", value) unless value.nil?
         end
         self
       end
@@ -55,9 +55,14 @@ module ActiveInteractor
     #   end
     def acts_as_context
       class_eval do
+        extend ActiveInteractor::Context::Attributes::ClassMethods
+
+        include ActiveModel::Attributes
+        include ActiveModel::Model
         include ActiveModel::Validations
-        include ActiveInteractor::Models::InstanceMethods
+        include ActiveInteractor::Context::Attributes
         include ActiveInteractor::Context::Status
+        include ActiveInteractor::Models::InstanceMethods
         delegate :each_pair, to: :attributes
       end
     end
