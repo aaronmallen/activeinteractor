@@ -13,6 +13,16 @@ An implementation of the [command pattern] for Ruby with [ActiveModel::Validatio
 [interactor][collective_idea_interactors] gem. Rich support for attributes, callbacks, and validations,
 and thread safe performance methods.
 
+Reduce controller bloat with procedural service objects. Checkout this [Medium article] for a crash
+course on how to use ActiveInteractors. Read the [wiki] for detailed usage information.
+
+## Features
+
+* [Context validation][wiki_context_validation]
+* [Callbacks][wiki_callbacks]
+* Thread safe performance calls
+* Organize multiple interactors [conditionally][wiki_organizers_conditionally] or in [parallel][wiki_organizers_parallel]
+
 ## Getting Started
 
 Add this line to your application's Gemfile:
@@ -69,6 +79,11 @@ The gem is available as open source under the terms of the [MIT License][mit_lic
 [business_logic_wikipedia]: https://en.wikipedia.org/wiki/Business_logic
 [collective_idea_interactors]: https://github.com/collectiveidea/interactor
 [command pattern]: https://en.wikipedia.org/wiki/Command_pattern
+[Medium article]: https://medium.com/@aaronmallen/activeinteractor-8557c0dc78db
 [mit_license]: https://opensource.org/licenses/MIT
 [ruby docs]: https://www.rubydoc.info/gems/activeinteractor
 [wiki]: https://github.com/aaronmallen/activeinteractor/wiki
+[wiki_callbacks]: https://github.com/aaronmallen/activeinteractor/wiki/Callbacks
+[wiki_context_validation]: https://github.com/aaronmallen/activeinteractor/wiki/Context#validating-the-context
+[wiki_organizers_conditionally]: https://github.com/aaronmallen/activeinteractor/wiki/Interactors#organizing-interactors-conditionally
+[wiki_organizers_parallel]: https://github.com/aaronmallen/activeinteractor/wiki/Interactors#running-interactors-in-parallel
