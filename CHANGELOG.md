@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [v1.0.2] - 2020-02-04
+
+### Added
+
+- Support for `Dynamoid` ORM
+- Support for `Mongoid` ORM
+
+### Changed
+
+- `ActiveInteractor::Models#acts_as_context` no longer includes `ActiveModel::Validations`
+- `ActiveInteractor::Models#acts_as_context` now includes `ActiveInteractor::Context::Attributes`
+
+### Removed
+
+- `ActiveInteractor::Models::InstanceMethods#merge!`
+
 ## [v1.0.1] - 2020-01-28
 
 ### Added
@@ -159,7 +175,8 @@ and this project adheres to [Semantic Versioning].
 
 <!-- versions -->
 
-[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.2...HEAD
+[v1.0.2]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.1...v1.0.2
 [v1.0.1]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0...v1.0.1
 [v1.0.0]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.7...v1.0.0
 [v0.1.7]: https://github.com/aaronmallen/activeinteractor/compare/v0.1.6...v0.1.7
