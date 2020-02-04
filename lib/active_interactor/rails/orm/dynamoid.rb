@@ -2,4 +2,4 @@
 
 require 'dynamoid/document'
 
-Dynamoid::Document::ClassMethods.send :include, ActiveInteractor::Models
+Dynamoid::Document::ClassMethods.include ActiveInteractor::Models
