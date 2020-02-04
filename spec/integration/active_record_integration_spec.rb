@@ -11,10 +11,11 @@ begin
     context 'after ActiveSupport.run_load_hooks has been received with :active_record' do
       before { ActiveSupport.run_load_hooks(:active_record, active_record_base_mock) }
 
-      describe 'an ActiveRecord model class with .acts_as_context' do
+      describe 'an ActiveRecord model class with .acts_as_context and attribute :foo' do
         let(:model_class) do
-          build_class('ModelMock', active_record_base_mock) do
+          build_class('ModelClass', active_record_base_mock) do
             acts_as_context
+            attribute :foo
           end
         end
 

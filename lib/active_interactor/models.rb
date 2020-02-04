@@ -13,32 +13,9 @@ module ActiveInteractor
     # @author Aaron Allen <hello@aaronmallen.me>
     # @since 1.0.0
     module InstanceMethods
-      def initialize(attributes = nil)
-        copy_flags!(attributes) if attributes
-        copy_called!(attributes) if attributes
-        attributes_as_hash = context_attributes_as_hash(attributes)
-        super(attributes_as_hash)
-      end
-
-      # Merge an instance of model class into the calling model class instance
-      #
-      # @see Context::Attributes#merge!
-      #
-      # @param context [Class] a {Base context} instance to be merged
-      # @return [self] the {Base context} instance
-      def merge!(context)
-        copy_flags!(context)
-        context.each_pair do |key, value|
-          public_send("#{key}=", value) unless value.nil?
-        end
-        self
-      end
-
-      private
-
-      def context_attributes_as_hash(attributes)
-        return attributes.to_h if attributes&.respond_to?(:to_h)
-        return attributes.attributes.to_h if attributes.respond_to?(:attributes)
+      def initialize(context = nil)
+        @attributes = self.class._default_attributes.deep_dup
+        super
       end
     end
 

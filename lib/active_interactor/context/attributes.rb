@@ -53,6 +53,7 @@ module ActiveInteractor
         merge_errors!(context.errors) if context.respond_to?(:errors)
         copy_flags!(context)
         copy_called!(context)
+        context = context_attributes_as_hash(context) || {}
         super
 
         merge_attribute_values(context)
@@ -116,6 +117,11 @@ module ActiveInteractor
 
       def _called
         @_called ||= []
+      end
+
+      def context_attributes_as_hash(context)
+        return context.to_h if context&.respond_to?(:to_h)
+        return context.attributes.to_h if context.respond_to?(:attributes)
       end
 
       def copy_called!(context)
