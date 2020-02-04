@@ -66,6 +66,8 @@ RSpec.shared_examples 'A class that extends ActiveInteractor::Models' do
       let(:attributes) { model_class.new(other_instance) }
       let!(:other_class) do
         build_class('OtherClass') do
+          include ActiveModel::Attributes
+          include ActiveModel::Model
           extend ActiveInteractor::Models
           acts_as_context
           attribute :bar

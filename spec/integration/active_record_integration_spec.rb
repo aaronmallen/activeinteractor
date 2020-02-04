@@ -14,6 +14,8 @@ begin
       describe 'an ActiveRecord model class with .acts_as_context and attribute :foo' do
         let(:model_class) do
           build_class('ModelClass', active_record_base_mock) do
+            include ActiveModel::Attributes
+            include ActiveModel::Model
             acts_as_context
             attribute :foo
           end
