@@ -90,24 +90,6 @@ module ActiveInteractor
         !failure?
       end
       alias successful? success?
-
-      private
-
-      def _called
-        @_called ||= []
-      end
-
-      def copy_called!(context)
-        value = context.instance_variable_get('@_called') || []
-        instance_variable_set('@_called', value)
-      end
-
-      def copy_flags!(context)
-        %w[_failed _rolled_back].each do |flag|
-          value = context.instance_variable_get("@#{flag}")
-          instance_variable_set("@#{flag}", value)
-        end
-      end
     end
   end
 end
