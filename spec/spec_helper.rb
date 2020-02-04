@@ -17,6 +17,7 @@ begin
     add_filter '/lib/rails/**/*.rb'
     track_files '/lib/**/*.rb'
   end
+  Codacy::Reporter.start if ENV['CODACY_PROJECT_TOKEN']
 rescue LoadError
   puts 'Skipping coverage...'
 end
