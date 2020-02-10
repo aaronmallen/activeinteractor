@@ -22,7 +22,7 @@ module ActiveInteractor
       # @param interactor_class [Const] an {ActiveInteractor::Base interactor} class
       # @return [Const] a class that inherits from {Base}
       def self.create(context_class_name, interactor_class)
-        interactor_class.const_set(context_class_name.to_s.classify, Class.new(BASE_CONTEXT))
+        interactor_class.const_set(context_class_name.to_s.camelize, Class.new(BASE_CONTEXT))
       end
 
       # Find or create a {Base context} class for a given {ActiveInteractor::Base interactor}. If a class exists

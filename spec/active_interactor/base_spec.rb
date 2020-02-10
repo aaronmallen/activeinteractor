@@ -10,7 +10,6 @@ RSpec.describe ActiveInteractor::Base do
 
   describe '.contextualize_with' do
     subject { described_class.contextualize_with(klass) }
-    let!(:singularized_class) { build_class('PlaceData') }
 
     context 'with an class that does not exist' do
       let(:klass) { 'SomeClassThatDoesNotExist' }
@@ -31,6 +30,7 @@ RSpec.describe ActiveInteractor::Base do
 
         # https://github.com/aaronmallen/activeinteractor/issues/168
         context 'when singularized' do
+          let!(:singularized_class) { build_context('PlaceData') }
           let(:klass) { 'PlaceData' }
 
           it 'is expected to assign the appropriate context class' do
@@ -50,6 +50,7 @@ RSpec.describe ActiveInteractor::Base do
 
         # https://github.com/aaronmallen/activeinteractor/issues/168
         context 'when singularized' do
+          let!(:singularized_class) { build_context('PlaceData') }
           let(:klass) { :place_data }
 
           it 'is expected to assign the appropriate context class' do
@@ -69,6 +70,7 @@ RSpec.describe ActiveInteractor::Base do
 
         # https://github.com/aaronmallen/activeinteractor/issues/168
         context 'when singularized' do
+          let!(:singularized_class) { build_context('PlaceData') }
           let(:klass) { PlaceData }
 
           it 'is expected to assign the appropriate context class' do
