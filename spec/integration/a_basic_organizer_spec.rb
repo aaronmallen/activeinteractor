@@ -69,6 +69,25 @@ RSpec.describe 'A basic organizer', type: :integration do
         expect_any_instance_of(test_interactor_2).not_to receive(:perform!)
         subject
       end
+
+      # https://github.com/aaronmallen/activeinteractor/issues/169
+      context 'with error message "something went wrong"' do
+        let!(:test_interactor_1) do
+          build_interactor('TestInteractor1') do
+            def perform
+              context.fail!('something went wrong')
+            end
+          end
+        end
+
+        it { expect { subject }.not_to raise_error }
+        it { is_expected.to be_a interactor_class.context_class }
+        it { is_expected.to be_failure }
+        it 'is expected to have errors "something went wrong" on :context' do
+          expect(subject.errors[:context]).not_to be_empty
+          expect(subject.errors[:context]).to include 'something went wrong'
+        end
+      end
     end
   end
 
@@ -91,6 +110,25 @@ RSpec.describe 'A basic organizer', type: :integration do
         expect_any_instance_of(test_interactor_2).to receive(:rollback)
         expect_any_instance_of(test_interactor_1).to receive(:rollback)
         subject
+      end
+
+      # https://github.com/aaronmallen/activeinteractor/issues/169
+      context 'with error message "something went wrong"' do
+        let!(:test_interactor_2) do
+          build_interactor('TestInteractor2') do
+            def perform
+              context.fail!('something went wrong')
+            end
+          end
+        end
+
+        it { expect { subject }.not_to raise_error }
+        it { is_expected.to be_a interactor_class.context_class }
+        it { is_expected.to be_failure }
+        it 'is expected to have errors "something went wrong" on :context' do
+          expect(subject.errors[:context]).not_to be_empty
+          expect(subject.errors[:context]).to include 'something went wrong'
+        end
       end
     end
   end
