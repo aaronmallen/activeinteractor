@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Fixed
+
+- [\#168](https://github.com/aaronmallen/activeinteractor/issues/168) `#classify` is called on const arguments
+
 ## [v1.0.2] - 2020-02-04
 
 ### Added
