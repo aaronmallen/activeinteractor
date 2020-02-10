@@ -211,7 +211,7 @@ module ActiveInteractor
         # @return [Const] the {Base interactor} class' {ActiveInteractor::Context::Base context} class
         def contextualize_with(klass)
           @context_class = begin
-            context_class = klass.to_s.classify.safe_constantize
+            context_class = klass.to_s.camelize.safe_constantize
             raise(ActiveInteractor::Error::InvalidContextClass, klass) unless context_class
 
             context_class

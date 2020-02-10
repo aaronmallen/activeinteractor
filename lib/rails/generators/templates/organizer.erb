@@ -6,8 +6,8 @@ class <%= class_name %> < ApplicationOrganizer
 
 <%- end -%>
 <%- if interactors.any? -%>
-  organize <%= interactors.map(&:classify).join(", ") %>
+  organize <%= interactors.join(", ") %>
 <%- else -%>
-  # organize Interactor1, Interactor2
+  # organize :interactor_1, :interactor_2
 <%- end -%>
 end

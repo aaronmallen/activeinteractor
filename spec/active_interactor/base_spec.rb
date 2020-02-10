@@ -27,6 +27,17 @@ RSpec.describe ActiveInteractor::Base do
           subject
           expect(described_class.context_class).to eq TestContext
         end
+
+        # https://github.com/aaronmallen/activeinteractor/issues/168
+        context 'when singularized' do
+          let!(:singularized_class) { build_context('PlaceData') }
+          let(:klass) { 'PlaceData' }
+
+          it 'is expected to assign the appropriate context class' do
+            subject
+            expect(described_class.context_class).to eq PlaceData
+          end
+        end
       end
 
       context 'when passed as a symbol' do
@@ -36,6 +47,17 @@ RSpec.describe ActiveInteractor::Base do
           subject
           expect(described_class.context_class).to eq TestContext
         end
+
+        # https://github.com/aaronmallen/activeinteractor/issues/168
+        context 'when singularized' do
+          let!(:singularized_class) { build_context('PlaceData') }
+          let(:klass) { :place_data }
+
+          it 'is expected to assign the appropriate context class' do
+            subject
+            expect(described_class.context_class).to eq PlaceData
+          end
+        end
       end
 
       context 'when passed as a constant' do
@@ -44,6 +66,17 @@ RSpec.describe ActiveInteractor::Base do
         it 'is expected to assign the appropriate context class' do
           subject
           expect(described_class.context_class).to eq TestContext
+        end
+
+        # https://github.com/aaronmallen/activeinteractor/issues/168
+        context 'when singularized' do
+          let!(:singularized_class) { build_context('PlaceData') }
+          let(:klass) { PlaceData }
+
+          it 'is expected to assign the appropriate context class' do
+            subject
+            expect(described_class.context_class).to eq PlaceData
+          end
         end
       end
     end

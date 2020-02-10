@@ -40,7 +40,7 @@ module ActiveInteractor
       #  {Interactor::Perform::ClassMethods#perform .perform}. See {Interactor::Perform::Options}.
       # @return [InteractorInterface] a new instance of {InteractorInterface}
       def initialize(interactor_class, options = {})
-        @interactor_class = interactor_class.to_s.classify.safe_constantize
+        @interactor_class = interactor_class.to_s.camelize.safe_constantize
         @filters = options.select { |key, _value| CONDITIONAL_FILTERS.include?(key) }
         @perform_options = options.reject { |key, _value| CONDITIONAL_FILTERS.include?(key) }
       end
