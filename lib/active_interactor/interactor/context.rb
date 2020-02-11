@@ -366,6 +366,7 @@ module ActiveInteractor
       # @return [Class] the {ActiveInteractor::Context::Base context} instance
       def finalize_context!
         context.called!(self)
+        context.resolve
         context
       end
 

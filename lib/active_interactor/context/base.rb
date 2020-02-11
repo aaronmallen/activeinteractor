@@ -326,6 +326,7 @@ module ActiveInteractor
       include ActiveModel::Attributes
       include ActiveModel::Validations
       include ActiveInteractor::Context::Attributes
+      include ActiveInteractor::Context::Errors
       include ActiveInteractor::Context::Status
     end
   end

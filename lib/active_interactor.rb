@@ -64,6 +64,7 @@ module ActiveInteractor
 
     autoload :Attributes
     autoload :Base
+    autoload :Errors
     autoload :Loader
     autoload :Status
   end
