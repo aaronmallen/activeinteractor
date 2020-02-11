@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
 begin
+  require 'simplecov'
+
   if ENV['CODACY_PROJECT_TOKEN']
     require 'codacy-coverage'
 
     Codacy::Reporter.start
-  else
-    require 'simplecov'
+  end
 
-    SimpleCov.start do
-      enable_coverage :branch
-      add_filter '/spec/'
-      add_filter '/lib/rails/**/*.rb'
-      track_files '/lib/**/*.rb'
-    end
+  SimpleCov.start do
+    enable_coverage :branch
+    add_filter '/spec/'
+    add_filter '/lib/rails/**/*.rb'
+    track_files '/lib/**/*.rb'
   end
 rescue LoadError
   puts 'Skipping coverage...'
