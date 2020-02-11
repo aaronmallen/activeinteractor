@@ -13,4 +13,12 @@ RSpec.describe ActiveInteractor::Config do
       expect(subject[:logger]).to be_a Logger
     end
   end
+
+  describe '#silence_deprecation_warnings' do
+    subject { described_class.new.silence_deprecation_warnings }
+    let(:next_major_mock) { ActiveSupport::Deprecation.new('1.0', 'ActiveInteractorTest') }
+    before { stub_const('ActiveInteractor::NextMajorDeprecator', next_major_mock) }
+
+    it { expect { subject }.to change { next_major_mock.silenced }.to(true) }
+  end
 end
