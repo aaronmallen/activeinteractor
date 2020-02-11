@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    activeinteractor (1.0.2)
+    activeinteractor (1.0.3)
       activemodel (>= 4.2, < 7.0)
       activesupport (>= 4.2, < 7.0)
 
