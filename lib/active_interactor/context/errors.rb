@@ -7,7 +7,7 @@ module ActiveInteractor
     #
     # @api private
     # @author Aaron Allen <hello@aaronmallen.me>
-    # @since unreleased
+    # @since 1.0.3
     module Errors
       # Generic errors generated outside of validation.
       #

@@ -63,7 +63,7 @@ module ActiveInteractor
       # Resolve an instance of {Base context}.  Called when an interactor
       #  is finished with it's context.
       #
-      # @since unreleased
+      # @since 1.0.3
       # @return [self] the instance of {Base context}
       def resolve
         resolve_errors
