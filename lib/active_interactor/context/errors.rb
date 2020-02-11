@@ -18,6 +18,11 @@ module ActiveInteractor
 
       private
 
+      def clear_all_errors
+        errors.clear
+        failure_errors.clear
+      end
+
       def handle_errors(errors)
         if errors.is_a?(String)
           failure_errors.add(:context, errors)
@@ -33,7 +38,9 @@ module ActiveInteractor
       end
 
       def resolve_errors
-        errors.merge!(failure_errors)
+        all_errors = (failure_errors.uniq + errors.uniq).compact.uniq
+        clear_all_errors
+        all_errors.each { |error| errors.add(error[0], error[1]) }
       end
     end
   end
