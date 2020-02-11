@@ -26,4 +26,10 @@ RSpec.describe ActiveInteractor do
 
     it { is_expected.to be_a Logger }
   end
+
+  describe '::NextMajorDeprecator' do
+    subject { described_class::NextMajorDeprecator }
+    it { is_expected.to be_a ActiveSupport::Deprecation }
+    it { is_expected.to have_attributes(deprecation_horizon: '2.0') }
+  end
 end

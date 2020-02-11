@@ -6,11 +6,13 @@ require 'active_support/core_ext/array/extract_options'
 require 'active_support/core_ext/class/attribute'
 require 'active_support/core_ext/string/inflections'
 require 'active_support/dependencies/autoload'
+require 'active_support/deprecation'
 require 'logger'
 require 'ostruct'
 
 require 'active_interactor/configurable'
 require 'active_interactor/config'
+require 'active_interactor/logging'
 require 'active_interactor/version'
 
 # An {Base interactor} is a simple, single-purpose service object. {Base Interactors} can be used to reduce the
