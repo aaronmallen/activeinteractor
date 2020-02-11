@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [v1.0.4] - 2020-02-11
+
 ### Fixed
 
 - [\#184](https://github.com/aaronmallen/activeinteractor/issues/184) `ActiveInteractor::Context::Base#fail!` error
@@ -193,7 +195,8 @@ and this project adheres to [Semantic Versioning].
 
 <!-- versions -->
 
-[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.3...HEAD
+[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.4...HEAD
+[v1.0.4]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.3...v1.0.4
 [v1.0.3]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.2...v1.0.3
 [v1.0.2]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.1...v1.0.2
 [v1.0.1]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.0...v1.0.1
