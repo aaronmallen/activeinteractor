@@ -1,20 +1,17 @@
 # frozen_string_literal: true
 
 begin
+  require 'codacy-coverage'
   require 'simplecov'
 
   SimpleCov.start do
+    # disable branch reporting until SimpleCov can be updated
     # enable_coverage :branch
     add_filter '/spec/'
     add_filter '/lib/rails/**/*.rb'
     track_files '/lib/**/*.rb'
   end
-
-  if ENV['CODACY_PROJECT_TOKEN']
-    require 'codacy-coverage'
-
-    Codacy::Reporter.start
-  end
+  Codacy::Reporter.start if ENV['CODACY_PROJECT_TOKEN']
 rescue LoadError
   puts 'Skipping coverage...'
 end
