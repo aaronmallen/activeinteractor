@@ -7,12 +7,16 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Added
+
+- `ActiveInteractor::NextMajorDeprecator`
+- `ActiveInteractor::Config#silence_deprecation_warnings`
+
 ## [v1.0.4] - 2020-02-11
 
 ### Fixed
 
 - [\#184](https://github.com/aaronmallen/activeinteractor/issues/184) `ActiveInteractor::Context::Base#fail!` error
-  message gets pupulated 3 times with the same message.
 
 ## [v1.0.3] - 2020-02-10
 
