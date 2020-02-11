@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Fixed
+
+- [\#184](https://github.com/aaronmallen/activeinteractor/issues/184) `ActiveInteractor::Context::Base#fail!` error
+  message gets pupulated 3 times with the same message.
+
 ## [v1.0.3] - 2020-02-10
 
 ### Added
