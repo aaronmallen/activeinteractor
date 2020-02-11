@@ -83,6 +83,7 @@ RSpec.describe 'A basic organizer', type: :integration do
         it { expect { subject }.not_to raise_error }
         it { is_expected.to be_a interactor_class.context_class }
         it { is_expected.to be_failure }
+        it { expect(subject.errors.count).to eq 1 }
         it 'is expected to have errors "something went wrong" on :context' do
           expect(subject.errors[:context]).not_to be_empty
           expect(subject.errors[:context]).to include 'something went wrong'
@@ -125,6 +126,7 @@ RSpec.describe 'A basic organizer', type: :integration do
         it { expect { subject }.not_to raise_error }
         it { is_expected.to be_a interactor_class.context_class }
         it { is_expected.to be_failure }
+        it { expect(subject.errors.count).to eq 1 }
         it 'is expected to have errors "something went wrong" on :context' do
           expect(subject.errors[:context]).not_to be_empty
           expect(subject.errors[:context]).to include 'something went wrong'
