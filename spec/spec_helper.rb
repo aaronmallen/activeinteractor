@@ -4,6 +4,13 @@ begin
   require 'codacy-coverage'
   require 'simplecov'
 
+  formatters = [
+    SimpleCov::Formatter::HTMLFormatter,
+    Codacy::Formatter
+  ]
+
+  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(formatters)
+
   SimpleCov.start do
     # disable branch reporting until SimpleCov can be updated
     # enable_coverage :branch
@@ -11,7 +18,6 @@ begin
     add_filter '/lib/rails/**/*.rb'
     track_files '/lib/**/*.rb'
   end
-  Codacy::Reporter.start if ENV['CODACY_PROJECT_TOKEN']
 rescue LoadError
   puts 'Skipping coverage...'
 end
