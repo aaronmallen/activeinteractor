@@ -40,6 +40,7 @@ module ActiveInteractor
         extend ActiveInteractor::Context::Attributes::ClassMethods
 
         include ActiveInteractor::Context::Attributes
+        include ActiveInteractor::Context::Errors
         include ActiveInteractor::Context::Status
         include ActiveInteractor::Models::InstanceMethods
         delegate :each_pair, to: :attributes

@@ -37,8 +37,9 @@ module ActiveInteractor
       # @see https://api.rubyonrails.org/classes/ActiveModel/Errors.html ActiveModel::Errors
       # @raise [Error::ContextFailure]
       def fail!(errors = nil)
-        merge_errors!(errors) if errors
+        handle_errors(errors) if errors
         @_failed = true
+        resolve
         raise ActiveInteractor::Error::ContextFailure, self
       end
 
@@ -58,6 +59,16 @@ module ActiveInteractor
         @_failed || false
       end
       alias fail? failure?
+
+      # Resolve an instance of {Base context}.  Called when an interactor
+      #  is finished with it's context.
+      #
+      # @since unreleased
+      # @return [self] the instance of {Base context}
+      def resolve
+        resolve_errors
+        self
+      end
 
       # {#rollback! Rollback} an instance of {Base context}. Any {ActiveInteractor::Base interactors} the instance has
       # been passed via the {#called!} method are asked to roll themselves back by invoking their

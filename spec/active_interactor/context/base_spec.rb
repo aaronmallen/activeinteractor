@@ -127,7 +127,7 @@ RSpec.describe ActiveInteractor::Context::Base do
       it { expect { subject }.to raise_error(ActiveInteractor::Error::ContextFailure) }
 
       it 'is expected not to merge errors' do
-        expect(instance.errors).not_to receive(:merge!)
+        expect(instance.errors).not_to receive(:merge!).with(nil)
         subject
       rescue ActiveInteractor::Error::ContextFailure # rubocop:disable Lint/SuppressedException
       end

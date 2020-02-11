@@ -7,9 +7,16 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Added
+
+- `ActiveInteractor::Context::Errors`
+- `ActiveInteractor::Context::Status#resolve`
+
 ### Fixed
 
 - [\#168](https://github.com/aaronmallen/activeinteractor/issues/168) `#classify` is called on const arguments
+- [\#169](https://github.com/aaronmallen/activeinteractor/issues/169) If some of the interactors of the organizer fail
+  error message is not persisted.
 
 ## [v1.0.2] - 2020-02-04
 
