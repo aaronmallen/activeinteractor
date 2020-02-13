@@ -105,6 +105,18 @@ module ActiveInteractor
     autoload :Perform
   end
 
+  # {State::Manager State} classes and modules
+  #
+  # @author Aaron Allen <hello@aaronmallen.me>
+  # @since unreleased
+  module State
+    extend ActiveSupport::Autoload
+
+    autoload :Manager
+    autoload :Mutation
+    autoload :Status
+  end
+
   eager_autoload do
     autoload :Error
   end
