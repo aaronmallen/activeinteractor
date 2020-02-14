@@ -54,6 +54,7 @@ module ActiveInteractor
   extend ActiveSupport::Autoload
 
   autoload :Base
+  autoload :Result
 
   # {Context::Base Context} classes and modules
   #
