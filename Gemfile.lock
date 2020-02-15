@@ -168,6 +168,7 @@ GEM
       docile (~> 1.1)
       simplecov-html (~> 0.11)
     simplecov-html (0.12.0)
+    simplecov-lcov (0.7.0)
     solargraph (0.38.5)
       backport (~> 1.1)
       benchmark
@@ -216,6 +217,7 @@ DEPENDENCIES
   rspec (~> 3.9)
   rubocop
   simplecov
+  simplecov-lcov
   solargraph
   yard
 

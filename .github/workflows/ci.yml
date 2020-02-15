@@ -20,7 +20,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
-      CODACY_RUN_LOCAL: true
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-ruby@v1
@@ -38,8 +37,14 @@ jobs:
           gem install bundler
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
+      - name: Setup Coverage Reporting
+        run: |
+          sudo apt-get install jq
+          curl -LSs $(curl -LSs https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r '.assets | map({name, browser_download_url} | select(.name | endswith(".jar"))) | .[0].browser_download_url')" -o codacy-coverage-reporter-assembly.jar
       - name: Rake spec
         run: bundle exec rake spec
+      - name: Reporting Coverage
+        run: java -jar codacy-coverage-reporter-assembly.jar report -l Java -r coverage/lcov/activeinteractor.lcov
       - name: Rake build
         run: bundle exec rake build
     strategy:

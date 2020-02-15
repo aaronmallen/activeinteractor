@@ -9,6 +9,7 @@ group :development, :test do
   gem 'rails'
   gem 'rubocop'
   gem 'simplecov'
+  gem 'simplecov-lcov'
   gem 'solargraph'
 end
 
