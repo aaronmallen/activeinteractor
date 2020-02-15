@@ -20,6 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
+      CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-ruby@v1
@@ -41,10 +42,20 @@ jobs:
         run: |
           curl -Ls -o codacy-coverage-reporter "$(curl -Ls https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r '.assets | map({name, browser_download_url} | select(.name | contains("codacy-coverage-reporter-linux"))) | .[0].browser_download_url')"
           chmod +x codacy-coverage-reporter
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          chmod +x ./cc-test-reporter
+          ./cc-test-reporter before-build
       - name: Rake spec
         run: bundle exec rake spec
       - name: Reporting Coverage
-        run: ./codacy-coverage-reporter report -l Java
+        run: |
+          export GIT_BRANCH=${GITHUB_REF##*/}
+          export GIT_COMMIT_SHA=${GITHUB_SHA}
+          export CI_NAME=GITHUB
+          export CI_BUILD_ID=${GITHUB_RUN_NUMBER}
+          export CI_BUILD_URL=https://github.com/aaronmallen/activeinteractor/actions/runs/${GITHUB_RUN_ID}
+          ./codacy-coverage-reporter report -l Java -r coverage/lcov/activeinteractor.lcov
+          ./cc-test-reporter after-build --exit-code $?
       - name: Rake build
         run: bundle exec rake build
     strategy:
