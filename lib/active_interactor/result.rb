@@ -80,7 +80,7 @@ module ActiveInteractor
 
     # @private
     def respond_to_missing?(method, include_private = false)
-      return super unless context.respond_to?(method)
+      return super unless context.respond_to?(method, include_private)
 
       context_method_deprecation_warning(method)
       context.respond_to?(method, include_private)
