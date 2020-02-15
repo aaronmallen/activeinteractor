@@ -55,7 +55,7 @@ jobs:
           export CI_BUILD_ID=${GITHUB_RUN_NUMBER}
           export CI_BUILD_URL=https://github.com/aaronmallen/activeinteractor/actions/runs/${GITHUB_RUN_ID}
           ./codacy-coverage-reporter report -l Java -r coverage/lcov/activeinteractor.lcov
-          ./cc-test-reporter after-build -t simplecov --exit-code $?
+          ./cc-test-reporter after-build --exit-code $? --debug
       - name: Rake build
         run: bundle exec rake build
     strategy:
