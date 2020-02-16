@@ -5,11 +5,13 @@ source 'https://rubygems.org'
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
 group :development, :test do
+  gem 'codacy-coverage'
   gem 'mdl'
   gem 'rails'
   gem 'rubocop'
-  gem 'simplecov'
-  gem 'simplecov-lcov'
+  # Note: simplecov version regressed from 0.18.1 to 0.17.1 until fix:
+  # https://github.com/codacy/ruby-codacy-coverage/issues/50
+  gem 'simplecov', '0.17.1'
   gem 'solargraph'
 end
 
