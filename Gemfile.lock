@@ -67,7 +67,7 @@ GEM
     backport (1.1.2)
     benchmark (0.1.0)
     builder (3.2.4)
-    codacy-coverage (2.2.0)
+    codacy-coverage (2.2.1)
       simplecov
     concurrent-ruby (1.1.6)
     crass (1.0.6)
