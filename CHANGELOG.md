@@ -7,13 +7,6 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
-### Added
-
-- `ActiveInteractor::NextMajorDeprecator`
-- `ActiveInteractor::Config#silence_deprecation_warnings`
-- `ActiveInteractor::State`
-- `ActiveInteractor::Result`
-
 ## [v1.0.4] - 2020-02-11
 
 ### Fixed

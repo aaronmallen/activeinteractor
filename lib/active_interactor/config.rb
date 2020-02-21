@@ -24,13 +24,6 @@ module ActiveInteractor
   class Config
     include ActiveInteractor::Configurable
     defaults logger: Logger.new(STDOUT)
-
-    # Silence deprecation warnings in the console.
-    #
-    # @since unreleased
-    def silence_deprecation_warnings
-      ActiveInteractor::NextMajorDeprecator.silenced = true
-    end
   end
 
   # The ActiveInteractor configuration
@@ -54,5 +47,14 @@ module ActiveInteractor
   # @yield [#config]
   def self.configure
     yield config
+  end
+
+  # The logger instance to use for logging
+  #
+  # @since 0.1.0
+  #
+  # @return [Class] the {Config#logger #config#logger} instance
+  def self.logger
+    config.logger
   end
 end
