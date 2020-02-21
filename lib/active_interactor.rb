@@ -54,7 +54,6 @@ module ActiveInteractor
   extend ActiveSupport::Autoload
 
   autoload :Base
-  autoload :Result
 
   # {Context::Base Context} classes and modules
   #
@@ -104,18 +103,6 @@ module ActiveInteractor
     autoload :InteractorInterfaceCollection
     autoload :Organize
     autoload :Perform
-  end
-
-  # {State::Manager State} classes and modules
-  #
-  # @author Aaron Allen <hello@aaronmallen.me>
-  # @since unreleased
-  module State
-    extend ActiveSupport::Autoload
-
-    autoload :Manager
-    autoload :Mutation
-    autoload :Status
   end
 
   eager_autoload do
