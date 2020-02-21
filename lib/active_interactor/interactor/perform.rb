@@ -175,7 +175,11 @@ module ActiveInteractor
       #
       # @return [Base] a duplicated {Base interactor} instance
       def deep_dup
-        self.class.new(context.dup).with_options(options.dup)
+        dupped = dup
+        %w[@context @options].each do |variable|
+          dupped.instance_variable_set(variable, instance_variable_get(variable)&.dup)
+        end
+        dupped
       end
 
       # Options for the {Base interactor} {#perform}
