@@ -4,15 +4,15 @@ on:
   pull_request:
     branches:
       - master
-      - /.*-alpha/
-      - /.*-beta/
-      - /.*-stable/
+      - '*-alpha'
+      - '*-beta'
+      - '*-stable'
   push:
     branches:
       - master
-      - /.*-alpha/
-      - /.*-beta/
-      - /.*-stable/
+      - '*-alpha'
+      - '*-beta'
+      - '*-stable'
 
 jobs:
   test:
