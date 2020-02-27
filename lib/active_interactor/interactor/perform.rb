@@ -235,6 +235,11 @@ module ActiveInteractor
       #   #=> <#MyInteractor::Context first_name='Bob'>
       def rollback; end
 
+      # The interactor {State}
+      #
+      # @since unreleased
+      #
+      # @return [State] the {State} instance
       def state
         @state ||= State.new
       end
