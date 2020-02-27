@@ -235,6 +235,10 @@ module ActiveInteractor
       #   #=> <#MyInteractor::Context first_name='Bob'>
       def rollback; end
 
+      def state
+        @state ||= State.new
+      end
+
       # Set {Options options} for an {Base interactor's} {#perform}
       #
       # @api private
