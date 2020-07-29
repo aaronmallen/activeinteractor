@@ -34,6 +34,49 @@ RSpec.describe ActiveInteractor::Context::Base do
     end
   end
 
+  describe '#[]' do
+    subject { instance[attribute] }
+
+    context 'with class attributes []' do
+      let(:instance) { build_context.new }
+
+      context 'with attribute nil' do
+        let(:attribute) { :foo }
+
+        it { is_expected.to be_nil }
+      end
+
+      context 'with attribute equal to "foo"' do
+        let(:attribute) { :foo }
+        before { instance.foo = 'foo' }
+
+        it { is_expected.to eq 'foo' }
+      end
+    end
+
+    context 'with class attributes [:foo]' do
+      let!(:context_class) do
+        build_context do
+          attributes :foo
+        end
+      end
+      let(:instance) { context_class.new }
+
+      context 'with attribute nil' do
+        let(:attribute) { :foo }
+
+        it { is_expected.to be_nil }
+      end
+
+      context 'with attribute equal to "foo"' do
+        let(:attribute) { :foo }
+        before { instance.foo = 'foo' }
+
+        it { is_expected.to eq 'foo' }
+      end
+    end
+  end
+
   describe '#attribute?' do
     subject { instance.attribute?(attribute) }
 
