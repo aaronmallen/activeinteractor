@@ -6,8 +6,8 @@
 [![Test Coverage](https://api.codacy.com/project/badge/Coverage/be92c4ecf12347da82d266f6a4368b6e)](https://www.codacy.com/manual/aaronmallen/activeinteractor?utm_source=github.com&utm_medium=referral&utm_content=aaronmallen/activeinteractor&utm_campaign=Badge_Coverage)
 [![Dependencies](https://img.shields.io/depfu/aaronmallen/activeinteractor.svg?maxAge=300)](https://depfu.com/github/aaronmallen/activeinteractor)
 [![Yard Docs](http://img.shields.io/badge/yard-docs-blue.svg)](https://www.rubydoc.info/gems/activeinteractor)
-[![Inline docs](http://inch-ci.org/github/aaronmallen/activeinteractor.svg?branch=master)](http://inch-ci.org/github/aaronmallen/activeinteractor)
-[![License](https://img.shields.io/github/license/aaronmallen/activeinteractor.svg?maxAge=300)](https://github.com/aaronmallen/activeinteractor/blob/master/LICENSE)
+[![Inline docs](http://inch-ci.org/github/aaronmallen/activeinteractor.svg?branch=main)](http://inch-ci.org/github/aaronmallen/activeinteractor)
+[![License](https://img.shields.io/github/license/aaronmallen/activeinteractor.svg?maxAge=300)](https://github.com/aaronmallen/activeinteractor/blob/main/LICENSE)
 
 An implementation of the [command pattern] for Ruby with [ActiveModel::Validations] inspired by the
 [interactor][collective_idea_interactors] gem. Rich support for attributes, callbacks, and validations,

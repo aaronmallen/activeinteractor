@@ -51,7 +51,7 @@ Here are some ways *you* can contribute:
 Inspired by [factory_bot]
 
 [code_of_conduct]: CODE_OF_CONDUCT.md
-[repo]: https://github.com/aaronmallen/activeinteractor/tree/master
+[repo]: https://github.com/aaronmallen/activeinteractor/tree/main
 [issues]: https://github.com/aaronmallen/activeinteractor/issues
 [fork]: https://help.github.com/articles/fork-a-repo/
 [branch]: https://help.github.com/articles/creating-and-deleting-branches-within-your-repository/
