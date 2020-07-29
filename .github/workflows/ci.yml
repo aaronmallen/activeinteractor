@@ -18,8 +18,6 @@ jobs:
   test:
     name: Ruby ${{ matrix.ruby }}
     runs-on: ubuntu-latest
-    env:
-      CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-ruby@v1
@@ -38,11 +36,13 @@ jobs:
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
       - name: Rake spec
-        run: |
-          bundle exec rake spec
-          bash <(curl -Ls https://coverage.codacy.com/get.sh)
+        run: bundle exec rake spec
       - name: Rake build
         run: bundle exec rake build
+      - uses: codacy/codacy-coverage-reporter-action@master
+        with:
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          coverage-reports: coverage/lcov/activeinteractor.lcov
     strategy:
       matrix:
         ruby:
