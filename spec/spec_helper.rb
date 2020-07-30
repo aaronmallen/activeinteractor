@@ -1,22 +1,20 @@
 # frozen_string_literal: true
 
 begin
-  require 'codacy-coverage'
   require 'simplecov'
+  require 'simplecov-lcov'
 
-  formatters = [
-    SimpleCov::Formatter::HTMLFormatter,
-    Codacy::Formatter
-  ]
-
-  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(formatters)
+  SimpleCov::Formatter::LcovFormatter.config.report_with_single_file = true
 
   SimpleCov.start do
-    # disable branch reporting until SimpleCov can be updated
-    # enable_coverage :branch
+    enable_coverage :branch
     add_filter '/spec/'
     add_filter '/lib/rails/**/*.rb'
     track_files '/lib/**/*.rb'
+    formatter SimpleCov::Formatter::MultiFormatter.new([
+                                                         SimpleCov::Formatter::HTMLFormatter,
+                                                         SimpleCov::Formatter::LcovFormatter
+                                                       ])
   end
 rescue LoadError
   puts 'Skipping coverage...'

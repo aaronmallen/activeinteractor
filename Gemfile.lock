@@ -67,8 +67,6 @@ GEM
     backport (1.1.2)
     benchmark (0.1.0)
     builder (3.2.4)
-    codacy-coverage (2.2.1)
-      simplecov
     concurrent-ruby (1.1.6)
     crass (1.0.6)
     diff-lcs (1.4.4)
@@ -177,6 +175,7 @@ GEM
       docile (~> 1.1)
       simplecov-html (~> 0.11)
     simplecov-html (0.12.2)
+    simplecov-lcov (0.8.0)
     solargraph (0.39.12)
       backport (~> 1.1)
       benchmark
@@ -217,7 +216,6 @@ PLATFORMS
 DEPENDENCIES
   activeinteractor!
   bundler (~> 2.0)
-  codacy-coverage
   github-markup
   mdl
   rails
@@ -225,7 +223,8 @@ DEPENDENCIES
   redcarpet
   rspec (~> 3.9)
   rubocop
-  simplecov (= 0.18.5)
+  simplecov
+  simplecov-lcov
   solargraph
   yard
 
