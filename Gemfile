@@ -8,9 +8,8 @@ group :development, :test do
   gem 'mdl'
   gem 'rails'
   gem 'rubocop'
-  # Note: simplecov version regressed from 0.18.1 to 0.17.1 until fix:
-  # https://github.com/codacy/ruby-codacy-coverage/issues/50
-  gem 'simplecov', '0.18.5'
+  gem 'simplecov'
+  gem 'simplecov-lcov'
   gem 'solargraph'
 end
 

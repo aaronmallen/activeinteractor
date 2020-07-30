@@ -2,12 +2,19 @@
 
 begin
   require 'simplecov'
+  require 'simplecov-lcov'
+
+  SimpleCov::Formatter::LcovFormatter.config.report_with_single_file = true
 
   SimpleCov.start do
     enable_coverage :branch
     add_filter '/spec/'
     add_filter '/lib/rails/**/*.rb'
     track_files '/lib/**/*.rb'
+    formatter SimpleCov::Formatter::MultiFormatter.new([
+                                                         SimpleCov::Formatter::HTMLFormatter,
+                                                         SimpleCov::Formatter::LcovFormatter
+                                                       ])
   end
 rescue LoadError
   puts 'Skipping coverage...'
