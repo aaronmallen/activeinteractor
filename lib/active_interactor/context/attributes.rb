@@ -59,6 +59,16 @@ module ActiveInteractor
         merge_attribute_values(context)
       end
 
+      # Returns the value of an attribute
+      #
+      # @since unreleased
+      #
+      # @param name [String, Symbol] the key of the value to be returned
+      # @returns [*] the attribute value
+      def [](name)
+        @table[name.to_sym] || attributes[name.to_sym]
+      end
+
       # Get values defined on the instance of {Base context} whose keys are defined on the {Base context} class'
       # {ClassMethods#attributes .attributes}
       #
