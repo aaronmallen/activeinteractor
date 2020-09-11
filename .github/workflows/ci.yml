@@ -1,4 +1,4 @@
-name: Build
+name: CI
 
 on:
   pull_request:
@@ -15,16 +15,18 @@ on:
       - '*-stable'
 
 jobs:
-  test:
-    name: Ruby ${{ matrix.ruby }}
+  build:
+    name: Build ruby ${{ matrix.ruby }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-ruby@v1
+      - name: Setup branch
+        uses: actions/checkout@v2
+      - name: Setup ruby ${{ matrix.ruby }}
+        uses: actions/setup-ruby@v1.1.1
         with:
           ruby-version: ${{ matrix.ruby }}
-          architecture: x64
-      - uses: actions/cache@v1
+      - name: Setup cache
+        uses: actions/cache@v2
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
@@ -35,15 +37,19 @@ jobs:
           gem install bundler
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
-      - name: Rake spec
-        run: bundle exec rake spec
-      - name: Rake build
+      - name: Test
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        run: |
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          export GIT_BRANCH=$(echo ${GITHUB_HEAD_REF##*/})
+          chmod +x ./cc-test-reporter
+          ./cc-test-reporter before-build
+          bundle exec rake spec
+          ./cc-test-reporter format-coverage -t lcov coverage/lcov/activeinteractor.lcov
+          ./cc-test-reporter upload-coverage
+      - name: Build gem
         run: bundle exec rake build
-      - name: Reporting Coverage
-        uses: codacy/codacy-coverage-reporter-action@master
-        with:
-          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-          coverage-reports: coverage/lcov/activeinteractor.lcov
     strategy:
       matrix:
         ruby:
