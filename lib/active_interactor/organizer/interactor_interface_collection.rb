@@ -14,6 +14,7 @@ module ActiveInteractor
     #  @return [Array<InteractorInterface>] the {InteractorInterface} collection
     class InteractorInterfaceCollection
       attr_reader :collection
+
       # @!method map(&block)
       #  Invokes the given block once for each element of {#collection}.
       #  @return [Array] a new array containing the values returned by the block.

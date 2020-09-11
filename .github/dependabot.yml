@@ -5,12 +5,23 @@
 
 version: 2
 updates:
-  - package-ecosystem: bundler
-    directory: '/'
+  - package-ecosystem: github-actions
+    directory: /
     schedule:
       interval: weekly
       day: monday
-    reviewers:
-      - aaronmallen
     labels:
       - dependabot
+      - github-actions
+    reviewers:
+      - aaronmallen
+  - package-ecosystem: bundler
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    labels:
+      - dependabot
+      - bundler
+    reviewers:
+      - aaronmallen

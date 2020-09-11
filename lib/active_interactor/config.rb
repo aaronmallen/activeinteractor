@@ -23,7 +23,7 @@ module ActiveInteractor
   #  @return [Config] a new instance of {Config}
   class Config
     include ActiveInteractor::Configurable
-    defaults logger: Logger.new(STDOUT)
+    defaults logger: Logger.new($stdout)
   end
 
   # The ActiveInteractor configuration

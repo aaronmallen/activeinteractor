@@ -2,6 +2,7 @@ AllCops:
   Exclude:
     - bin/**/*
     - vendor/bundle/**/*
+  NewCops: enable
   TargetRubyVersion: 2.5
 Metrics/BlockLength:
   Exclude:
@@ -12,3 +13,6 @@ Layout/LineLength:
   Max: 120
 Style/Documentation:
   Enabled: false
+Style/OptionalBooleanParameter:
+  Enabled: false
+
