@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [v1.0.5] - 2020-09-15
+
+### Fixed
+
+- [\#200](https://github.com/aaronmallen/activeinteractor/issues/200) Context attributes assigned in interactor not accessible as element within interactor
+
 ## [v1.0.4] - 2020-02-11
 
 ### Fixed

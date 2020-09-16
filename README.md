@@ -4,7 +4,6 @@
 [![Build Status](https://github.com/aaronmallen/activeinteractor/workflows/Build/badge.svg)](https://github.com/aaronmallen/activeinteractor/actions)
 [![Maintainability](https://api.codeclimate.com/v1/badges/2f1cb318f681a1eebb27/maintainability)](https://codeclimate.com/github/aaronmallen/activeinteractor/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/2f1cb318f681a1eebb27/test_coverage)](https://codeclimate.com/github/aaronmallen/activeinteractor/test_coverage)
-[![Dependencies](https://img.shields.io/depfu/aaronmallen/activeinteractor.svg?maxAge=300)](https://depfu.com/github/aaronmallen/activeinteractor)
 [![Yard Docs](http://img.shields.io/badge/yard-docs-blue.svg)](https://www.rubydoc.info/gems/activeinteractor)
 [![Inline docs](http://inch-ci.org/github/aaronmallen/activeinteractor.svg?branch=main)](http://inch-ci.org/github/aaronmallen/activeinteractor)
 [![License](https://img.shields.io/github/license/aaronmallen/activeinteractor.svg?maxAge=300)](https://github.com/aaronmallen/activeinteractor/blob/main/LICENSE)

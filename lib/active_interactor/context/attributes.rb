@@ -61,7 +61,7 @@ module ActiveInteractor
 
       # Returns the value of an attribute
       #
-      # @since unreleased
+      # @since 1.0.5
       #
       # @param name [String, Symbol] the key of the value to be returned
       # @returns [*] the attribute value
