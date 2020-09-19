@@ -76,7 +76,10 @@ module ActiveInteractor
       def perform_in_order
         self.class.organized.each do |interface|
           result = execute_interactor_with_callbacks(interface, true)
-          context.merge!(result) if result
+          next if result.nil?
+
+          context.merge!(result)
+          context_fail! if result.failure?
         end
       rescue ActiveInteractor::Error::ContextFailure => e
         context.merge!(e.context)
