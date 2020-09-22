@@ -30,14 +30,14 @@ RSpec.describe 'An organizer with failing nested organizer', type: :integration 
     subject { parent_interactor_class.perform }
 
     before do
-      expect_any_instance_of(child_interactor_class).to receive(:perform).and_call_original
-      expect_any_instance_of(child_interactor1).to receive(:perform).and_call_original
-      expect_any_instance_of(child_interactor2).to receive(:perform).and_call_original
-      expect_any_instance_of(child_interactor2).to receive(:rollback).and_call_original
-      expect_any_instance_of(child_interactor1).to receive(:rollback).and_call_original
-      expect_any_instance_of(parent_interactor1).to receive(:rollback).and_call_original
-      expect_any_instance_of(parent_interactor2).not_to receive(:perform).and_call_original
-      expect_any_instance_of(parent_interactor2).not_to receive(:rollback).and_call_original
+      expect_any_instance_of(child_interactor_class).to receive(:perform).exactly(:once).and_call_original
+      expect_any_instance_of(child_interactor1).to receive(:perform).exactly(:once).and_call_original
+      expect_any_instance_of(child_interactor2).to receive(:perform).exactly(:once).and_call_original
+      expect_any_instance_of(child_interactor2).to receive(:rollback).exactly(:once).and_call_original
+      expect_any_instance_of(child_interactor1).to receive(:rollback).exactly(:once).and_call_original
+      expect_any_instance_of(parent_interactor1).to receive(:rollback).exactly(:once).and_call_original
+      expect_any_instance_of(parent_interactor2).not_to receive(:perform).exactly(:once).and_call_original
+      expect_any_instance_of(parent_interactor2).not_to receive(:rollback).exactly(:once).and_call_original
     end
 
     it { is_expected.to be_a parent_interactor_class.context_class }
