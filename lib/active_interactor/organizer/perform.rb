@@ -73,10 +73,17 @@ module ActiveInteractor
         context_fail! if contexts.any?(&:failure?)
       end
 
+      def execute_and_merge_contexts(interface)
+        result = execute_interactor_with_callbacks(interface, true)
+        return if result.nil?
+
+        context.merge!(result)
+        context_fail! if result.failure?
+      end
+
       def perform_in_order
         self.class.organized.each do |interface|
-          result = execute_interactor_with_callbacks(interface, true)
-          context.merge!(result) if result
+          execute_and_merge_contexts(interface)
         end
       rescue ActiveInteractor::Error::ContextFailure => e
         context.merge!(e.context)
