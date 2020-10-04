@@ -84,6 +84,72 @@ RSpec.describe ActiveInteractor::Organizer::InteractorInterface do
         end
       end
 
+      context 'with options {:before => :some_method }' do
+        let(:options) { { before: :some_method } }
+
+        describe '#callbacks' do
+          subject { instance.callbacks }
+
+          it { is_expected.to eq(before: :some_method) }
+        end
+
+        describe '#perform_options' do
+          subject { instance.perform_options }
+
+          it { is_expected.to be_empty }
+        end
+      end
+
+      context 'with options {:before => -> { context.test = true } }' do
+        let(:options) { { before: -> { context.test = true } } }
+
+        describe '#callbacks' do
+          subject { instance.callbacks }
+
+          it { expect(subject[:before]).not_to be_nil }
+          it { expect(subject[:before]).to be_a Proc }
+        end
+
+        describe '#perform_options' do
+          subject { instance.perform_options }
+
+          it { is_expected.to be_empty }
+        end
+      end
+
+      context 'with options {:after => :some_method }' do
+        let(:options) { { after: :some_method } }
+
+        describe '#callbacks' do
+          subject { instance.callbacks }
+
+          it { is_expected.to eq(after: :some_method) }
+        end
+
+        describe '#perform_options' do
+          subject { instance.perform_options }
+
+          it { is_expected.to be_empty }
+        end
+      end
+
+      context 'with options {:after => -> { context.test = true } }' do
+        let(:options) { { after: -> { context.test = true } } }
+
+        describe '#callbacks' do
+          subject { instance.callbacks }
+
+          it { expect(subject[:after]).not_to be_nil }
+          it { expect(subject[:after]).to be_a Proc }
+        end
+
+        describe '#perform_options' do
+          subject { instance.perform_options }
+
+          it { is_expected.to be_empty }
+        end
+      end
+
       context 'with options { :validate => false }' do
         let(:options) { { validate: false } }
 
@@ -100,13 +166,19 @@ RSpec.describe ActiveInteractor::Organizer::InteractorInterface do
         end
       end
 
-      context 'with options { :if => :some_method, :validate => false }' do
-        let(:options) { { if: :some_method, validate: false } }
+      context 'with options { :if => :some_method, :validate => false, :before => :other_method }' do
+        let(:options) { { if: :some_method, validate: false, before: :other_method } }
 
         describe '#filters' do
           subject { instance.filters }
 
           it { is_expected.to eq(if: :some_method) }
+        end
+
+        describe '#callbacks' do
+          subject { instance.callbacks }
+
+          it { is_expected.to eq(before: :other_method) }
         end
 
         describe '#perform_options' do
