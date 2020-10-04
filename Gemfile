@@ -11,11 +11,14 @@ group :development, :test do
   gem 'solargraph'
 end
 
+group :test do
+  gem 'simplecov'
+  gem 'simplecov-lcov'
+end
+
 group :doc do
   gem 'github-markup'
   gem 'redcarpet'
-  gem 'simplecov'
-  gem 'simplecov-lcov'
   gem 'yard'
 end
 

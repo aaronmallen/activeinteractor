@@ -3,5 +3,5 @@
 module ActiveInteractor
   # The ActiveInteractor version
   # @return [String] the ActiveInteractor version
-  VERSION = '1.0.5'
+  VERSION = '1.1.0'
 end
