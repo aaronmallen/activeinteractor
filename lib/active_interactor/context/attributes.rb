@@ -69,6 +69,17 @@ module ActiveInteractor
         @table[name.to_sym] || attributes[name.to_sym]
       end
 
+      # Sets value of a Hash attribute in context.attributes
+      #
+      # @param name [String, Symbol] the key name of the attribute
+      # @param value [*] the value to be given attribute name
+      # @returns [*] the attribute value
+      def []=(name, value)
+        public_send("#{name}=", value)
+
+        super
+      end
+
       # Get values defined on the instance of {Base context} whose keys are defined on the {Base context} class'
       # {ClassMethods#attributes .attributes}
       #
@@ -117,7 +128,8 @@ module ActiveInteractor
       def merge!(context)
         merge_errors!(context) if context.respond_to?(:errors)
         copy_flags!(context)
-        context.each_pair do |key, value|
+
+        merged_context_attributes(context).each_pair do |key, value|
           public_send("#{key}=", value) unless value.nil?
         end
         self
@@ -127,6 +139,13 @@ module ActiveInteractor
 
       def _called
         @_called ||= []
+      end
+
+      def merged_context_attributes(context)
+        attrs = {}
+        attrs.merge!(context.to_h) if context.respond_to?(:to_h)
+        attrs.merge!(context.attributes.to_h) if context.respond_to?(:attributes)
+        attrs
       end
 
       def context_attributes_as_hash(context)
