@@ -27,11 +27,12 @@ module ActiveInteractor
     #  @return [Hash{Symbol=>*}] {Interactor::Perform::Options} for the {ActiveInteractor::Base interactor}
     #   {Interactor::Perform#perform #perform}
     class InteractorInterface
-      attr_reader :filters, :interactor_class, :perform_options
+      attr_reader :filters, :callbacks, :interactor_class, :perform_options
 
       # Keywords for conditional filters
       # @return [Array<Symbol>]
       CONDITIONAL_FILTERS = %i[if unless].freeze
+      CALLBACKS = %i[before after].freeze
 
       # Initialize a new instance of {InteractorInterface}
       #
@@ -42,7 +43,8 @@ module ActiveInteractor
       def initialize(interactor_class, options = {})
         @interactor_class = interactor_class.to_s.camelize.safe_constantize
         @filters = options.select { |key, _value| CONDITIONAL_FILTERS.include?(key) }
-        @perform_options = options.reject { |key, _value| CONDITIONAL_FILTERS.include?(key) }
+        @callbacks = options.select { |key, _value| CALLBACKS.include?(key) }
+        @perform_options = options.reject { |key, _value| CONDITIONAL_FILTERS.include?(key) || CALLBACKS.include?(key) }
       end
 
       # Call the {#interactor_class} {Interactor::Perform::ClassMethods#perform .perform} or
@@ -57,21 +59,29 @@ module ActiveInteractor
       #  {Context::Status#fail! fails} its {Context::Base context}.
       # @return [Class] an instance of {Context::Base context}
       def perform(target, context, fail_on_error = false, perform_options = {})
-        return if check_conditionals(target, filters[:if]) == false
-        return if check_conditionals(target, filters[:unless]) == true
+        return if check_conditionals(target, :if) == false
+        return if check_conditionals(target, :unless) == true
 
         method = fail_on_error ? :perform! : :perform
         options = self.perform_options.merge(perform_options)
         interactor_class.send(method, context, options)
       end
 
+      def execute_inplace_callback(target, callback)
+        resolve_option(target, callbacks[callback])
+      end
+
       private
 
       def check_conditionals(target, filter)
-        return unless filter
+        resolve_option(target, filters[filter])
+      end
 
-        return target.send(filter) if filter.is_a?(Symbol)
-        return target.instance_exec(&filter) if filter.is_a?(Proc)
+      def resolve_option(target, opt)
+        return unless opt
+
+        return target.send(opt) if opt.is_a?(Symbol)
+        return target.instance_exec(&opt) if opt.is_a?(Proc)
       end
     end
   end

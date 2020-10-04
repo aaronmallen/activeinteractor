@@ -74,11 +74,13 @@ module ActiveInteractor
       end
 
       def execute_and_merge_contexts(interface)
+        interface.execute_inplace_callback(self, :before)
         result = execute_interactor_with_callbacks(interface, true)
         return if result.nil?
 
         context.merge!(result)
         context_fail! if result.failure?
+        interface.execute_inplace_callback(self, :after)
       end
 
       def perform_in_order
