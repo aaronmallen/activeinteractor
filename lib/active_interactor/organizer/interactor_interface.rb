@@ -14,6 +14,13 @@ module ActiveInteractor
     #
     #  @return [Hash{Symbol=>Proc, Symbol}] conditional options for the {ActiveInteractor::Base interactor} class
     #
+    # @!attribute [r] callbacks
+    #   Callbacks for the interactor_class
+    #
+    #   @since 1.1.0
+    #
+    #   @return [Hash{Symbol=>*}] the interactor callbacks
+    #
     # @!attribute [r] interactor_class
     #  An {ActiveInteractor::Base interactor} class
     #

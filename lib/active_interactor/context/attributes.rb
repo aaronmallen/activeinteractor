@@ -71,6 +71,8 @@ module ActiveInteractor
 
       # Sets value of a Hash attribute in context.attributes
       #
+      # @since 1.1.0
+      #
       # @param name [String, Symbol] the key name of the attribute
       # @param value [*] the value to be given attribute name
       # @returns [*] the attribute value

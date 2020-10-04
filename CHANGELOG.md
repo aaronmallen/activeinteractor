@@ -7,11 +7,23 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [v1.1.0] - 2020-10-04
+
+### Added
+
+- [\#247](https://github.com/aaronmallen/activeinteractor/issues/247) Support in place callbacks
+
+### Fixed
+
+- [\#242](https://github.com/aaronmallen/activeinteractor/issues/242) Optional attributes are always null
+- [\#243](https://github.com/aaronmallen/activeinteractor/issues/243) Nested Organizers do not rollback parent context
+
 ## [v1.0.5] - 2020-09-15
 
 ### Fixed
 
-- [\#200](https://github.com/aaronmallen/activeinteractor/issues/200) Context attributes assigned in interactor not accessible as element within interactor
+- [\#200](https://github.com/aaronmallen/activeinteractor/issues/200) Context attributes assigned in interactor not
+  accessible as element within interactor
 
 ## [v1.0.4] - 2020-02-11
 
@@ -200,7 +212,9 @@ and this project adheres to [Semantic Versioning].
 
 <!-- versions -->
 
-[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.4...HEAD
+[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.1.0...HEAD
+[v1.1.0]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.5...v1.1.0
+[v1.0.5]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.4...v1.0.5
 [v1.0.4]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.3...v1.0.4
 [v1.0.3]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.2...v1.0.3
 [v1.0.2]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.1...v1.0.2
