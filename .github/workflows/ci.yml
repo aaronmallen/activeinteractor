@@ -22,7 +22,7 @@ jobs:
       - name: Setup branch
         uses: actions/checkout@v2
       - name: Setup ruby ${{ matrix.ruby }}
-        uses: actions/setup-ruby@v1.1.1
+        uses: actions/setup-ruby@v1.1.2
         with:
           ruby-version: ${{ matrix.ruby }}
       - name: Setup cache
