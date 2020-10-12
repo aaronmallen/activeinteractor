@@ -4,12 +4,13 @@ lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'active_interactor/version'
 
-version = ActiveInteractor::VERSION.dup
-
 Gem::Specification.new do |spec|
+  gem_version = ActiveInteractor::Version.gem_version
+  semver = ActiveInteractor::Version.semver
+
   spec.platform      = Gem::Platform::RUBY
   spec.name          = 'activeinteractor'
-  spec.version       = version
+  spec.version       = gem_version
   spec.summary       = 'Ruby interactors with ActiveModel::Validations'
   spec.description   = <<~DESC
     An implementation of the Command Pattern for Ruby with ActiveModel::Validations inspired by the interactor gem.
@@ -30,10 +31,10 @@ Gem::Specification.new do |spec|
 
   spec.metadata = {
     'bug_tracker_uri' => 'https://github.com/aaronmallen/activeinteractor/issues',
-    'changelog_uri' => "https://github.com/aaronmallen/activeinteractor/blob/v#{version}/CHANGELOG.md",
-    'documentation_uri' => "https://www.rubydoc.info/gems/activeinteractor/#{version}",
+    'changelog_uri' => "https://github.com/aaronmallen/activeinteractor/blob/v#{semver}/CHANGELOG.md",
+    'documentation_uri' => "https://www.rubydoc.info/gems/activeinteractor/#{gem_version}",
     'hompage_uri' => spec.homepage,
-    'source_code_uri' => "https://github.com/aaronmallen/activeinteractor/tree/v#{version}",
+    'source_code_uri' => "https://github.com/aaronmallen/activeinteractor/tree/v#{semver}",
     'wiki_uri' => 'https://github.com/aaronmallen/activeinteractor/wiki'
   }
 
