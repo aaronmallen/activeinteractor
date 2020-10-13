@@ -16,6 +16,8 @@ on:
 
 jobs:
   build:
+    env:
+      CC_TEST_REPORTER_ID:  ${{ secrets.CC_TEST_REPORTER_ID }}
     name: Build ruby ${{ matrix.ruby }}
     runs-on: ubuntu-latest
     steps:
@@ -37,15 +39,18 @@ jobs:
           gem install bundler
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
-      - name: Test
-        env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+      - name: Setup coverage reporter
+        if: env.CC_TEST_REPORTER_ID != null
         run: |
           curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
           export GIT_BRANCH=$(echo ${GITHUB_HEAD_REF##*/})
           chmod +x ./cc-test-reporter
           ./cc-test-reporter before-build
-          bundle exec rake spec
+      - name: Test
+        run: bundle exec rake spec
+      - name: Report coverage
+        if: env.CC_TEST_REPORTER_ID != null
+        run: |
           ./cc-test-reporter format-coverage -t lcov coverage/lcov/activeinteractor.lcov
           ./cc-test-reporter upload-coverage
       - name: Build gem
