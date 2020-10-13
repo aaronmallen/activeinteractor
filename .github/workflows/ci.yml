@@ -23,6 +23,15 @@ jobs:
     steps:
       - name: Setup branch
         uses: actions/checkout@v2
+      - name: Echo Branch
+        env:
+          BASE_REF: ${{ github.base_ref }}
+          HEAD_REF: ${{ github.head_ref }}
+          BOOL_VAL: ${{ null || github.base_ref || github.head_ref || github.ref }}
+        run: |
+          echo ${BASE_REF}
+          echo ${HEAD_REF}
+          echo ${BOOL_VAL}
       - name: Setup ruby ${{ matrix.ruby }}
         uses: actions/setup-ruby@v1.1.2
         with:
