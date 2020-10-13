@@ -41,14 +41,14 @@ jobs:
           bundle install --jobs 4 --retry 3
       - name: Setup coverage reporter
         env:
-          GIT_BRANCH: ${{ github.head_ref || github.ref }}
+          GIT_BRANCH: ${{ github.ref }}
         if: env.CC_TEST_REPORTER_ID != null
         run: |
           curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
           chmod +x ./cc-test-reporter
           ./cc-test-reporter before-build
       - name: Test
-        run: bundle exec rake spec
+        run: bundle exec rspec
       - name: Report coverage
         if: env.CC_TEST_REPORTER_ID != null
         run: |
