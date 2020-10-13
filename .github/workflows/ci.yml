@@ -40,10 +40,11 @@ jobs:
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
       - name: Setup coverage reporter
+        env:
+          GIT_BRANCH: ${{ github.head_ref || github.ref }}
         if: env.CC_TEST_REPORTER_ID != null
         run: |
           curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-          export GIT_BRANCH=$(echo ${GITHUB_HEAD_REF##*/})
           chmod +x ./cc-test-reporter
           ./cc-test-reporter before-build
       - name: Test
