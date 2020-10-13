@@ -15,13 +15,3 @@ updates:
       - github-actions
     reviewers:
       - aaronmallen
-  - package-ecosystem: bundler
-    directory: /
-    schedule:
-      interval: weekly
-      day: monday
-    labels:
-      - dependabot
-      - bundler
-    reviewers:
-      - aaronmallen
