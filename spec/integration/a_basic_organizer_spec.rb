@@ -224,5 +224,81 @@ RSpec.describe 'A basic organizer', type: :integration do
         end
       end
     end
+
+    context 'when passing default attributes on the organizer and its interactors' do
+      let!(:test_organizer_context_class) do
+        build_context('TestOrganizerContext') do
+          attributes :foo
+          attributes :baz
+        end
+      end
+
+      let!(:test_interactor_3_context_class) do
+        build_context('TestInteractor3Context') do
+          attribute :foo
+          attribute :bar, default: 'bar'
+          attribute :baz, default: 'baz'
+        end
+      end
+
+      let!(:test_interactor_4_context_class) do
+        build_context('TestInteractor4Context') do
+          attribute :foo
+          attribute :bar, default: 'bar'
+          attribute :baz
+        end
+      end
+
+      let!(:test_interactor_3) do
+        build_interactor('TestInteractor3') do
+          def perform
+            context.bar = 'bar'
+            context.baz_is_set_at_3 = (context.baz == 'baz')
+          end
+        end
+      end
+
+      let!(:test_interactor_4) do
+        build_interactor('TestInteractor4') do
+          def perform
+            context.baz_is_set_at_4 = (context.baz == 'baz')
+          end
+        end
+      end
+
+      let!(:interactor_class) do
+        build_organizer('TestOrganizer') do
+          organize TestInteractor3, TestInteractor4
+        end
+      end
+
+      describe '.perform' do
+        subject(:result) { interactor_class.perform(context_attributes) }
+
+        context 'when inputs are not defined' do
+          let(:context_attributes) { {} }
+
+          it { is_expected.to have_attributes(foo: nil, bar: 'bar', baz: 'baz') }
+        end
+
+        context 'when [:foo] is defined' do
+          let(:context_attributes) { { foo: 'foo' } }
+
+          it { is_expected.to have_attributes(foo: 'foo', bar: 'bar', baz: 'baz') }
+        end
+
+        context 'when [:bar] is nil' do
+          let(:context_attributes) { { bar: nil } }
+
+          it { is_expected.to have_attributes(foo: nil, bar: 'bar', baz: 'baz') }
+        end
+
+        context 'when [:baz] is nil' do
+          let(:context_attributes) { {} }
+
+          it { is_expected.to have_attributes(baz: 'baz', baz_is_set_at_3: true, baz_is_set_at_4: true) }
+        end
+      end
+    end
   end
 end
