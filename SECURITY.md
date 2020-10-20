@@ -2,11 +2,16 @@
 
 ## Supported Versions
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 1.1.x   | :white_check_mark: |
-| 1.0.x   | :x:                |
-| 0.1.x   | :x:                |
+| Version | Supported                |
+| ------- | ------------------------ |
+| 1.1.x   | :rocket: :beetle: :lock: |
+| 1.0.x   | :beetle: :lock:          |
+| 0.1.x   | :x:                      |
+
+- :rocket: - Currently addressing feature requests
+- :beetle: - Currently addressing bug reports
+- :lock:   - Currently addressing security reports
+- :x:      - No longer supported
 
 ## Reporting a Vulnerability
 
