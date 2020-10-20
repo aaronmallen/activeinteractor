@@ -132,7 +132,7 @@ module ActiveInteractor
         copy_flags!(context)
 
         merged_context_attributes(context).each_pair do |key, value|
-          public_send("#{key}=", value) unless value.nil?
+          self[key] = value unless value.nil?
         end
         self
       end
