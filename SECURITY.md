@@ -15,8 +15,8 @@
 
 ## Reporting a Vulnerability
 
-To report a security vulnerability please create a bug report on the [GitHub issue tracker][issues]. Security issues
-will be triaged as soon as possible. We also welcome pull requests, please see our
+To report a security vulnerability please create a security report on the [GitHub issue tracker][issues] tracker.
+Security issues will be triaged as soon as possible. We also welcome pull requests, please see our
 [contributing guidelines][contributing] for more information on how to contribute.
 
 [issues]: https://github.com/aaronmallen/activeinteractor/issues
