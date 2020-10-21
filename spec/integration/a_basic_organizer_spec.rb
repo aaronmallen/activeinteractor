@@ -231,6 +231,7 @@ RSpec.describe 'A basic organizer', type: :integration do
           attribute :foo
           attribute :baz
           attribute :zoo, default: 'zoo'
+          attribute :taz, default: 'taz0'
         end
       end
 
@@ -240,6 +241,7 @@ RSpec.describe 'A basic organizer', type: :integration do
           attribute :bar, default: 'bar'
           attribute :baz, default: 'baz'
           attribute :zoo
+          attribute :taz, default: 'taz3'
         end
       end
 
@@ -255,6 +257,7 @@ RSpec.describe 'A basic organizer', type: :integration do
         build_interactor('TestInteractor3') do
           def perform
             context.bar = 'bar'
+            context.taz_is_set_at_3 = (context.taz == 'taz')
             context.baz_is_set_at_3 = (context.baz == 'baz')
             context.zoo_is_set_at_3 = (context.zoo == 'zoo')
           end
@@ -264,6 +267,7 @@ RSpec.describe 'A basic organizer', type: :integration do
       let!(:test_interactor_4) do
         build_interactor('TestInteractor4') do
           def perform
+            context.taz_is_set_at_4 = (context.taz == 'taz')
             context.baz_is_set_at_4 = (context.baz == 'baz')
             context.zoo_is_set_at_4 = (context.zoo == 'zoo')
           end
@@ -312,6 +316,12 @@ RSpec.describe 'A basic organizer', type: :integration do
           let(:context_attributes) { { foo: 'foo' } }
 
           it { is_expected.to have_attributes(foo: 'foo', bar: 'bar', baz: 'baz') }
+        end
+
+        context 'when [:taz] is defined' do
+          let(:context_attributes) { { taz: 'taz' } }
+
+          it { is_expected.to have_attributes(taz: 'taz', taz_is_set_at_3: true, taz_is_set_at_4: true) }
         end
 
         context 'when [:bar] is nil' do
