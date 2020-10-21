@@ -276,6 +276,29 @@ RSpec.describe 'A basic organizer', type: :integration do
         end
       end
 
+      describe '.context_class' do
+        describe 'TestOrganizer' do
+          subject { interactor_class.context_class }
+
+          it { is_expected.to eq TestOrganizerContext }
+          it { is_expected.to be < ActiveInteractor::Context::Base }
+        end
+
+        describe 'TestInteractor3' do
+          subject { test_interactor_3.context_class }
+
+          it { is_expected.to eq TestInteractor3Context }
+          it { is_expected.to be < ActiveInteractor::Context::Base }
+        end
+
+        describe 'TestInteractor4' do
+          subject { test_interactor_4.context_class }
+
+          it { is_expected.to eq TestInteractor4Context }
+          it { is_expected.to be < ActiveInteractor::Context::Base }
+        end
+      end
+
       describe '.perform' do
         subject(:result) { interactor_class.perform(context_attributes) }
 
