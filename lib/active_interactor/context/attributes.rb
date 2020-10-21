@@ -170,8 +170,8 @@ module ActiveInteractor
       def merge_attribute_values(context)
         return unless context
 
-        context.each_pair do |key, value|
-          public_send("#{key}=", value)
+        attributes.compact.merge(context).each_pair do |key, value|
+          self[key] = value
         end
       end
     end
