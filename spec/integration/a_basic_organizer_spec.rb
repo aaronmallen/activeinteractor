@@ -228,8 +228,9 @@ RSpec.describe 'A basic organizer', type: :integration do
     context 'when passing default attributes on the organizer and its interactors' do
       let!(:test_organizer_context_class) do
         build_context('TestOrganizerContext') do
-          attributes :foo
-          attributes :baz
+          attribute :foo
+          attribute :baz
+          attribute :zoo, default: 'zoo'
         end
       end
 
@@ -238,6 +239,7 @@ RSpec.describe 'A basic organizer', type: :integration do
           attribute :foo
           attribute :bar, default: 'bar'
           attribute :baz, default: 'baz'
+          attribute :zoo
         end
       end
 
@@ -254,6 +256,7 @@ RSpec.describe 'A basic organizer', type: :integration do
           def perform
             context.bar = 'bar'
             context.baz_is_set_at_3 = (context.baz == 'baz')
+            context.zoo_is_set_at_3 = (context.zoo == 'zoo')
           end
         end
       end
@@ -262,6 +265,7 @@ RSpec.describe 'A basic organizer', type: :integration do
         build_interactor('TestInteractor4') do
           def perform
             context.baz_is_set_at_4 = (context.baz == 'baz')
+            context.zoo_is_set_at_4 = (context.zoo == 'zoo')
           end
         end
       end
@@ -297,6 +301,12 @@ RSpec.describe 'A basic organizer', type: :integration do
           let(:context_attributes) { {} }
 
           it { is_expected.to have_attributes(baz: 'baz', baz_is_set_at_3: true, baz_is_set_at_4: true) }
+        end
+
+        context 'when [:zoo] is nil' do
+          let(:context_attributes) { {} }
+
+          it { is_expected.to have_attributes(zoo: 'zoo', zoo_is_set_at_3: true, zoo_is_set_at_4: true) }
         end
       end
     end
