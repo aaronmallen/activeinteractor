@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [v1.1.1] - 2020-10-21
+
+### Fixed
+
+- [\#267](https://github.com/aaronmallen/activeinteractor/pull/267) Allow default attributes to propagate to
+  sibling/child interactors
+
 ## [v1.1.0] - 2020-10-04
 
 ### Added
@@ -212,7 +219,8 @@ and this project adheres to [Semantic Versioning].
 
 <!-- versions -->
 
-[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.1.1...HEAD
+[v1.1.1]: https://github.com/aaronmallen/activeinteractor/compare/v1.1.0...v1.1.1
 [v1.1.0]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.5...v1.1.0
 [v1.0.5]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.4...v1.0.5
 [v1.0.4]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.3...v1.0.4
