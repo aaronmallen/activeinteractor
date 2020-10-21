@@ -224,5 +224,124 @@ RSpec.describe 'A basic organizer', type: :integration do
         end
       end
     end
+
+    context 'when passing default attributes on the organizer and its interactors' do
+      let!(:test_organizer_context_class) do
+        build_context('TestOrganizerContext') do
+          attribute :foo
+          attribute :baz
+          attribute :zoo, default: 'zoo'
+          attribute :taz, default: 'taz0'
+        end
+      end
+
+      let!(:test_interactor_3_context_class) do
+        build_context('TestInteractor3Context') do
+          attribute :foo
+          attribute :bar, default: 'bar'
+          attribute :baz, default: 'baz'
+          attribute :zoo
+          attribute :taz, default: 'taz3'
+        end
+      end
+
+      let!(:test_interactor_4_context_class) do
+        build_context('TestInteractor4Context') do
+          attribute :foo
+          attribute :bar, default: 'bar'
+          attribute :baz
+        end
+      end
+
+      let!(:test_interactor_3) do
+        build_interactor('TestInteractor3') do
+          def perform
+            context.bar = 'bar'
+            context.taz_is_set_at_3 = (context.taz == 'taz')
+            context.baz_is_set_at_3 = (context.baz == 'baz')
+            context.zoo_is_set_at_3 = (context.zoo == 'zoo')
+          end
+        end
+      end
+
+      let!(:test_interactor_4) do
+        build_interactor('TestInteractor4') do
+          def perform
+            context.taz_is_set_at_4 = (context.taz == 'taz')
+            context.baz_is_set_at_4 = (context.baz == 'baz')
+            context.zoo_is_set_at_4 = (context.zoo == 'zoo')
+          end
+        end
+      end
+
+      let!(:interactor_class) do
+        build_organizer('TestOrganizer') do
+          organize TestInteractor3, TestInteractor4
+        end
+      end
+
+      describe '.context_class' do
+        describe 'TestOrganizer' do
+          subject { interactor_class.context_class }
+
+          it { is_expected.to eq TestOrganizerContext }
+          it { is_expected.to be < ActiveInteractor::Context::Base }
+        end
+
+        describe 'TestInteractor3' do
+          subject { test_interactor_3.context_class }
+
+          it { is_expected.to eq TestInteractor3Context }
+          it { is_expected.to be < ActiveInteractor::Context::Base }
+        end
+
+        describe 'TestInteractor4' do
+          subject { test_interactor_4.context_class }
+
+          it { is_expected.to eq TestInteractor4Context }
+          it { is_expected.to be < ActiveInteractor::Context::Base }
+        end
+      end
+
+      describe '.perform' do
+        subject(:result) { interactor_class.perform(context_attributes) }
+
+        context 'when inputs are not defined' do
+          let(:context_attributes) { {} }
+
+          it { is_expected.to have_attributes(foo: nil, bar: 'bar', baz: 'baz') }
+        end
+
+        context 'when [:foo] is defined' do
+          let(:context_attributes) { { foo: 'foo' } }
+
+          it { is_expected.to have_attributes(foo: 'foo', bar: 'bar', baz: 'baz') }
+        end
+
+        context 'when [:taz] is defined' do
+          let(:context_attributes) { { taz: 'taz' } }
+
+          it { is_expected.to have_attributes(taz: 'taz', taz_is_set_at_3: true, taz_is_set_at_4: true) }
+        end
+
+        context 'when [:bar] is nil' do
+          let(:context_attributes) { { bar: nil } }
+
+          it { is_expected.to have_attributes(foo: nil, bar: 'bar', baz: 'baz') }
+        end
+
+        context 'when [:baz] is nil' do
+          let(:context_attributes) { {} }
+
+          it { is_expected.to have_attributes(baz: 'baz', baz_is_set_at_3: true, baz_is_set_at_4: true) }
+        end
+
+        context 'when [:zoo] is nil' do
+          let(:context_attributes) { {} }
+
+          it { is_expected.to have_attributes(zoo: 'zoo', zoo_is_set_at_3: true, zoo_is_set_at_4: true) }
+        end
+      end
+    end
   end
 end
