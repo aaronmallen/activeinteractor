@@ -81,6 +81,7 @@ module ActiveInteractor
     autoload :Callbacks
     autoload :Context
     autoload :Perform
+    autoload :State
     autoload :Worker
   end
 
