@@ -79,7 +79,7 @@ module ActiveInteractor
       def []=(name, value)
         public_send("#{name}=", value)
 
-        super
+        super unless @table.nil?
       end
 
       # Get values defined on the instance of {Base context} whose keys are defined on the {Base context} class'
