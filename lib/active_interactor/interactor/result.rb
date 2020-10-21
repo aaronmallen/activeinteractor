@@ -75,12 +75,7 @@ module ActiveInteractor
       # @return [Boolean] `true` if all {ActiveInteractor::Interactor::State#called #called} interactors have
       #  successfully rolled back otherwise `false`.
       def rollback!
-        state.called.reverse_each do |interactor|
-          next if state.rolled_back.include? interactor
-
-          interactor.rollback
-          state.rolled_back! interactor
-        end
+        rollback_called!
         (state.rolled_back - state.called).empty?
       end
 
@@ -113,6 +108,15 @@ module ActiveInteractor
         all_errors = context.errors.uniq.compact
         context.errors.clear
         all_errors.each { |error| context.errors.add(error[0], error[1]) }
+      end
+
+      def rollback_called!
+        state.called.reverse_each do |interactor|
+          next if state.rolled_back.include? interactor
+
+          interactor.rollback
+          state.rolled_back! interactor
+        end
       end
     end
   end
