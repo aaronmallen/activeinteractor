@@ -79,7 +79,7 @@ module ActiveInteractor
       def []=(name, value)
         public_send("#{name}=", value)
 
-        super
+        super unless @table.nil?
       end
 
       # Get values defined on the instance of {Base context} whose keys are defined on the {Base context} class'
@@ -132,7 +132,7 @@ module ActiveInteractor
         copy_flags!(context)
 
         merged_context_attributes(context).each_pair do |key, value|
-          public_send("#{key}=", value) unless value.nil?
+          self[key] = value unless value.nil?
         end
         self
       end
@@ -170,8 +170,8 @@ module ActiveInteractor
       def merge_attribute_values(context)
         return unless context
 
-        context.each_pair do |key, value|
-          public_send("#{key}=", value)
+        attributes.compact.merge(context).each_pair do |key, value|
+          self[key] = value
         end
       end
     end
