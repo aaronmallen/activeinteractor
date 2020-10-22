@@ -38,8 +38,8 @@ jobs:
             bundle install --jobs 4 --retry 3
       - name: Rubocop run
         run: |
-          bundle exec rubocop --require rubocop-performance --require code_scanning --display-cop-names
-          bundle exec rubocop --require rubocop-performance --require code_scanning --format CodeScanning::SarifFormatter -o rubocop.sarif
+          bin/rubocop
+          bin/rubocop --format CodeScanning::SarifFormatter -o rubocop.sarif
       - name: Upload sarif output
         uses: github/codeql-action/upload-sarif@v1
         with:
