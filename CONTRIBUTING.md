@@ -41,12 +41,57 @@ Here are some ways *you* can contribute:
 1. Add, commit, and push your changes.
 1. [Submit a pull request.][pr]
 
-## Notes
+### Branches and Versions
+
+Each major/minor version of the project has a corresponding stable branch. For example version `1.1.1` is based off the
+`1-1-stable` branch, likewise version `1.2.0` will be based off the `1-2-stable` branch. If your pull request is to
+address an issue with a particular version your work should be based off the appropriate branch, and your pull request
+should be set to merge into that branch as well. There may be occasions where you will be asked to open a separate PR
+to apply your patch changes to the main branch or other version stable branches.
+
+### Notes
 
 * Please add tests if you changed code. Contributions without tests won't be accepted.
 * If you don't know how to add tests, please put in a PR and leave a comment
   asking for help. We love helping!
 * Please don't update the Gem version.
+
+## Setting Up
+
+After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests.
+You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+
+To install this gem onto your local machine, run `bundle exec rake install`.
+
+## Running the test suite
+
+The default rake task will run the full test suite and lint:
+
+```sh
+bundle exec rake
+```
+
+To run an individual rspec test, you can provide a path and line number:
+
+```sh
+bundle exec rspec spec/path/to/spec.rb:123
+```
+
+## Formatting and Style
+
+Our style guide is defined in [`.rubocop.yml`](https://github.com/aaronmallen/activeinteractor/blob/main/.rubocop.yml)
+
+To run the linter:
+
+```sh
+bin/rubocop
+```
+
+To run the linter with auto correct:
+
+```sh
+bin/rubocop -A
+```
 
 Inspired by [factory_bot]
 
