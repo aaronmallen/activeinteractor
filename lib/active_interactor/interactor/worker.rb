@@ -42,9 +42,7 @@ module ActiveInteractor
       #
       # @return [Boolean] `true` if context was successfully rolled back
       def execute_rollback
-        return if interactor.options.skip_rollback
-
-        execute_interactor_rollback!
+        interactor.context_rollback!
       end
 
       private
@@ -76,14 +74,6 @@ module ActiveInteractor
         return interactor.perform unless interactor.options.validate
 
         execute_context_with_validation!
-      end
-
-      def execute_interactor_rollback!
-        return interactor.context_rollback! if interactor.options.skip_rollback_callbacks
-
-        interactor.run_callbacks :rollback do
-          interactor.context_rollback!
-        end
       end
 
       def handle_error(exception)

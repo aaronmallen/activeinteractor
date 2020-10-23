@@ -81,8 +81,20 @@ module ActiveInteractor
       def rollback!
         return false if @_rolled_back
 
-        _called.reverse_each(&:rollback)
+        _called.reverse_each do |interactor|
+          next if interactor.options.skip_rollback
+
+          execute_interactor_rollback!(interactor)
+        end
         @_rolled_back = true
+      end
+
+      def execute_interactor_rollback!(interactor)
+        return interactor.rollback if interactor.options.skip_rollback_callbacks
+
+        interactor.run_callbacks :rollback do
+          interactor.rollback
+        end
       end
 
       # Whether the {Base context} instance is successful. By default, a new instance is successful and only changes
