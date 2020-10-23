@@ -152,8 +152,9 @@ module ActiveInteractor
       #  @return [Options] a new instance of {Options}
       class Options
         include ActiveInteractor::Configurable
-        defaults skip_each_perform_callbacks: false, skip_perform_callbacks: false, skip_rollback: false,
-                 skip_rollback_callbacks: false, validate: true, validate_on_calling: true, validate_on_called: true
+        defaults skip_each_perform_callbacks: false, skip_perform_callbacks: false, skip_organized_rollback: false,
+                 skip_rollback: false, skip_rollback_callbacks: false, validate: true, validate_on_calling: true,
+                 validate_on_called: true
       end
 
       # @!method execute_perform

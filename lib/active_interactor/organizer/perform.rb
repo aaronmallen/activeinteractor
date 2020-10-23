@@ -75,7 +75,7 @@ module ActiveInteractor
 
       def execute_and_merge_contexts(interface)
         interface.execute_inplace_callback(self, :before)
-        result = execute_interactor_with_callbacks(interface, true)
+        result = execute_interactor_with_callbacks(interface, true, skip_organized_rollback: true)
         return if result.nil?
 
         context.merge!(result)
