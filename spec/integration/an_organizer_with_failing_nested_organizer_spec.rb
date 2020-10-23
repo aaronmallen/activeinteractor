@@ -5,12 +5,30 @@ require 'spec_helper'
 RSpec.describe 'An organizer with failing nested organizer', type: :integration do
   let!(:parent_interactor1) { build_interactor('TestParentInteractor1') }
   let!(:parent_interactor2) { build_interactor('TestParentInteractor2') }
-  let!(:child_interactor1) { build_interactor('TestChildInteractor1') }
+  let!(:child_interactor1) do
+    build_interactor('TestChildInteractor1') do
+      before_rollback :test_before_rollback
+      after_rollback :test_after_rollback
+
+      def perform; end
+
+      def test_after_rollback; end
+
+      def test_before_rollback; end
+    end
+  end
   let!(:child_interactor2) do
     build_interactor('TestChildInteractor2') do
+      before_rollback :test_before_rollback
+      after_rollback :test_after_rollback
+
       def perform
         context.fail!
       end
+
+      def test_after_rollback; end
+
+      def test_before_rollback; end
     end
   end
 
@@ -38,6 +56,10 @@ RSpec.describe 'An organizer with failing nested organizer', type: :integration 
       expect_any_instance_of(parent_interactor1).to receive(:rollback).exactly(:once).and_call_original
       expect_any_instance_of(parent_interactor2).not_to receive(:perform).exactly(:once).and_call_original
       expect_any_instance_of(parent_interactor2).not_to receive(:rollback).exactly(:once).and_call_original
+      expect_any_instance_of(child_interactor2).to receive(:test_before_rollback).exactly(:once).and_call_original
+      expect_any_instance_of(child_interactor2).to receive(:test_after_rollback).exactly(:once).and_call_original
+      expect_any_instance_of(child_interactor1).to receive(:test_before_rollback).exactly(:once).and_call_original
+      expect_any_instance_of(child_interactor1).to receive(:test_after_rollback).exactly(:once).and_call_original
     end
 
     it { is_expected.to be_a parent_interactor_class.context_class }
