@@ -193,6 +193,31 @@ module ActiveInteractor
           set_callback(:validation, :before, *args, options, &block)
         end
 
+        # Define a callback to call before an {Base interactor} fails
+        #
+        # @since unreleased
+        #
+        # @example
+        #   class MyInteractor < ActiveInteractor::Base
+        #     before_failure :log_error
+        #
+        #     def perform
+        #       context.fail!("I failed!")
+        #     end
+        #
+        #     private
+        #
+        #     def log_error
+        #       p context.errors.full_messages
+        #     end
+        #   end
+        #
+        #   result = MyInteractor.perform
+        #   #=> ["Context I failed!"]
+        def before_failure(*filters, &block)
+          set_callback(:failure, :before, *filters, &block)
+        end
+
         # Define a callback to call before {Interactor::Perform#perform #perform} has been called on an
         # {Base interactor} instance
         #
@@ -267,7 +292,7 @@ module ActiveInteractor
           define_callbacks :validation,
                            skip_after_callbacks_if_terminated: true,
                            scope: %i[kind name]
-          define_callbacks :perform, :rollback
+          define_callbacks :failure, :perform, :rollback
         end
       end
     end
