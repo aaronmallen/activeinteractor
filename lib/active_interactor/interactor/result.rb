@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'active_support/core_ext/module/delegation'
-
 module ActiveInteractor
   module Interactor
     # An Interactor Result object.
@@ -41,7 +39,6 @@ module ActiveInteractor
       # @!method successful?
       #  @see ActiveInteractor::Interactor::State#success?
       delegate :called, :called!, :fail?, :failure?, :success?, :successful?, to: :state
-      delegate_missing_to :context
 
       # Initializes a new instance of {Result}
       #
@@ -104,10 +101,27 @@ module ActiveInteractor
         errors.each { |error| handle_errors(error) }
       end
 
+      def method_missing(method_name, *args, &block)
+        context.public_send(method_name, *args, &block)
+        ActiveInteractor::Deprecation::V2.deprecation_warning(
+          method_name,
+          'calling #context methods on an ActiveInteractor::Interactor::Result is deprecated use #context instead',
+          caller
+        )
+      rescue NoMethodError
+        super
+      end
+
       def resolve_errors!
         all_errors = context.errors.uniq.compact
         context.errors.clear
         all_errors.each { |error| context.errors.add(error[0], error[1]) }
+      end
+
+      def respond_to_missing?(method_name, include_private = false)
+        return true if method_name[/.*(?==\z)/m]
+
+        context.respond_to?(method_name, include_private) || super
       end
 
       def rollback_called!
