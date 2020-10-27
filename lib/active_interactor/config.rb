@@ -6,12 +6,28 @@ module ActiveInteractor
   # @author Aaron Allen <hello@aaronmallen.me>
   # @since 1.0.0
   #
+  # @!attribute [rw] deprecation_debugging
+  #  Whether or not to enable debugging for deprecation messages. Deprecation debugging is `false` by default.
+  #
+  #  @since unreleased
+  #  @see https://api.rubyonrails.org/classes/ActiveSupport/Deprecation.html ActiveSupport::Deprecation
+  #
+  #  @return [Boolean] `true` if enabled or `false` if disabled
+  #
   # @!attribute [rw] logger
   #  The logger instance to use for logging.
   #
   #  @since 1.0.0
   #
   #  @return [Class] an instance of Logger.
+  #
+  # @!attribute [rw] silence_deprecation_warnings
+  #  Whether or not to silence deprecation messages. Deprecation silencing is `false` by default.
+  #
+  #  @since unreleased
+  #  @see https://api.rubyonrails.org/classes/ActiveSupport/Deprecation.html ActiveSupport::Deprecation
+  #
+  #  @return [Boolean] `true` if silenced or `false` if not silenced
   #
   # @!method initialize(options = {})
   #  Initialize a new instance of {Config}
@@ -23,7 +39,7 @@ module ActiveInteractor
   #  @return [Config] a new instance of {Config}
   class Config
     include ActiveInteractor::Configurable
-    defaults logger: Logger.new($stdout)
+    defaults deprecation_debugging: false, logger: Logger.new($stdout), silence_deprecation_warnings: false
   end
 
   # The ActiveInteractor configuration
