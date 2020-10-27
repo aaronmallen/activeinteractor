@@ -76,7 +76,7 @@ RSpec.describe ActiveInteractor::Interactor::Worker do
     describe '#execute_perform' do
       subject { described_class.new(interactor).execute_perform }
 
-      it { is_expected.to be_an TestInteractor.context_class }
+      it { is_expected.to be_an ActiveInteractor::Interactor::Result }
 
       context 'when context fails' do
         before do
@@ -85,7 +85,7 @@ RSpec.describe ActiveInteractor::Interactor::Worker do
         end
 
         it { expect { subject }.not_to raise_error }
-        it { is_expected.to be_an TestInteractor.context_class }
+        it { is_expected.to be_an ActiveInteractor::Interactor::Result }
       end
 
       include_examples 'an interactor with options'
@@ -94,7 +94,7 @@ RSpec.describe ActiveInteractor::Interactor::Worker do
     describe '#execute_perform!' do
       subject { described_class.new(interactor).execute_perform! }
 
-      it { is_expected.to be_an TestInteractor.context_class }
+      it { is_expected.to be_an ActiveInteractor::Interactor::Result }
 
       it 'is expected to run perform callbacks on interactor' do
         expect_any_instance_of(TestInteractor).to receive(:run_callbacks)

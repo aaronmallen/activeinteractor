@@ -117,7 +117,7 @@ RSpec.describe ActiveInteractor::Organizer::Base do
         end
       end
 
-      it { is_expected.to be_a interactor_class.context_class }
+      it { is_expected.to be_a ActiveInteractor::Interactor::Result }
       it 'is expected to receive #perform on both interactors' do
         expect_any_instance_of(interactor1).to receive(:perform)
         expect_any_instance_of(interactor2).to receive(:perform)
@@ -127,7 +127,7 @@ RSpec.describe ActiveInteractor::Organizer::Base do
       context 'with options :skip_each_perform_callbacks eq to true' do
         subject { interactor_class.perform({}, skip_each_perform_callbacks: true) }
 
-        it { is_expected.to be_a interactor_class.context_class }
+        it { is_expected.to be_a ActiveInteractor::Interactor::Result }
         it 'is expected to receive #perform on both interactors' do
           expect_any_instance_of(interactor1).to receive(:perform)
           expect_any_instance_of(interactor2).to receive(:perform)
@@ -151,7 +151,7 @@ RSpec.describe ActiveInteractor::Organizer::Base do
 
         it { expect { subject }.not_to raise_error }
         it { is_expected.to be_failure }
-        it { is_expected.to be_a interactor_class.context_class }
+        it { is_expected.to be_a ActiveInteractor::Interactor::Result }
         it 'is expected to receive #perform on the first interactor' do
           expect_any_instance_of(interactor1).to receive(:perform)
           subject
@@ -177,7 +177,7 @@ RSpec.describe ActiveInteractor::Organizer::Base do
 
         it { expect { subject }.not_to raise_error }
         it { is_expected.to be_failure }
-        it { is_expected.to be_a interactor_class.context_class }
+        it { is_expected.to be_a ActiveInteractor::Interactor::Result }
         it 'is expected to receive #perform on both interactors' do
           expect_any_instance_of(interactor1).to receive(:perform)
           expect_any_instance_of(interactor2).to receive(:perform)
@@ -199,7 +199,7 @@ RSpec.describe ActiveInteractor::Organizer::Base do
           end
         end
 
-        it { is_expected.to be_a interactor_class.context_class }
+        it { is_expected.to be_a ActiveInteractor::Interactor::Result }
         it 'is expected to receive #perform on both interactors' do
           expect_any_instance_of(interactor1).to receive(:perform)
           expect_any_instance_of(interactor2).to receive(:perform)
@@ -217,7 +217,7 @@ RSpec.describe ActiveInteractor::Organizer::Base do
 
           it { expect { subject }.not_to raise_error }
           it { is_expected.to be_failure }
-          it { is_expected.to be_a interactor_class.context_class }
+          it { is_expected.to be_a ActiveInteractor::Interactor::Result }
           it 'is expected to receive #perform on both interactors' do
             expect_any_instance_of(interactor1).to receive(:perform)
             expect_any_instance_of(interactor2).to receive(:perform)
@@ -241,7 +241,7 @@ RSpec.describe ActiveInteractor::Organizer::Base do
 
           it { expect { subject }.not_to raise_error }
           it { is_expected.to be_failure }
-          it { is_expected.to be_a interactor_class.context_class }
+          it { is_expected.to be_a ActiveInteractor::Interactor::Result }
           it 'is expected to receive #perform on both interactors' do
             expect_any_instance_of(interactor1).to receive(:perform)
             expect_any_instance_of(interactor2).to receive(:perform)

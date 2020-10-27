@@ -65,13 +65,13 @@ module ActiveInteractor
       # @raise [Error::ContextFailure] if `fail_on_error` is `true` and the {#interactor_class}
       #  {Context::Status#fail! fails} its {Context::Base context}.
       # @return [Class] an instance of {Context::Base context}
-      def perform(target, context, fail_on_error = false, perform_options = {})
+      def perform(target, context, fail_on_error = false, perform_options = {}, state = nil)
         return if check_conditionals(target, :if) == false
         return if check_conditionals(target, :unless) == true
 
         method = fail_on_error ? :perform! : :perform
         options = self.perform_options.merge(perform_options)
-        interactor_class.send(method, context, options)
+        interactor_class.send(method, context, options, state)
       end
 
       def execute_inplace_callback(target, callback)

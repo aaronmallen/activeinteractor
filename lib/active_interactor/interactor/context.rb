@@ -232,8 +232,8 @@ module ActiveInteractor
       #  @since 1.0.1
       #
       # @!method context_fail!(errors = nil)
-      #  Call {ActiveInteractor::Context::Status#fail! #fail!} on the {Base interactor} instance's
-      #  {ActiveInteractor::Context::Base context} instance
+      #  Call {ActiveInteractor::Interactor::Result#fail! #fail!} on the {Base interactor} instance's
+      #  {ActiveInteractor::Interactor::Result result} instance
       #
       #  @since 1.0.0
       #
@@ -244,8 +244,8 @@ module ActiveInteractor
       #  @since 1.0.1
       #
       # @!method context_rollback!
-      #  Call {ActiveInteractor::Context::Status#rollback! #rollback!} on the {Base interactor} instance's
-      #  {ActiveInteractor::Context::Base context} instance
+      #  Call {ActiveInteractor::Interactor::Result#rollback! #rollback!} on the {Base interactor} instance's
+      #  {ActiveInteractor::Interactor::Result result} instance
       #
       #  @since 1.0.0
       delegate :attribute_missing, :attribute_names, :fail!, :respond_to_without_attributes?, :rollback!,
@@ -354,19 +354,19 @@ module ActiveInteractor
       # @param context [Hash, Class] attributes to assign to the {Base interactor} instance's
       #  {ActiveInteractor::Context::Base context} instance
       # @return [Base] a new instance of {Base}
-      def initialize(context = {})
-        @context = self.class.context_class.new(context)
+      def initialize(context = {}, state = nil)
+        context_object = self.class.context_class.new(context)
+        @context = Result.new(context_object, state)
       end
 
-      # Mark the {Base interactor} instance as called on the instance's {ActiveInteractor::Context::Base context}
-      # instance and return the {ActiveInteractor::Context::Base context} instance.
+      # Mark the {Base interactor} instance as called on the instance's {ActiveInteractor::Interactor::Result result}
+      # instance and return the {ActiveInteractor::Interactor::Result result} instance.
       #
       # @since 1.0.0
       #
-      # @return [Class] the {ActiveInteractor::Context::Base context} instance
+      # @return [Class] the {ActiveInteractor::Interactor::Result result} instance
       def finalize_context!
-        context.called!(self)
-        context.resolve
+        context.state.called!(self)
         context
       end
 
