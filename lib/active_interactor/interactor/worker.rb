@@ -89,7 +89,8 @@ module ActiveInteractor
       def handle_error(exception)
         @context = interactor.finalize_context!
         execute_rollback
-        raise exception
+        interactor.run_callbacks :failure
+        ActiveSupport::Notifications.instrument('interactor failure') { raise exception }
       end
 
       def validate_context(validation_context = nil)
