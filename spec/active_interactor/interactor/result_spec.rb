@@ -117,4 +117,34 @@ RSpec.describe ActiveInteractor::Interactor::Result do
       end
     end
   end
+
+  describe 'calling context methods' do
+    subject(:context_method) { result.bar = 'bar' }
+
+    before do
+      allow(ActiveInteractor::Deprecation::V2).to receive(:deprecation_warning).and_return(true)
+    end
+
+    let(:result) { described_class.new(context_object) }
+    let(:context_object) { build_context.new }
+
+    it { expect { context_method }.not_to raise_error }
+
+    it 'is expected to call the approriate context method' do
+      context_method
+
+      expect(context_object.bar).to eq 'bar'
+    end
+
+    it 'is expected to warn about deprecation' do
+      context_method
+
+      expect(ActiveInteractor::Deprecation::V2).to have_received(:deprecation_warning)
+        .with(
+          :bar=,
+          'calling #context methods on an ActiveInteractor::Interactor::Result is deprecated use #context instead',
+          any_args
+        )
+    end
+  end
 end
