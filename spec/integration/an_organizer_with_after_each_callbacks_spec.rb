@@ -24,7 +24,7 @@ RSpec.describe 'An organizer with .after_each callbacks', type: :integration do
   describe '.perform' do
     subject { interactor_class.perform }
 
-    it { is_expected.to be_a interactor_class.context_class }
+    it { is_expected.to be_a ActiveInteractor::Interactor::Result }
     it 'is expected to receive #test_after_each_perform twice' do
       expect_any_instance_of(interactor_class).to receive(:test_after_each_perform)
         .exactly(:twice)

@@ -61,7 +61,7 @@ module ActiveInteractor
         handle_errors(errors)
         resolve_errors!
         state.fail!
-        raise ActiveInteractor::Error::ContextFailure, context
+        raise ActiveInteractor::Error::ContextFailure, self
       end
 
       # Rollback {ActiveInteractor::Base interactors}. Any {ActiveInteractor::Base interactors} listed in {#state}
@@ -102,12 +102,13 @@ module ActiveInteractor
       end
 
       def method_missing(method_name, *args, &block)
-        context.public_send(method_name, *args, &block)
+        result = context.public_send(method_name, *args, &block)
         ActiveInteractor::Deprecation::V2.deprecation_warning(
           method_name,
           'calling #context methods on an ActiveInteractor::Interactor::Result is deprecated use #context instead',
           caller
         )
+        result
       rescue NoMethodError
         super
       end

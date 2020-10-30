@@ -40,7 +40,7 @@ RSpec.describe 'An organizer with failing nested organizer', type: :integration 
       expect_any_instance_of(parent_interactor2).not_to receive(:rollback).exactly(:once).and_call_original
     end
 
-    it { is_expected.to be_a parent_interactor_class.context_class }
+    it { is_expected.to be_a ActiveInteractor::Interactor::Result }
 
     it { is_expected.to be_failure }
   end

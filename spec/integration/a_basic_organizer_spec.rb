@@ -40,7 +40,7 @@ RSpec.describe 'A basic organizer', type: :integration do
   describe '.perform' do
     subject { interactor_class.perform }
 
-    it { is_expected.to be_a interactor_class.context_class }
+    it { is_expected.to be_a ActiveInteractor::Interactor::Result }
     it { is_expected.to be_successful }
     it { is_expected.to have_attributes(test_field_1: 'test 1', test_field_2: 'test 2') }
   end
@@ -58,7 +58,7 @@ RSpec.describe 'A basic organizer', type: :integration do
       subject { interactor_class.perform }
 
       it { expect { subject }.not_to raise_error }
-      it { is_expected.to be_a interactor_class.context_class }
+      it { is_expected.to be_a ActiveInteractor::Interactor::Result }
       it { is_expected.to be_failure }
       it 'is expected to receive #rollback on the first interactor' do
         expect_any_instance_of(test_interactor_1).to receive(:rollback)
@@ -81,7 +81,7 @@ RSpec.describe 'A basic organizer', type: :integration do
         end
 
         it { expect { subject }.not_to raise_error }
-        it { is_expected.to be_a interactor_class.context_class }
+        it { is_expected.to be_a ActiveInteractor::Interactor::Result }
         it { is_expected.to be_failure }
         it { expect(subject.errors.count).to eq 1 }
         it 'is expected to have errors "something went wrong" on :context' do
@@ -105,7 +105,7 @@ RSpec.describe 'A basic organizer', type: :integration do
       subject { interactor_class.perform }
 
       it { expect { subject }.not_to raise_error }
-      it { is_expected.to be_a interactor_class.context_class }
+      it { is_expected.to be_a ActiveInteractor::Interactor::Result }
       it { is_expected.to be_failure }
       it 'is expected to receive #rollback on all interactors' do
         expect_any_instance_of(test_interactor_2).to receive(:rollback)
@@ -124,7 +124,7 @@ RSpec.describe 'A basic organizer', type: :integration do
         end
 
         it { expect { subject }.not_to raise_error }
-        it { is_expected.to be_a interactor_class.context_class }
+        it { is_expected.to be_a ActiveInteractor::Interactor::Result }
         it { is_expected.to be_failure }
         it { expect(subject.errors.count).to eq 1 }
         it 'is expected to have errors "something went wrong" on :context' do

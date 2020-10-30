@@ -23,14 +23,14 @@ RSpec.describe 'An interactor with validations on :called', type: :integration d
     context 'with :should_have_test_field true' do
       let(:context_attributes) { { should_have_test_field: true } }
 
-      it { is_expected.to be_an TestInteractor::Context }
+      it { is_expected.to be_an ActiveInteractor::Interactor::Result }
       it { is_expected.to be_successful }
     end
 
     context 'with :should_have_test_field false' do
       let(:context_attributes) { { should_have_test_field: false } }
 
-      it { is_expected.to be_an TestInteractor::Context }
+      it { is_expected.to be_an ActiveInteractor::Interactor::Result }
       it { is_expected.to be_failure }
       it 'is expected to have errors on :some_field' do
         expect(subject.errors[:test_field]).not_to be_nil
