@@ -5,8 +5,12 @@ module ActiveInteractor
     # Context status methods. Because {Status} is a module classes should include {Status} rather than inherit from it.
     #
     # @author Aaron Allen <hello@aaronmallen.me>
+    # @deprecated use {ActiveInteractor::Interactor::State} instead
     # @since 1.0.0
     module Status
+      deprecate :called!, :fail!, :fail?, :failure?, :resolve, :rollback!, :success?, :successful?,
+                deprecator: ActiveInteractor::Deprecation::V2
+
       # Add an instance of {ActiveInteractor::Base interactor} to the list of {ActiveInteractor::Base interactors}
       # called on the {Base context}. This list is used when {#rollback!} is called on a {Base context} instance.
       #
