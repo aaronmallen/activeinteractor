@@ -6,9 +6,12 @@ module ActiveInteractor
     # inherit from it.
     #
     # @api private
+    # @deprecated
     # @author Aaron Allen <hello@aaronmallen.me>
     # @since 1.0.3
     module Errors
+      deprecate :failure_errors, deprecator: ActiveInteractor::Deprecation::V2
+
       # Generic errors generated outside of validation.
       #
       # @return [ActiveModel::Errors] an instance of `ActiveModel::Errors`
