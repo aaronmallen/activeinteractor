@@ -40,10 +40,18 @@ module ActiveInteractor
         failure_errors.merge!(other.failure_errors)
       end
 
-      def resolve_errors
-        all_errors = (failure_errors.uniq + errors.uniq).compact.uniq
-        clear_all_errors
-        all_errors.each { |error| errors.add(error[0], error[1]) }
+      if ActiveModel::Errors.method_defined?(:import)
+        def resolve_errors
+          all_errors = (failure_errors.uniq + errors.uniq).compact.uniq
+          clear_all_errors
+          all_errors.each { |error| errors.import(error) }
+        end
+      else
+        def resolve_errors
+          all_errors = (failure_errors.uniq + errors.uniq).compact.uniq
+          clear_all_errors
+          all_errors.each { |error| errors.add(error[0], error[1]) }
+        end
       end
     end
   end

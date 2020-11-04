@@ -113,10 +113,18 @@ module ActiveInteractor
         super
       end
 
-      def resolve_errors!
-        all_errors = context.errors.uniq.compact
-        context.errors.clear
-        all_errors.each { |error| context.errors.add(error[0], error[1]) }
+      if ActiveModel::Errors.method_defined?(:import)
+        def resolve_errors!
+          all_errors = context.errors.uniq.compact
+          context.errors.clear
+          all_errors.each { |error| context.errors.import(error) }
+        end
+      else
+        def resolve_errors!
+          all_errors = context.errors.uniq.compact
+          context.errors.clear
+          all_errors.each { |error| context.errors.add(error[0], error[1]) }
+        end
       end
 
       def respond_to_missing?(method_name, include_private = false)
