@@ -2,6 +2,7 @@ AllCops:
   Exclude:
     - bin/**/*
     - vendor/bundle/**/*
+    - spec/**/*
   NewCops: enable
   TargetRubyVersion: 2.5
 Metrics/BlockLength:
