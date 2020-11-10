@@ -4,12 +4,14 @@ begin
   require 'simplecov'
   require 'simplecov-lcov'
 
-  SimpleCov::Formatter::LcovFormatter.config.report_with_single_file = true
+  SimpleCov::Formatter::LcovFormatter.config do |config|
+    config.report_with_single_file = true
+    config.single_report_path = 'coverage/lcov.info'
+  end
 
   SimpleCov.start do
     enable_coverage :branch
     add_filter '/spec/'
-    add_filter '/lib/rails/**/*.rb'
     track_files '/lib/**/*.rb'
     formatter SimpleCov::Formatter::MultiFormatter.new([
                                                          SimpleCov::Formatter::HTMLFormatter,
@@ -26,15 +28,6 @@ require 'active_interactor'
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = 'spec/.rspec_status'
-
-  config.before do
-    # suppress logs in test
-    allow(ActiveInteractor.logger).to receive(:error).and_return(true)
-  end
-
-  config.after(:each) do
-    clean_factories!
-  end
 
   # Disable RSpec exposing methods globally on `Module` and `main`
   config.disable_monkey_patching!
