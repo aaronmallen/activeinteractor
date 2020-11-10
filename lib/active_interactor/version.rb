@@ -33,10 +33,11 @@ module ActiveInteractor
     def self.semver
       @semver ||= begin
         primary = [MAJOR, MINOR, PATCH].join('.').freeze
-        return primary if PRE.nil?
-        return "#{primary}-#{PRE}" if META.nil?
-
-        "#{primary}-#{PRE}+#{META}"
+        if PRE.nil?
+          primary
+        else
+          META.nil? ? "#{primary}-#{PRE}" : "#{primary}-#{PRE}+#{META}"
+        end
       end
     end
   end
