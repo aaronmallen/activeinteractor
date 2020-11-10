@@ -2,8 +2,8 @@ PATH
   remote: .
   specs:
     activeinteractor (1.1.1)
-      activemodel (>= 4.2, < 7.0)
-      activesupport (>= 4.2, < 7.0)
+      activemodel (>= 4.2, <= 6.1)
+      activesupport (>= 4.2, <= 6.1)
 
 GEM
   remote: https://rubygems.org/
