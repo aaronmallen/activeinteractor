@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [v1.1.2] - 2020-11-10
+
+### Changed
+
+- [\#300](https://github.com/aaronmallen/activeinteractor/pull/300) `ActiveModel` and `ActiveSupport` v6.1 will be the
+  highest supported version for `ActiveInteractor` v1.1.x
+
+### Fixed
+
+- [\#300](https://github.com/aaronmallen/activeinteractor/pull/300) `ActiveInteractor::Context::Error` compatibility
+  with `ActiveModel` v6.1
+
 ## [v1.1.1] - 2020-10-21
 
 ### Fixed
@@ -219,7 +231,8 @@ and this project adheres to [Semantic Versioning].
 
 <!-- versions -->
 
-[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.1.1...HEAD
+[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.1.2...HEAD
+[v1.1.2]: https://github.com/aaronmallen/activeinteractor/compare/v1.1.1...v1.1.2
 [v1.1.1]: https://github.com/aaronmallen/activeinteractor/compare/v1.1.0...v1.1.1
 [v1.1.0]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.5...v1.1.0
 [v1.0.5]: https://github.com/aaronmallen/activeinteractor/compare/v1.0.4...v1.0.5

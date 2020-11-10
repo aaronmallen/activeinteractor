@@ -21,6 +21,16 @@ module ActiveInteractor
 
       private
 
+      def add_errors(errors)
+        errors.each do |error|
+          if self.errors.respond_to?(:import)
+            self.errors.import(error)
+          else
+            self.errors.add(error[0], error[1])
+          end
+        end
+      end
+
       def clear_all_errors
         errors.clear
         failure_errors.clear
@@ -43,7 +53,7 @@ module ActiveInteractor
       def resolve_errors
         all_errors = (failure_errors.uniq + errors.uniq).compact.uniq
         clear_all_errors
-        all_errors.each { |error| errors.add(error[0], error[1]) }
+        add_errors(all_errors)
       end
     end
   end
