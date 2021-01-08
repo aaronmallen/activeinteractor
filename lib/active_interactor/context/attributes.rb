@@ -174,6 +174,12 @@ module ActiveInteractor
           self[key] = value
         end
       end
+
+      def is_method_protected!(name)
+        return true if attribute?(name)
+
+        super
+      end
     end
   end
 end
