@@ -34,11 +34,14 @@ plugins:
   fixme:
     enabled: true
   git-legal:
-    enabled: false
+    enabled: true
   markdownlint:
     enabled: true
   rubocop:
     enabled: true
+    channel: rubocop-1-9-1
+    config:
+      file: .rubocop-codeclimate.yml
 exclude_patterns:
   - .github/PULL_REQUEST_TEMPLATE.md
   - .github/ISSUE_TEMPLATE/*

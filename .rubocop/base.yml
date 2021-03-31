@@ -1,0 +1,8 @@
+AllCops:
+  Exclude:
+    - bin/**/*
+    - vendor/bundle/**/*
+    - spec/**/*
+  NewCops: enable
+  SuggestExtensions: false
+  TargetRubyVersion: 2.5
