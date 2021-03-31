@@ -64,7 +64,7 @@ jobs:
       - name: Report coverage
         if: env.CC_TEST_REPORTER_ID != null
         run: |
-          ./cc-test-reporter format-coverage -t lcov coverage/lcov/activeinteractor.lcov
+          ./cc-test-reporter format-coverage -t lcov coverage/lcov.info
           ./cc-test-reporter upload-coverage
       - name: Build gem
         run: bundle exec rake build
