@@ -27,5 +27,6 @@ module ActiveInteractor
   extend ActiveSupport::Autoload
 
   autoload :Attribute
+  autoload :AttributeSet
   autoload :Version
 end
