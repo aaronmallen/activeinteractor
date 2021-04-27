@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'active_interactor/version'
+require 'active_support/dependencies/autoload'
 
 # ## License
 #
@@ -24,4 +24,19 @@ require_relative 'active_interactor/version'
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 module ActiveInteractor
+  extend ActiveSupport::Autoload
+
+  autoload :Attribute
+  autoload :AttributeSet
+  autoload :Context
+  autoload :InputContext
+  autoload :Interactor
+  autoload :InteractorOptions
+  autoload :Organizer
+  autoload :OutputContext
+  autoload :Result
+  autoload :Status
+  autoload :TypeValidator
+  autoload :Version
+  autoload :Worker
 end

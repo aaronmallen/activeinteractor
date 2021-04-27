@@ -1,0 +1,76 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'optparse'
+
+require_relative '../lib/active_interactor/version'
+
+module PrepareDeploy
+  def self.run(options)
+    opts = Options.parse(options)
+    MetaVersionWriter.perform(opts.meta_version) if opts.meta_version
+  end
+
+  class Options
+    attr_accessor :meta_version
+
+    class << self
+      def parse(options)
+        instance = new
+        opt_parser(instance).parse!(options)
+        instance
+      end
+
+      private
+
+      def opt_parser(instance)
+        OptionParser.new do |opts|
+          opts.banner = 'Usage: bin/prepare-deploy [options]'
+
+          opts.on('--sha=SHA', 'The current git sha') do |value|
+            instance.meta_version = value
+          end
+
+          opts.on('-h', '--help', 'Prints this help') do
+            puts opts
+            exit
+          end
+        end
+      end
+    end
+  end
+
+  module MetaVersionWriter
+    class << self
+      def perform(meta_version)
+        return unless pre_release?
+
+        write_version_with_meta(meta_version)
+      end
+
+      private
+
+      def pre_release?
+        !ActiveInteractor::Version::PRE.nil?
+      end
+
+      def version_contents
+        @version_contents ||= File.read(version_file)
+      end
+
+      def version_contents_with_meta(meta_version)
+        version_contents.gsub('META = nil', "META = '#{meta_version}'")
+      end
+
+      def version_file
+        File.expand_path('../lib/active_interactor/version.rb', __dir__)
+      end
+
+      def write_version_with_meta(meta_version)
+        File.write(version_file, version_contents_with_meta(meta_version))
+      end
+    end
+  end
+end
+
+PrepareDeploy.run(ARGV)
