@@ -6,6 +6,7 @@
 --protected
 --no-private
 --embed-mixins
+--plugin activesupport-concern
 lib/**/*.rb
 -
 CHANGELOG.md
