@@ -19,7 +19,7 @@ begin
   SimpleCov.start do
     enable_coverage :branch
     add_filter 'spec/'
-    track_files '/lib/**/*.rb'
+    track_files 'lib/**/*.rb'
   end
 rescue LoadError
   puts "\n== Skipping Coverage =="
