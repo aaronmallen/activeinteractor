@@ -26,6 +26,7 @@ group :doc do
   gem 'github-markup'
   gem 'redcarpet'
   gem 'yard'
+  gem 'yard-activesupport-concern'
 end
 
 # Specify your gem's dependencies in activeinteractor.gemspec
