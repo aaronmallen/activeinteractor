@@ -26,5 +26,6 @@ require 'active_support/dependencies/autoload'
 module ActiveInteractor
   extend ActiveSupport::Autoload
 
+  autoload :Attribute
   autoload :Version
 end
