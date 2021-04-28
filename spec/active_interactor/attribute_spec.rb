@@ -53,7 +53,7 @@ RSpec.describe ActiveInteractor::Attribute do
     subject(:type) { attribute.type }
 
     context 'when type is "String"' do
-      let(:attribute) { described_class.new(name: :test, type: "String") }
+      let(:attribute) { described_class.new(name: :test, type: 'String') }
 
       it { is_expected.to eq String }
     end

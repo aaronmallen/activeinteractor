@@ -64,10 +64,10 @@ RSpec.describe ActiveInteractor::AttributeSet do
       it { is_expected.to be_a described_class }
 
       it 'is expected to dup each attribute' do
-        attributes.each { |name, attribute| allow(attribute).to receive(:dup) }
+        attributes.each { |_name, attribute| allow(attribute).to receive(:dup) }
         deep_dup
 
-        attributes.each { |name, attribute| expect(attribute).to have_received(:dup) }
+        attributes.each { |_name, attribute| expect(attribute).to have_received(:dup) }
       end
     end
   end
@@ -105,7 +105,7 @@ RSpec.describe ActiveInteractor::AttributeSet do
       it { is_expected.to be_a Hash }
 
       it 'is expected to return the appropriate hash' do
-        expect(to_hash).to eq({a: initialized_attribute.value })
+        expect(to_hash).to eq({ a: initialized_attribute.value })
       end
     end
   end
