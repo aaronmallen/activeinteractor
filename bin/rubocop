@@ -1,3 +1,0 @@
-#!/bin/sh
-
-bundle exec rubocop --require rubocop-performance --require code_scanning --display-cop-names $@

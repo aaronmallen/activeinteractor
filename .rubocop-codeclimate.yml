@@ -3,5 +3,4 @@ inherit_from:
   - .rubocop/layout.yml
   - .rubocop/metrics.yml
   - .rubocop/performance.yml
-  - .rubocop/rspec.yml
   - .rubocop/style.yml
