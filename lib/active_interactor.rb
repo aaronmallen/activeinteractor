@@ -28,5 +28,6 @@ module ActiveInteractor
 
   autoload :Attribute
   autoload :AttributeSet
+  autoload :Context
   autoload :Version
 end
