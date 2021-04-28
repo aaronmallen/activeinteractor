@@ -23,7 +23,7 @@ module ActiveInteractor
     end
 
     def attribute?(name)
-      @attributes.key?(name)
+      @attributes.key?(name&.to_sym)
     end
 
     def attribute_names
@@ -40,7 +40,7 @@ module ActiveInteractor
     end
 
     def get_attribute(name)
-      @attributes[name]
+      @attributes[name&.to_sym]
     end
     alias [] get_attribute
 
