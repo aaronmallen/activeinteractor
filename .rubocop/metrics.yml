@@ -1,0 +1,5 @@
+Metrics/BlockLength:
+  Exclude:
+    - '*.gemspec'
+    - spec/**/*_spec.rb
+    - spec/support/**/*.rb
