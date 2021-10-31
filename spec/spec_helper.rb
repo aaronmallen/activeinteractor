@@ -29,6 +29,10 @@ RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = 'spec/.rspec_status'
 
+  config.after do
+    SpecHelpers::FactoryCollection.clean!
+  end
+
   # Disable RSpec exposing methods globally on `Module` and `main`
   config.disable_monkey_patching!
 

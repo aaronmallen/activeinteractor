@@ -1,2 +1,6 @@
 require:
   - rubocop-rspec
+
+RSpec/DescribeClass:
+  Exclude:
+    - spec/integration/**/*_spec.rb

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative 'active_interactor/interactor'
 require_relative 'active_interactor/version'
 
 # ## License
