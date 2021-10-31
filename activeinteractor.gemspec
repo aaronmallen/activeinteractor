@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
-lib = File.expand_path('lib', __dir__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'active_interactor/version'
+require_relative 'lib/active_interactor/version'
 
 Gem::Specification.new do |spec|
-  gem_version = ActiveInteractor::Version.gem_version
-  semver = ActiveInteractor::Version.semver
+  repo = 'https://github.com/aaronmallen/activeinteractor'
+  gem_version = ActiveInteractor::Version.gem_version.freeze
+  semver = ActiveInteractor::Version.semver.freeze
 
   spec.platform      = Gem::Platform::RUBY
   spec.name          = 'activeinteractor'
@@ -23,25 +22,21 @@ Gem::Specification.new do |spec|
 
   spec.authors       = ['Aaron Allen']
   spec.email         = ['hello@aaronmallen.me']
-  spec.homepage      = 'https://github.com/aaronmallen/activeinteractor'
+  spec.homepage      = repo
 
-  spec.files         = Dir['.yardopts', 'CHANGELOG.md', 'LICENSE', 'README.md', 'lib/**/*']
+  spec.files         = Dir['CHANGELOG.md', 'LICENSE', 'README.md', 'lib/**/*']
   spec.require_paths = ['lib']
   spec.test_files    = Dir['spec/**/*']
 
   spec.metadata = {
-    'bug_tracker_uri' => 'https://github.com/aaronmallen/activeinteractor/issues',
-    'changelog_uri' => "https://github.com/aaronmallen/activeinteractor/blob/v#{semver}/CHANGELOG.md",
+    'bug_tracker_uri' => "#{repo}/issues",
+    'changelog_uri' => "#{repo}/blob/v#{semver}/CHANGELOG.md",
     'documentation_uri' => "https://www.rubydoc.info/gems/activeinteractor/#{gem_version}",
     'hompage_uri' => spec.homepage,
-    'source_code_uri' => "https://github.com/aaronmallen/activeinteractor/tree/v#{semver}",
-    'wiki_uri' => 'https://github.com/aaronmallen/activeinteractor/wiki'
+    'source_code_uri' => "#{repo}/tree/v#{semver}",
+    'wiki_uri' => "#{repo}/wiki"
   }
 
-  spec.add_dependency 'activemodel', '>= 4.2', '<= 6.1'
-  spec.add_dependency 'activesupport', '>= 4.2', '<= 6.1'
-
-  spec.add_development_dependency 'bundler', '~> 2.0'
-  spec.add_development_dependency 'rake', '~> 13.0'
-  spec.add_development_dependency 'rspec', '~> 3.9'
+  spec.add_dependency 'activemodel', '>= 4.2', '< 7'
+  spec.add_dependency 'activesupport', '>= 4.2', '< 7'
 end

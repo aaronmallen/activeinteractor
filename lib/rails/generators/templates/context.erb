@@ -1,7 +1,0 @@
-# frozen_string_literal: true
-
-class <%= class_name %>Context < ApplicationContext
-<%- unless context_attributes.empty? -%>
-  attributes <%= context_attributes.map { |a| ":#{a}" }.join(', ') %>
-<%- end -%>
-end
