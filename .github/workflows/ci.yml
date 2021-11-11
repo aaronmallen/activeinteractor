@@ -1,4 +1,4 @@
-name: CI
+name: Build
 
 on:
   pull_request:
@@ -6,59 +6,23 @@ on:
       - main
       - '*-alpha'
       - '*-beta'
+      - '*-dev'
       - '*-stable'
   push:
     branches:
       - main
       - '*-alpha'
       - '*-beta'
+      - '*-dev'
       - '*-stable'
 
 jobs:
+  lint:
+    uses: aaronmallen/activeinteractor/.github/workflows/lint.yml@main
+  test:
+    uses: aaronmallen/activeinteractor/.github/workflows/test.yml@main
   build:
-    env:
-      CC_TEST_REPORTER_ID:  ${{ secrets.CC_TEST_REPORTER_ID }}
-    name: Build ruby ${{ matrix.ruby }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup branch
-        uses: actions/checkout@v2
-      - name: Setup ruby ${{ matrix.ruby }}
-        uses: actions/setup-ruby@v1.1.2
-        with:
-          ruby-version: ${{ matrix.ruby }}
-      - name: Setup cache
-        uses: actions/cache@v2
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-gems-
-      - name: Bundle install
-        run: |
-          gem install bundler
-          bundle config path vendor/bundle
-          bundle install --jobs 4 --retry 3
-      - name: Setup coverage reporter
-        env:
-          GIT_BRANCH: ${{ github.ref }}
-        if: env.CC_TEST_REPORTER_ID != null
-        run: |
-          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-          chmod +x ./cc-test-reporter
-          ./cc-test-reporter before-build
-      - name: Test
-        run: bundle exec rspec
-      - name: Report coverage
-        if: env.CC_TEST_REPORTER_ID != null
-        run: |
-          ./cc-test-reporter format-coverage -t lcov coverage/lcov/activeinteractor.lcov
-          ./cc-test-reporter upload-coverage
-      - name: Build gem
-        run: bundle exec rake build
-    strategy:
-      matrix:
-        ruby:
-          - '2.5'
-          - '2.6'
-          - '2.7'
+    if: success()
+    needs:
+      - test
+    uses: aaronmallen/activeinteractor/.github/workflows/build_gem.yml@main
