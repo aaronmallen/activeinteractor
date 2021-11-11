@@ -18,60 +18,11 @@ on:
 
 jobs:
   lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup branch
-        uses: actions/checkout@v2
-      - name: Set up ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.5
-          bundler-cache: true
-      - name: Rubocop run
-        run: |
-          bundle exec rubocop --display-cop-names
-          bundle exec rubocop --require code_scanning --display-cop-names --format CodeScanning::SarifFormatter -o rubocop.sarif
-      - name: Upload sarif output
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: rubocop.sarif
+    uses: aaronmallen/activeinteractor/.github/workflows/lint.yml@HEAD
+  test:
+    uses: aaronmallen/activeinteractor/.github/workflows/test.yml@HEAD
   build:
-    env:
-      CC_TEST_REPORTER_ID:  ${{ secrets.CC_TEST_REPORTER_ID }}
     if: success()
-    name: Build ruby ${{ matrix.ruby }}
     needs:
-      - lint
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup branch
-        uses: actions/checkout@v2
-      - name: Setup ruby ${{ matrix.ruby }}
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: ${{ matrix.ruby }}
-          bundler-cache: true
-      - name: Setup coverage reporter
-        env:
-          GIT_BRANCH: ${{ github.ref }}
-        if: env.CC_TEST_REPORTER_ID != null
-        run: |
-          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-          chmod +x ./cc-test-reporter
-          ./cc-test-reporter before-build
-      - name: Test
-        run: bundle exec rspec
-      - name: Report coverage
-        if: env.CC_TEST_REPORTER_ID != null
-        run: |
-          ./cc-test-reporter format-coverage -t lcov coverage/lcov.info
-          ./cc-test-reporter upload-coverage
-      - name: Build gem
-        run: bundle exec rake build
-    strategy:
-      matrix:
-        ruby:
-          - '2.5'
-          - '2.6'
-          - '2.7'
-          - '3.0'
+      - test
+    uses: aaronmallen/activeinteractor/.github/workflows/build_gem.yml@HEAD

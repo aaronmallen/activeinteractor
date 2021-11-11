@@ -24,4 +24,7 @@ require_relative 'active_interactor/version'
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 module ActiveInteractor
+  class Interactor; end # rubocop:disable Lint/EmptyClass
+
+  class Result; end # rubocop:disable Lint/EmptyClass
 end

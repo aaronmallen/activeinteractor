@@ -6,23 +6,23 @@ on:
       - published
 
 jobs:
+  lint:
+    uses: aaronmallen/activeinteractor/.github/workflows/lint.yml@HEAD
   test:
-    name: Test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.5
-          bundler-cache: true
-      - name: Rake specs
-        run: bundle exec rake spec
-      - name: Rake build
-        run: bundle exec rake build
+    if: success()
+    needs:
+      - lint
+    uses: aaronmallen/activeinteractor/.github/workflows/test.yml@HEAD
+  build:
+    if: success()
+    needs:
+      - test
+    uses: aaronmallen/activeinteractor/.github/workflows/build_gem.yml@HEAD
   publish:
     name: Publish
     needs:
-      - test
+      - lint
+      - build
     if: success()
     runs-on: ubuntu-latest
     steps:
