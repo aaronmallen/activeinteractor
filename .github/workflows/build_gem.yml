@@ -1,4 +1,4 @@
-name: Lint
+name: Build Gem
 
 on:
   workflow_call:
@@ -8,8 +8,10 @@ on:
         required: false
         type: string
 
+
 jobs:
-  rubocop:
+  build:
+    name: Build Gem for Ruby ${{ inputs.ruby-version }}
     runs-on: ubuntu-latest
     steps:
       - name: Setup Branch
@@ -21,5 +23,5 @@ jobs:
           ruby-version: ${{ inputs.ruby-version }}
           bundler-cache: true
 
-      - name: Run Rubocop
-        run: bundle exec rubocop --display-cop-names
+      - name: Build Gem
+        run: bundle exec rake build
