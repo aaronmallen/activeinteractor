@@ -21,7 +21,7 @@ jobs:
       - name: Setup branch
         uses: actions/checkout@v2
       - name: Set up ruby
-        uses: actions/setup-ruby@v1.1.2
+        uses: actions/setup-ruby@v1.1.3
         with:
           ruby-version: 2.5
       - name: Setup cache
