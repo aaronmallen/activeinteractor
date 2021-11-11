@@ -5,6 +5,7 @@ require 'spec_helper'
 RSpec.describe ActiveInteractor::Organizer::InteractorInterfaceCollection do
   describe '#add' do
     subject { instance.add(interactor) }
+
     let(:instance) { described_class.new }
 
     context 'with an interactor that does not exist' do
@@ -57,6 +58,7 @@ RSpec.describe ActiveInteractor::Organizer::InteractorInterfaceCollection do
 
   describe '#concat' do
     subject { instance.concat(interactors) }
+
     let(:instance) { described_class.new }
 
     context 'with two existing interactors' do

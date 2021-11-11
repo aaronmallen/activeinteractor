@@ -3,12 +3,6 @@
 require 'spec_helper'
 
 RSpec.describe ActiveInteractor do
-  describe '::VERSION' do
-    subject { described_class::VERSION }
-
-    it { is_expected.to be_a String }
-  end
-
   describe '.config' do
     subject { described_class.config }
 

@@ -221,6 +221,7 @@ RSpec.describe ActiveInteractor::Organizer::InteractorInterface do
       context 'when interactors are passed as strings' do
         let(:interactor_class) { 'TestInteractor' }
         let(:options) { {} }
+
         include_examples 'an instance of InteractorInterface correctly parse options'
 
         describe '#interactor_class' do

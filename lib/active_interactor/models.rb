@@ -41,6 +41,7 @@ module ActiveInteractor
 
         include ActiveInteractor::Context::Attributes
         include ActiveInteractor::Context::Errors
+        include ActiveInteractor::Context::Status
         include ActiveInteractor::Models::InstanceMethods
         delegate :each_pair, to: :attributes
       end

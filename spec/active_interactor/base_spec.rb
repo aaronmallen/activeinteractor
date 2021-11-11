@@ -4,6 +4,7 @@ require 'spec_helper'
 
 RSpec.describe ActiveInteractor::Base do
   let(:interactor_class) { described_class }
+
   include_examples 'a class with interactor methods'
   include_examples 'a class with interactor callback methods'
   include_examples 'a class with interactor context methods'

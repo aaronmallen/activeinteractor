@@ -50,14 +50,13 @@ module ActiveInteractor
       # @param context [Hash, Base, Class] attributes to assign to the {Base context}
       # @return [Base] a new instance of {Base}
       def initialize(context = {})
-        context_object = context.is_a?(ActiveInteractor::Interactor::Result) ? context.context : context
-        merge_errors!(context_object) if context_object.respond_to?(:errors)
-        copy_flags!(context_object)
-        copy_called!(context_object)
-        context_object = context_attributes_as_hash(context_object) || {}
+        merge_errors!(context) if context.respond_to?(:errors)
+        copy_flags!(context)
+        copy_called!(context)
+        context = context_attributes_as_hash(context) || {}
         super
 
-        merge_attribute_values(context_object)
+        merge_attribute_values(context)
       end
 
       # Returns the value of an attribute
@@ -129,11 +128,10 @@ module ActiveInteractor
       # @param context [Class] a {Base context} instance to be merged
       # @return [self] the {Base context} instance
       def merge!(context)
-        context_object = context.is_a?(ActiveInteractor::Interactor::Result) ? context.context : context
-        merge_errors!(context_object) if context_object.respond_to?(:errors)
-        copy_flags!(context_object)
+        merge_errors!(context) if context.respond_to?(:errors)
+        copy_flags!(context)
 
-        merged_context_attributes(context_object).each_pair do |key, value|
+        merged_context_attributes(context).each_pair do |key, value|
           self[key] = value unless value.nil?
         end
         self

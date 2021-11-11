@@ -3,6 +3,7 @@
 RSpec.shared_examples 'a class with organizer callback methods' do
   describe '.after_each_perform' do
     subject { interactor_class.after_each_perform(*args) }
+
     let(:args) { :some_method }
 
     it 'is expected to receive #set_callback with :each_perform, :after, :some_method' do
@@ -15,6 +16,7 @@ RSpec.shared_examples 'a class with organizer callback methods' do
 
   describe '.around_each_perform' do
     subject { interactor_class.around_each_perform(*args) }
+
     let(:args) { :some_method }
 
     it 'is expected to receive #set_callback with :each_perform, :around, :some_method' do
@@ -27,6 +29,7 @@ RSpec.shared_examples 'a class with organizer callback methods' do
 
   describe '.before_each_perform' do
     subject { interactor_class.before_each_perform(*args) }
+
     let(:args) { :some_method }
 
     it 'is expected to receive #set_callback with :each_perform, :before, :some_method' do

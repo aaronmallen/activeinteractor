@@ -26,7 +26,7 @@ RSpec.describe 'An interactor with .after_context_validation callbacks', type: :
     context 'with valid context attributes' do
       let(:context_attributes) { { test_field: 'TEST' } }
 
-      it { is_expected.to be_a ActiveInteractor::Interactor::Result }
+      it { is_expected.to be_a interactor_class.context_class }
       it { is_expected.to be_successful }
       it { is_expected.to have_attributes(test_field: 'test') }
     end
@@ -52,7 +52,7 @@ RSpec.describe 'An interactor with .after_context_validation callbacks', type: :
       context 'with :test_field "TEST" and :should_downcase true' do
         let(:context_attributes) { { test_field: 'TEST', should_downcase: true } }
 
-        it { is_expected.to be_a ActiveInteractor::Interactor::Result }
+        it { is_expected.to be_a interactor_class.context_class }
         it { is_expected.to be_successful }
         it { is_expected.to have_attributes(test_field: 'test') }
       end
@@ -60,7 +60,7 @@ RSpec.describe 'An interactor with .after_context_validation callbacks', type: :
       context 'with :test_field "TEST" and :should_downcase false' do
         let(:context_attributes) { { test_field: 'TEST', should_downcase: false } }
 
-        it { is_expected.to be_a ActiveInteractor::Interactor::Result }
+        it { is_expected.to be_a interactor_class.context_class }
         it { is_expected.to be_successful }
         it { is_expected.to have_attributes(test_field: 'TEST') }
       end

@@ -5,6 +5,7 @@ require 'spec_helper'
 RSpec.describe ActiveInteractor::Interactor::Worker do
   context 'with interactor class TestInteractor' do
     before { build_interactor }
+
     let(:interactor) { TestInteractor.new }
 
     RSpec.shared_examples 'an interactor with options' do
@@ -76,7 +77,7 @@ RSpec.describe ActiveInteractor::Interactor::Worker do
     describe '#execute_perform' do
       subject { described_class.new(interactor).execute_perform }
 
-      it { is_expected.to be_an ActiveInteractor::Interactor::Result }
+      it { is_expected.to be_an TestInteractor.context_class }
 
       context 'when context fails' do
         before do
@@ -85,7 +86,7 @@ RSpec.describe ActiveInteractor::Interactor::Worker do
         end
 
         it { expect { subject }.not_to raise_error }
-        it { is_expected.to be_an ActiveInteractor::Interactor::Result }
+        it { is_expected.to be_an TestInteractor.context_class }
       end
 
       include_examples 'an interactor with options'
@@ -94,7 +95,7 @@ RSpec.describe ActiveInteractor::Interactor::Worker do
     describe '#execute_perform!' do
       subject { described_class.new(interactor).execute_perform! }
 
-      it { is_expected.to be_an ActiveInteractor::Interactor::Result }
+      it { is_expected.to be_an TestInteractor.context_class }
 
       it 'is expected to run perform callbacks on interactor' do
         expect_any_instance_of(TestInteractor).to receive(:run_callbacks)
@@ -118,6 +119,7 @@ RSpec.describe ActiveInteractor::Interactor::Worker do
         end
 
         it { expect { subject }.to raise_error(ActiveInteractor::Error::ContextFailure) }
+
         it 'is expected to rollback the interactor context' do
           expect_any_instance_of(TestInteractor).to receive(:context_rollback!)
           expect { subject }.to raise_error(ActiveInteractor::Error::ContextFailure)
@@ -135,6 +137,7 @@ RSpec.describe ActiveInteractor::Interactor::Worker do
         end
 
         it { expect { subject }.to raise_error(ActiveInteractor::Error::ContextFailure) }
+
         it 'is expected to rollback the interactor context' do
           expect_any_instance_of(TestInteractor).to receive(:context_rollback!)
           expect { subject }.to raise_error(ActiveInteractor::Error::ContextFailure)

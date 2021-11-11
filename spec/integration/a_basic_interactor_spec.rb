@@ -25,7 +25,7 @@ RSpec.describe 'A basic interactor', type: :integration do
   describe '.perform' do
     subject { interactor_class.perform }
 
-    it { is_expected.to be_a ActiveInteractor::Interactor::Result }
+    it { is_expected.to be_a interactor_class.context_class }
     it { is_expected.to be_successful }
     it { is_expected.to have_attributes(test_field: 'test') }
   end
@@ -34,7 +34,7 @@ RSpec.describe 'A basic interactor', type: :integration do
     subject { interactor_class.perform! }
 
     it { expect { subject }.not_to raise_error }
-    it { is_expected.to be_a ActiveInteractor::Interactor::Result }
+    it { is_expected.to be_a interactor_class.context_class }
     it { is_expected.to be_successful }
     it { is_expected.to have_attributes(test_field: 'test') }
   end
@@ -58,7 +58,7 @@ RSpec.describe 'A basic interactor', type: :integration do
     describe '.perform' do
       subject(:result) { interactor_class.perform }
 
-      it { is_expected.to be_a ActiveInteractor::Interactor::Result }
+      it { is_expected.to be_a interactor_class.context_class }
       it { is_expected.to be_successful }
       it { is_expected.to have_attributes(test_field: 'test', some_other_field: 'test 2') }
 

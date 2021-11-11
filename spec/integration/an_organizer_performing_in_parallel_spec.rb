@@ -41,7 +41,7 @@ RSpec.describe 'An organizer performing in parallel', type: :integration do
   describe '.perform' do
     subject { interactor_class.perform }
 
-    it { is_expected.to be_a ActiveInteractor::Interactor::Result }
+    it { is_expected.to be_a interactor_class.context_class }
     it { is_expected.to be_successful }
     it { is_expected.to have_attributes(test_field_1: 'test 1', test_field_2: 'test 2') }
   end
