@@ -2,26 +2,27 @@ name: Build Gem
 
 on:
   workflow_call:
-    inputs:
-      ruby-version:
-        default: '2.5'
-        required: false
-        type: string
-
 
 jobs:
   build:
-    name: Build Gem for Ruby ${{ inputs.ruby-version }}
+    name: Build Gem for Ruby ${{ matrix.ruby-version }}
     runs-on: ubuntu-latest
     steps:
       - name: Setup Branch
         uses: actions/checkout@v2
 
-      - name: Setup Ruby ${{ inputs.ruby-version }}
+      - name: Setup Ruby ${{ matrix.ruby-version }}
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ inputs.ruby-version }}
+          ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: true
 
       - name: Build Gem
         run: bundle exec rake build
+    strategy:
+      matrix:
+        ruby-version:
+          - '2.5'
+          - '2.6'
+          - '2.7'
+          - '3.0'
