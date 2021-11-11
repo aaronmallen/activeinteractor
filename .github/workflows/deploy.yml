@@ -6,38 +6,38 @@ on:
       - published
 
 jobs:
+  lint:
+    uses: aaronmallen/activeinteractor/.github/workflows/lint.yml@main
   test:
-    name: Test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.5
-          bundler-cache: true
-      - name: Rake specs
-        run: bundle exec rake spec
-      - name: Rake build
-        run: bundle exec rake build
+    if: success()
+    needs:
+      - lint
+    uses: aaronmallen/activeinteractor/.github/workflows/test.yml@main
+    secrets:
+      cc-test-reporter-id: ${{ secrets.CC_TEST_REPORTER_ID }}
+  build:
+    if: success()
+    needs:
+      - test
+    uses: aaronmallen/activeinteractor/.github/workflows/build_gem.yml@main
   publish:
     name: Publish
     needs:
-      - test
+      - build
     if: success()
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - uses: ruby/setup-ruby@v1
+      - uses: actions/setup-ruby@v1.1.2
         with:
-          ruby-version: 2.5
-          bundler-cache: true
+          ruby-version: 2.6
+          architecture: x64
       - name: Publish to RubyGems
         run: |
           mkdir -p $HOME/.gem
           touch $HOME/.gem/credentials
           chmod 0600 $HOME/.gem/credentials
           printf -- "---\n:rubygems_api_key: ${GEM_HOST_API_KEY}\n" > $HOME/.gem/credentials
-          bin/prepare-deploy --sha $($GITHUB_SHA | cut -c 1-7)
           gem build *.gemspec
           gem push *.gem
         env:
@@ -48,7 +48,6 @@ jobs:
           touch $HOME/.gem/credentials
           chmod 0600 $HOME/.gem/credentials
           printf -- "---\n:github: Bearer ${GEM_HOST_API_KEY}\n" > $HOME/.gem/credentials
-          bin/prepare-deploy --sha $($GITHUB_SHA | cut -c 1-7)
           gem build *.gemspec
           gem push --KEY github --host https://rubygems.pkg.github.com/${OWNER} *.gem
         env:

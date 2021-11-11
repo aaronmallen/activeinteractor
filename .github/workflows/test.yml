@@ -1,0 +1,58 @@
+name: Test
+
+on:
+  workflow_call:
+    inputs:
+      ruby-version:
+        default: '2.5'
+        required: false
+        type: string
+    secrets:
+      cc-test-reporter-id:
+        required: false
+
+jobs:
+  test:
+    env:
+      CC_TEST_REPORTER_ID:  ${{ secrets.cc-test-reporter-id }}
+    name: Test ruby ${{ inputs.ruby-version }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Branch
+        uses: actions/checkout@v2
+
+      - name: Setup Ruby ${{ inputs.ruby-version }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ inputs.ruby-version }}
+          bundler-cache: true
+
+      - name: Skip Coverage
+        if: env.CC_TEST_REPORTER_ID == null
+        run: |
+          echo "###########################"
+          echo "Skipping Coverage Reporting"
+          echo "###########################"
+
+      - name: Setup Coverage Reporter
+        env:
+          GIT_BRANCH: ${{ github.ref }}
+        if: env.CC_TEST_REPORTER_ID != null
+        run: |
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          chmod +x ./cc-test-reporter
+          ./cc-test-reporter before-build
+
+      - name: Run Unit Tests
+        run: COVERAGE_TYPE=unit bundle exec rspec --tag \~type:integration --format documentation --order rand
+
+      - name: Run Integration Tests
+        run: COVERAGE_TYPE=integration bundle exec rspec --tag type:integration --format documentation --order rand
+
+      - name: Report Coverage
+        if: success() && env.CC_TEST_REPORTER_ID != null
+        run: |
+          ./cc-test-reporter format-coverage -t lcov -o coverage/codeclimate.unit.json coverage/unit_lcov.info
+          ./cc-test-reporter format-coverage -t lcov -o coverage/codeclimate.integration.json coverage/integration_lcov.info
+          ./cc-test-reporter sum-coverage coverage/codeclimate.*.json -p 2
+          ./cc-test-reporter upload-coverage
