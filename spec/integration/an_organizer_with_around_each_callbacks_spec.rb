@@ -33,7 +33,7 @@ RSpec.describe 'An organizer with .around_each callbacks', type: :integration do
   describe '.perform' do
     subject { interactor_class.perform }
 
-    it { is_expected.to be_a ActiveInteractor::Interactor::Result }
+    it { is_expected.to be_a interactor_class.context_class }
     it { is_expected.to have_attributes(around_each_step: [1, 2, 3, 4]) }
   end
 end

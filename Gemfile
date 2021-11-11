@@ -8,7 +8,7 @@ group :development, :test do
   gem 'code-scanning-rubocop'
   gem 'mdl'
   gem 'rails'
-  gem 'rubocop'
+  gem 'rubocop', '0.92.0'
   gem 'rubocop-performance'
   gem 'rubocop-rspec'
   gem 'solargraph'

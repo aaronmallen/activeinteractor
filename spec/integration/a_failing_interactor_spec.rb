@@ -26,8 +26,9 @@ RSpec.describe 'A failing interactor', type: :integration do
     subject { interactor_class.perform }
 
     it { expect { subject }.not_to raise_error }
-    it { is_expected.to be_a ActiveInteractor::Interactor::Result }
+    it { is_expected.to be_a interactor_class.context_class }
     it { is_expected.to be_failure }
+
     it 'is expected to receive #rollback' do
       expect_any_instance_of(interactor_class).to receive(:rollback)
       subject

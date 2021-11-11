@@ -1,24 +1,7 @@
 # frozen_string_literal: true
 
-begin
-  require 'simplecov'
-  require 'simplecov-lcov'
-
-  SimpleCov::Formatter::LcovFormatter.config.report_with_single_file = true
-
-  SimpleCov.start do
-    enable_coverage :branch
-    add_filter '/spec/'
-    add_filter '/lib/rails/**/*.rb'
-    track_files '/lib/**/*.rb'
-    formatter SimpleCov::Formatter::MultiFormatter.new([
-                                                         SimpleCov::Formatter::HTMLFormatter,
-                                                         SimpleCov::Formatter::LcovFormatter
-                                                       ])
-  end
-rescue LoadError
-  puts 'Skipping coverage...'
-end
+require_relative 'support/coverage'
+ActiveInteractor::Spec::Coverage.start
 
 require 'bundler/setup'
 require 'active_interactor'
@@ -32,7 +15,7 @@ RSpec.configure do |config|
     allow(ActiveInteractor.logger).to receive(:error).and_return(true)
   end
 
-  config.after(:each) do
+  config.after do
     clean_factories!
   end
 

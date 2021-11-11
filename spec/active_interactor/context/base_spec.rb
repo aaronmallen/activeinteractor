@@ -6,7 +6,9 @@ RSpec.describe ActiveInteractor::Context::Base do
   describe '.attributes' do
     context 'when no arguments are passed' do
       subject { context_class.attributes }
+
       let!(:context_class) { build_context }
+
       it { is_expected.to eq [] }
 
       context 'when an attribute :foo was previously defined' do
@@ -22,6 +24,7 @@ RSpec.describe ActiveInteractor::Context::Base do
 
     context 'when given arguments :foo and :bar' do
       subject { context_class.attributes(:foo, :bar) }
+
       let!(:context_class) { build_context }
 
       it { is_expected.to eq %i[bar foo] }
@@ -48,6 +51,7 @@ RSpec.describe ActiveInteractor::Context::Base do
 
       context 'with attribute equal to "foo"' do
         let(:attribute) { :foo }
+
         before { instance.foo = 'foo' }
 
         it { is_expected.to eq 'foo' }
@@ -70,6 +74,7 @@ RSpec.describe ActiveInteractor::Context::Base do
 
       context 'with attribute equal to "foo"' do
         let(:attribute) { :foo }
+
         before { instance.foo = 'foo' }
 
         it { is_expected.to eq 'foo' }
@@ -136,6 +141,7 @@ RSpec.describe ActiveInteractor::Context::Base do
 
         it { is_expected.to be_a Hash }
         it { is_expected.to eq(bar: 'bar', foo: 'foo') }
+
         it 'is expected to assign :baz' do
           expect(instance.baz).to eq 'baz'
         end
@@ -162,6 +168,7 @@ RSpec.describe ActiveInteractor::Context::Base do
 
   describe '#fail!' do
     subject { instance.fail!(errors) }
+
     let(:instance) { described_class.new }
 
     context 'with errors equal to nil' do
@@ -224,6 +231,7 @@ RSpec.describe ActiveInteractor::Context::Base do
 
   describe '#failure?' do
     subject { instance.failure? }
+
     let(:instance) { described_class.new }
 
     it { is_expected.to eq false }
@@ -275,6 +283,7 @@ RSpec.describe ActiveInteractor::Context::Base do
 
           it { is_expected.to be_a described_class }
           it { is_expected.to have_attributes(foo: 'foo') }
+
           it 'is expected to preserve @_failed instance variable' do
             expect(subject.instance_variable_get('@_failed')).to eq true
           end
@@ -285,6 +294,7 @@ RSpec.describe ActiveInteractor::Context::Base do
 
           it { is_expected.to be_a described_class }
           it { is_expected.to have_attributes(foo: 'foo') }
+
           it 'is expected to preserve @_rolled_back instance variable' do
             expect(subject.instance_variable_get('@_rolled_back')).to eq true
           end
@@ -347,6 +357,7 @@ RSpec.describe ActiveInteractor::Context::Base do
         before { attributes.errors.add(:foo, 'invalid') }
 
         it { is_expected.to be_a described_class }
+
         it 'is expected to have errors on :foo' do
           expect(subject.errors[:foo]).not_to be_nil
           expect(subject.errors[:foo]).to include 'invalid'
@@ -358,6 +369,7 @@ RSpec.describe ActiveInteractor::Context::Base do
 
         it { is_expected.to be_a described_class }
         it { is_expected.to have_attributes(foo: 'foo') }
+
         it 'is expected to preserve @_called instance variable' do
           expect(subject.instance_variable_get('@_called')).to eq %w[foo]
         end
@@ -368,6 +380,7 @@ RSpec.describe ActiveInteractor::Context::Base do
 
         it { is_expected.to be_a described_class }
         it { is_expected.to have_attributes(foo: 'foo') }
+
         it 'is expected to preserve @_failed instance variable' do
           expect(subject.instance_variable_get('@_failed')).to eq true
         end
@@ -378,6 +391,7 @@ RSpec.describe ActiveInteractor::Context::Base do
 
         it { is_expected.to be_a described_class }
         it { is_expected.to have_attributes(foo: 'foo') }
+
         it 'is expected to preserve @_rolled_back instance variable' do
           expect(subject.instance_variable_get('@_rolled_back')).to eq true
         end
@@ -387,6 +401,7 @@ RSpec.describe ActiveInteractor::Context::Base do
 
   describe '#rollback!' do
     subject { instance.rollback! }
+
     let(:instance) { described_class.new }
 
     context 'with #called! interactors' do
@@ -414,6 +429,7 @@ RSpec.describe ActiveInteractor::Context::Base do
 
   describe '#success?' do
     subject { instance.success? }
+
     let(:instance) { described_class.new }
 
     it { is_expected.to eq true }

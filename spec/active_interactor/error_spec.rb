@@ -14,10 +14,12 @@ RSpec.describe ActiveInteractor::Error::ContextFailure do
   end
 
   context 'when context is an instance of "TestContext"' do
-    before { build_context }
     subject { described_class.new(TestContext.new) }
 
+    before { build_context }
+
     it { is_expected.to have_attributes(message: 'TestContext failed!') }
+
     it 'is expected to have an instance of TestContext' do
       expect(subject.context).to be_a TestContext
     end

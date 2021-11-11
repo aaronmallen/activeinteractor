@@ -35,8 +35,8 @@ module ActiveInteractor
         # @param options [Hash, Perform::Options] options to use for the {.perform}. See {Perform::Options}
         # @return [Class] an instance of the {Base interactor} class' {ActiveInteractor::Context::Base context}
         #  instance
-        def perform(context = {}, options = {}, state = nil)
-          new(context, state).with_options(options).execute_perform
+        def perform(context = {}, options = {})
+          new(context).with_options(options).execute_perform
         end
 
         # Initialize a new {Base interactor} instance and call its {Interactor::Perform#perform #perform} method without
@@ -72,8 +72,8 @@ module ActiveInteractor
         #  fails.
         # @return [Class] an instance of the {Base interactor} class' {ActiveInteractor::Context::Base context}
         #  instance
-        def perform!(context = {}, options = {}, state = nil)
-          new(context, state).with_options(options).execute_perform!
+        def perform!(context = {}, options = {})
+          new(context).with_options(options).execute_perform!
         end
       end
 

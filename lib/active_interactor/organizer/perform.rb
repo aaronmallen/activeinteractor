@@ -56,7 +56,7 @@ module ActiveInteractor
       private
 
       def execute_interactor(interface, fail_on_error = false, perform_options = {})
-        interface.perform(self, context, fail_on_error, perform_options, @context.state)
+        interface.perform(self, context, fail_on_error, perform_options)
       end
 
       def execute_interactor_with_callbacks(interface, fail_on_error = false, perform_options = {})
@@ -68,9 +68,9 @@ module ActiveInteractor
         end
       end
 
-      def merge_contexts(results)
-        results.each { |result| @context.merge!(result) }
-        context_fail! if results.any?(&:failure?)
+      def merge_contexts(contexts)
+        contexts.each { |context| @context.merge!(context) }
+        context_fail! if contexts.any?(&:failure?)
       end
 
       def execute_and_merge_contexts(interface)
@@ -89,7 +89,6 @@ module ActiveInteractor
         end
       rescue ActiveInteractor::Error::ContextFailure => e
         context.merge!(e.context)
-        context_fail!
       end
 
       def perform_in_parallel

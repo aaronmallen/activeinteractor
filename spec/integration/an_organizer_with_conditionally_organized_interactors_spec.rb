@@ -7,7 +7,7 @@ RSpec.describe 'An organizer with conditionally organized interactors', type: :i
   let!(:test_interactor_2)  { build_interactor('TestInteractor2') }
 
   context 'with a condition on the first interactor { :if => -> { context.test_1 } } ' \
-  'and a condition on the second interactor { :if => -> { context.test_2 } }' do
+          'and a condition on the second interactor { :if => -> { context.test_2 } }' do
     let(:interactor_class) do
       build_organizer do
         organize do
@@ -28,8 +28,9 @@ RSpec.describe 'An organizer with conditionally organized interactors', type: :i
       context 'with context_attributes test_1 and test_2 both eq to true' do
         let(:context_attributes) { { test_1: true, test_2: true } }
 
-        it { is_expected.to be_a ActiveInteractor::Interactor::Result }
+        it { is_expected.to be_a interactor_class.context_class }
         it { is_expected.to be_successful }
+
         it 'is expected to receive #perform on both interactors' do
           expect_any_instance_of(test_interactor_1).to receive(:perform)
           expect_any_instance_of(test_interactor_2).to receive(:perform)
@@ -40,8 +41,9 @@ RSpec.describe 'An organizer with conditionally organized interactors', type: :i
       context 'with context_attributes test_1 eq to true and test_2 eq to false' do
         let(:context_attributes) { { test_1: true, test_2: false } }
 
-        it { is_expected.to be_a ActiveInteractor::Interactor::Result }
+        it { is_expected.to be_a interactor_class.context_class }
         it { is_expected.to be_successful }
+
         it 'is expected to receive #perform on the first interactor' do
           expect_any_instance_of(test_interactor_1).to receive(:perform)
           subject
@@ -56,8 +58,9 @@ RSpec.describe 'An organizer with conditionally organized interactors', type: :i
       context 'with context_attributes test_1 eq to false and test_2 eq to true' do
         let(:context_attributes) { { test_1: false, test_2: true } }
 
-        it { is_expected.to be_a ActiveInteractor::Interactor::Result }
+        it { is_expected.to be_a interactor_class.context_class }
         it { is_expected.to be_successful }
+
         it 'is expected not to receive #perform on the first interactor' do
           expect_any_instance_of(test_interactor_1).not_to receive(:perform)
           subject
@@ -72,8 +75,9 @@ RSpec.describe 'An organizer with conditionally organized interactors', type: :i
       context 'with context_attributes test_1 and test_2 both eq to false' do
         let(:context_attributes) { { test_1: false, test_2: false } }
 
-        it { is_expected.to be_a ActiveInteractor::Interactor::Result }
+        it { is_expected.to be_a interactor_class.context_class }
         it { is_expected.to be_successful }
+
         it 'is expected not to receive #perform on the first interactor' do
           expect_any_instance_of(test_interactor_1).not_to receive(:perform)
           subject
@@ -88,7 +92,7 @@ RSpec.describe 'An organizer with conditionally organized interactors', type: :i
   end
 
   context 'with a condition on the first interactor { :unless => -> { context.test_1 } } ' \
-  'and a condition on the second interactor { :unless => -> { context.test_2 } }' do
+          'and a condition on the second interactor { :unless => -> { context.test_2 } }' do
     let(:interactor_class) do
       build_organizer do
         organize do
@@ -109,8 +113,9 @@ RSpec.describe 'An organizer with conditionally organized interactors', type: :i
       context 'with context_attributes test_1 and test_2 both eq to true' do
         let(:context_attributes) { { test_1: true, test_2: true } }
 
-        it { is_expected.to be_a ActiveInteractor::Interactor::Result }
+        it { is_expected.to be_a interactor_class.context_class }
         it { is_expected.to be_successful }
+
         it 'is expected not to receive #perform on the first interactor' do
           expect_any_instance_of(test_interactor_1).not_to receive(:perform)
           subject
@@ -125,8 +130,9 @@ RSpec.describe 'An organizer with conditionally organized interactors', type: :i
       context 'with context_attributes test_1 eq to true and test_2 eq to false' do
         let(:context_attributes) { { test_1: true, test_2: false } }
 
-        it { is_expected.to be_a ActiveInteractor::Interactor::Result }
+        it { is_expected.to be_a interactor_class.context_class }
         it { is_expected.to be_successful }
+
         it 'is expected not to receive #perform on the first interactor' do
           expect_any_instance_of(test_interactor_1).not_to receive(:perform)
           subject
@@ -141,8 +147,9 @@ RSpec.describe 'An organizer with conditionally organized interactors', type: :i
       context 'with context_attributes test_1 eq to false and test_2 eq to true' do
         let(:context_attributes) { { test_1: false, test_2: true } }
 
-        it { is_expected.to be_a ActiveInteractor::Interactor::Result }
+        it { is_expected.to be_a interactor_class.context_class }
         it { is_expected.to be_successful }
+
         it 'is expected to receive #perform on the first interactor' do
           expect_any_instance_of(test_interactor_1).to receive(:perform)
           subject
@@ -157,8 +164,9 @@ RSpec.describe 'An organizer with conditionally organized interactors', type: :i
       context 'with context_attributes test_1 and test_2 both eq to false' do
         let(:context_attributes) { { test_1: false, test_2: false } }
 
-        it { is_expected.to be_a ActiveInteractor::Interactor::Result }
+        it { is_expected.to be_a interactor_class.context_class }
         it { is_expected.to be_successful }
+
         it 'is expected to receive #perform on both interactors' do
           expect_any_instance_of(test_interactor_1).to receive(:perform)
           expect_any_instance_of(test_interactor_2).to receive(:perform)
@@ -192,8 +200,9 @@ RSpec.describe 'An organizer with conditionally organized interactors', type: :i
     describe '.perform' do
       subject { interactor_class.perform }
 
-      it { is_expected.to be_a ActiveInteractor::Interactor::Result }
+      it { is_expected.to be_a interactor_class.context_class }
       it { is_expected.to be_successful }
+
       it 'is expected to receive #perform on both interactors' do
         expect_any_instance_of(test_interactor_1).to receive(:perform)
         expect_any_instance_of(test_interactor_2).to receive(:perform)
@@ -226,8 +235,9 @@ RSpec.describe 'An organizer with conditionally organized interactors', type: :i
     describe '.perform' do
       subject { interactor_class.perform }
 
-      it { is_expected.to be_a ActiveInteractor::Interactor::Result }
+      it { is_expected.to be_a interactor_class.context_class }
       it { is_expected.to be_successful }
+
       it 'is expected not to receive #perform on the first interactor' do
         expect_any_instance_of(test_interactor_1).not_to receive(:perform)
         subject
@@ -264,8 +274,9 @@ RSpec.describe 'An organizer with conditionally organized interactors', type: :i
     describe '.perform' do
       subject { interactor_class.perform }
 
-      it { is_expected.to be_a ActiveInteractor::Interactor::Result }
+      it { is_expected.to be_a interactor_class.context_class }
       it { is_expected.to be_successful }
+
       it 'is expected not to receive #perform on the first interactor' do
         expect_any_instance_of(test_interactor_1).not_to receive(:perform)
         subject
@@ -302,8 +313,9 @@ RSpec.describe 'An organizer with conditionally organized interactors', type: :i
     describe '.perform' do
       subject { interactor_class.perform }
 
-      it { is_expected.to be_a ActiveInteractor::Interactor::Result }
+      it { is_expected.to be_a interactor_class.context_class }
       it { is_expected.to be_successful }
+
       it 'is expected to receive #perform on both interactors' do
         expect_any_instance_of(test_interactor_1).to receive(:perform)
         expect_any_instance_of(test_interactor_2).to receive(:perform)

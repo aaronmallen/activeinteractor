@@ -52,7 +52,6 @@ module ActiveInteractor
   extend ActiveSupport::Autoload
 
   autoload :Base
-  autoload :Deprecation
 
   # {Context::Base Context} classes and modules
   #
@@ -82,8 +81,6 @@ module ActiveInteractor
     autoload :Callbacks
     autoload :Context
     autoload :Perform
-    autoload :Result
-    autoload :State
     autoload :Worker
   end
 
