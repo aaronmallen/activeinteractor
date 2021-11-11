@@ -2,11 +2,6 @@ name: Lint
 
 on:
   workflow_call:
-    inputs:
-      ruby-version:
-        default: '2.5'
-        required: false
-        type: string
 
 jobs:
   rubocop:
@@ -15,10 +10,10 @@ jobs:
       - name: Setup Branch
         uses: actions/checkout@v2
 
-      - name: Setup Ruby ${{ inputs.ruby-version }}
+      - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ inputs.ruby-version }}
+          ruby-version: 2.5
           bundler-cache: true
 
       - name: Run Rubocop

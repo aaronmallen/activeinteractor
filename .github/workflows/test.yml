@@ -2,11 +2,6 @@ name: Test
 
 on:
   workflow_call:
-    inputs:
-      ruby-version:
-        default: '2.5'
-        required: false
-        type: string
     secrets:
       cc-test-reporter-id:
         required: false
@@ -15,16 +10,16 @@ jobs:
   test:
     env:
       CC_TEST_REPORTER_ID:  ${{ secrets.cc-test-reporter-id }}
-    name: Test ruby ${{ inputs.ruby-version }}
+    name: Test ruby ${{ matrix.ruby-version }}
     runs-on: ubuntu-latest
     steps:
       - name: Setup Branch
         uses: actions/checkout@v2
 
-      - name: Setup Ruby ${{ inputs.ruby-version }}
+      - name: Setup Ruby ${{ matrix.ruby-version }}
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ inputs.ruby-version }}
+          ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: true
 
       - name: Skip Coverage
@@ -56,3 +51,10 @@ jobs:
           ./cc-test-reporter format-coverage -t lcov -o coverage/codeclimate.integration.json coverage/integration_lcov.info
           ./cc-test-reporter sum-coverage coverage/codeclimate.*.json -p 2
           ./cc-test-reporter upload-coverage
+    strategy:
+      matrix:
+        ruby-version:
+          - '2.5'
+          - '2.6'
+          - '2.7'
+          - '3.0'
