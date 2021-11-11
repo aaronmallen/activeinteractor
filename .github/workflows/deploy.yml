@@ -6,39 +6,119 @@ on:
       - published
 
 jobs:
-  test:
-    name: Test
+  lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-ruby@v1.1.2
+      - name: Setup Branch
+        uses: actions/checkout@v2
+      - name: Set Up Ruby
+        uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.6
-          architecture: x64
-      - name: Bundle install
-        run: gem install bundler && bundler install --jobs 4  --retry 3
-      - name: Rake specs
-        run: bundle exec rake spec
-      - name: Rake build
+          ruby-version: 2.5
+          bundler-cache: true
+      - name: Run Rubocop
+        run: bundle exec rubocop --display-cop-names
+  test:
+    env:
+      CC_TEST_REPORTER_ID:  ${{ secrets.CC_TEST_REPORTER_ID }}
+    if: success()
+    needs:
+      - lint
+    name: Test ruby ${{ matrix.ruby }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Branch
+        uses: actions/checkout@v2
+
+      - name: Setup Ruby ${{ matrix.ruby }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+
+      - name: Skip Coverage
+        if: env.CC_TEST_REPORTER_ID == null
+        run: |
+          echo "###########################"
+          echo "Skipping Coverage Reporting"
+          echo "###########################"
+
+      - name: Setup Coverage Reporter
+        env:
+          GIT_BRANCH: ${{ github.ref }}
+        if: env.CC_TEST_REPORTER_ID != null
+        run: |
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          chmod +x ./cc-test-reporter
+          ./cc-test-reporter before-build
+
+      - name: Run Unit Tests
+        run: COVERAGE_TYPE=unit bundle exec rspec --tag \~type:integration --format documentation --order rand
+
+      - name: Run Integration Tests
+        run: COVERAGE_TYPE=integration bundle exec rspec --tag type:integration --format documentation --order rand
+
+      - name: Report Coverage
+        if: env.CC_TEST_REPORTER_ID != null
+        run: |
+          ./cc-test-reporter format-coverage -t lcov -o coverage/codeclimate.unit.json coverage/unit_lcov.info
+          ./cc-test-reporter format-coverage -t lcov -o coverage/codeclimate.integration.json coverage/integration_lcov.info
+          ./cc-test-reporter sum-coverage coverage/codeclimate.*.json -p 2
+          ./cc-test-reporter upload-coverage
+
+    strategy:
+      matrix:
+        ruby:
+          - '2.5'
+          - '2.6'
+          - '2.7'
+          - '3.0'
+  build:
+    if: success()
+    needs:
+      - test
+    name: Build Gem for Ruby {{ matrix.ruby }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Branch
+        uses: actions/checkout@v2
+
+      - name: Setup Ruby ${{ matrix.ruby }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+
+      - name: Build Gem
         run: bundle exec rake build
+
+    strategy:
+      matrix:
+        ruby:
+          - '2.5'
+          - '2.6'
+          - '2.7'
+          - '3.0'
   publish:
     name: Publish
     needs:
-      - test
+      - lint
+      - build
     if: success()
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - uses: actions/setup-ruby@v1.1.2
+      - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.6
-          architecture: x64
+          ruby-version: 2.5
+          bundler-cache: true
       - name: Publish to RubyGems
         run: |
           mkdir -p $HOME/.gem
           touch $HOME/.gem/credentials
           chmod 0600 $HOME/.gem/credentials
           printf -- "---\n:rubygems_api_key: ${GEM_HOST_API_KEY}\n" > $HOME/.gem/credentials
+          bin/prepare-deploy --sha $($GITHUB_SHA | cut -c 1-7)
           gem build *.gemspec
           gem push *.gem
         env:
@@ -49,6 +129,7 @@ jobs:
           touch $HOME/.gem/credentials
           chmod 0600 $HOME/.gem/credentials
           printf -- "---\n:github: Bearer ${GEM_HOST_API_KEY}\n" > $HOME/.gem/credentials
+          bin/prepare-deploy --sha $($GITHUB_SHA | cut -c 1-7)
           gem build *.gemspec
           gem push --KEY github --host https://rubygems.pkg.github.com/${OWNER} *.gem
         env:
