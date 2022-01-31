@@ -36,8 +36,8 @@ Gem::Specification.new do |spec|
     'wiki_uri' => 'https://github.com/aaronmallen/activeinteractor/wiki'
   }
 
-  spec.add_dependency 'activemodel', '>= 4.2', '<= 6.1'
-  spec.add_dependency 'activesupport', '>= 4.2', '<= 6.1'
+  spec.add_dependency 'activemodel', '>= 4.2', '<= 6.1.4.4'
+  spec.add_dependency 'activesupport', '>= 4.2', '<= 6.1.4.4'
 
   spec.add_development_dependency 'bundler', '~> 2.0'
   spec.add_development_dependency 'rake', '~> 13.0'
