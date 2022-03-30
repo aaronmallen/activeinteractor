@@ -3,7 +3,6 @@
 ## Team
 
 - [Aaron Allen](https://github.com/aaronmallen)
-- [Mohamed Motaweh](https://github.com/mohameddiaa27)
 
 ## Contributors
 

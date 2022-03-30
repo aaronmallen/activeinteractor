@@ -4,7 +4,7 @@
 
 | Version | Supported                |
 | ------- | ------------------------ |
-| 1.1.x   | :rocket: :beetle: :lock: |
+| 1.1.x   | :beetle: :lock:          |
 | 1.0.x   | :lock:                   |
 | 0.1.x   | :x:                      |
 
