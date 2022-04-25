@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [v1.1.5] - 2022-04-25
+
+### Changed
+
+- [\#344] Bump activemodel and activesupport to v7.0.2.3
+
 ## [v1.1.4] - 2022-03-07
 
 ### Changed
@@ -243,7 +249,8 @@ and this project adheres to [Semantic Versioning].
 
 <!-- versions -->
 
-[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.1.4...HEAD
+[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.1.5...HEAD
+[v1.1.5]: https://github.com/aaronmallen/activeinteractor/compare/v1.1.4...v1.1.5
 [v1.1.4]: https://github.com/aaronmallen/activeinteractor/compare/v1.1.3...v1.1.4
 [v1.1.3]: https://github.com/aaronmallen/activeinteractor/compare/v1.1.2...v1.1.3
 [v1.1.2]: https://github.com/aaronmallen/activeinteractor/compare/v1.1.1...v1.1.2
