@@ -16,7 +16,7 @@ module ActiveInteractor
 
     # The ActiveInterctor patch version number
     # @return [Integer] The ActiveInteractor patch version number
-    PATCH = 4
+    PATCH = 6
 
     # The ActiveInterctor pre-release version
     # @return [String | nil] The ActiveInteractor pre-release version
