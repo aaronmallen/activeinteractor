@@ -2,3 +2,5 @@ Style/Documentation:
   Enabled: false
 Style/OptionalBooleanParameter:
   Enabled: false
+Layout/BlockAlignment:
+  Enabled: false

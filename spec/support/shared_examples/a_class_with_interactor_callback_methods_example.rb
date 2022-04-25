@@ -8,7 +8,7 @@ RSpec.shared_examples 'a class with interactor callback methods' do
 
     it 'is expected to receive #set_callback with :validation, :after, :some_method, { :prepend => true }' do
       expect(interactor_class).to receive(:set_callback)
-        .with(:validation, :after, :some_method, prepend: true)
+        .with(:validation, :after, :some_method, { prepend: true })
         .and_return(true)
       subject
     end
