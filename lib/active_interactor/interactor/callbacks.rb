@@ -249,6 +249,22 @@ module ActiveInteractor
           set_callback(:rollback, :before, *filters, &block)
         end
 
+        # Set {.after_callbacks_deferred_when_organized} to `true`
+        #
+        # @example a basic {Base organizer} set to defer 'after' callbacks when organized
+        #   class MyOrganizer < ActiveInteractor::Organizer::Base
+        #     defer_after_callbacks_when_organized
+        #   end
+        def defer_after_callbacks_when_organized
+          self.after_callbacks_deferred_when_organized = true
+        end
+
+        def self.extended(base)
+          base.class_eval do
+            class_attribute :after_callbacks_deferred_when_organized, instance_writer: false, default: false
+          end
+        end
+
         private
 
         def normalize_options(options)

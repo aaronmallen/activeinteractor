@@ -51,6 +51,7 @@ module ActiveInteractor
         else
           perform_in_order
         end
+        run_after_perform_callbacks_on_interactors
       end
 
       private
@@ -96,6 +97,14 @@ module ActiveInteractor
           Thread.new { execute_interactor_with_callbacks(interface, false, skip_rollback: true) }
         end
         merge_contexts(results.map(&:value))
+      end
+
+      def run_after_perform_callbacks_on_interactors
+        self.class.organized.each do |interface|
+          next unless interface.interactor_class.after_callbacks_deferred_when_organized
+
+          context.merge!(interface.execute_after_perform_callbacks(context))
+        end
       end
     end
   end
