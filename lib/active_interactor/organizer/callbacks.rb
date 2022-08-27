@@ -141,11 +141,127 @@ module ActiveInteractor
         def before_each_perform(*filters, &block)
           set_callback(:each_perform, :before, *filters, &block)
         end
+
+        # Define a callback to call after all {Organizer::Organize::ClassMethods#organized organized}
+        # {ActiveInteractor::Base interactors'} {Interactor::Perform#perform #perform} methods have been called.
+        #
+        # @example
+        #  class MyInteractor1 < ActiveInteractor::Base
+        #    def perform
+        #      puts 'MyInteractor1'
+        #    end
+        #  end
+        #
+        #  class MyInteractor2 < ActiveInteractor::Base
+        #    def perform
+        #      puts 'MyInteractor2'
+        #    end
+        #  end
+        #
+        #  class MyOrganizer < ActiveInteractor::Organizer
+        #    after_all_perform :print_done
+        #
+        #    organized MyInteractor1, MyInteractor2
+        #
+        #    private
+        #
+        #    def print_done
+        #      puts 'Done'
+        #    end
+        #  end
+        #
+        #  MyOrganizer.perform
+        #  "MyInteractor1"
+        #  "MyInteractor2"
+        #  "Done"
+        #  #=> <MyOrganizer::Context>
+        def after_all_perform(*filters, &block)
+          set_callback(:all_perform, :after, *filters, &block)
+        end
+
+        # Define a callback to call around all {Organizer::Organize::ClassMethods#organized organized}
+        # {ActiveInteractor::Base interactors'} {Interactor::Perform#perform #perform} method calls.
+        #
+        # @example
+        #  class MyInteractor1 < ActiveInteractor::Base
+        #    def perform
+        #      puts 'MyInteractor1'
+        #      sleep(1)
+        #    end
+        #  end
+        #
+        #  class MyInteractor2 < ActiveInteractor::Base
+        #    def perform
+        #      puts 'MyInteractor2'
+        #      sleep(1)
+        #    end
+        #  end
+        #
+        #  class MyOrganizer < ActiveInteractor::Organizer
+        #    around_all_perform :print_time
+        #
+        #    organized MyInteractor1, MyInteractor2
+        #
+        #    private
+        #
+        #    def print_time
+        #      puts Time.now.utc
+        #      yield
+        #      puts Time.now.utc
+        #    end
+        #  end
+        #
+        #  MyOrganizer.perform
+        #  "2019-04-01 00:00:00 UTC"
+        #  "MyInteractor1"
+        #  "MyInteractor2"
+        #  "2019-04-01 00:00:02 UTC"
+        #  #=> <MyOrganizer::Context>
+        def around_all_perform(*filters, &block)
+          set_callback(:all_perform, :around, *filters, &block)
+        end
+
+        # Define a callback to call before all {Organizer::Organize::ClassMethods#organized organized}
+        # {ActiveInteractor::Base interactors'} {Interactor::Perform#perform #perform} methods have been called.
+        #
+        # @example
+        #  class MyInteractor1 < ActiveInteractor::Base
+        #    def perform
+        #      puts 'MyInteractor1'
+        #    end
+        #  end
+        #
+        #  class MyInteractor2 < ActiveInteractor::Base
+        #    def perform
+        #      puts 'MyInteractor2'
+        #    end
+        #  end
+        #
+        #  class MyOrganizer < ActiveInteractor::Organizer
+        #    before_all_perform :print_starting
+        #
+        #    organized MyInteractor1, MyInteractor2
+        #
+        #    private
+        #
+        #    def print_starting
+        #      puts 'Starting'
+        #    end
+        #  end
+        #
+        #  MyOrganizer.perform
+        #  "Starting"
+        #  "MyInteractor1"
+        #  "MyInteractor2"
+        #  #=> <MyOrganizer::Context>
+        def before_all_perform(*filters, &block)
+          set_callback(:all_perform, :before, *filters, &block)
+        end
       end
 
       def self.included(base)
         base.class_eval do
-          define_callbacks :each_perform
+          define_callbacks :each_perform, :all_perform
         end
       end
     end
