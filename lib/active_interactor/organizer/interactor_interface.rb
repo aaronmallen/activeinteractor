@@ -52,12 +52,7 @@ module ActiveInteractor
         @filters = options.select { |key, _value| CONDITIONAL_FILTERS.include?(key) }
         @callbacks = options.select { |key, _value| CALLBACKS.include?(key) }
         @perform_options = options.reject { |key, _value| CONDITIONAL_FILTERS.include?(key) || CALLBACKS.include?(key) }
-        after_callbacks_deferred = @interactor_class.present? && @interactor_class.after_callbacks_deferred_when_organized
-        @after_perform_callbacks = if after_callbacks_deferred
-          @interactor_class._perform_callbacks
-        else
-          nil
-        end
+        init_after_perform_callbacks
       end
 
       # Call the {#interactor_class} {Interactor::Perform::ClassMethods#perform .perform} or
@@ -77,11 +72,7 @@ module ActiveInteractor
 
         options = self.perform_options.merge(perform_options)
 
-        if after_perform_callbacks.present?
-          after_perform_callbacks.each do |callback|
-            interactor_class.skip_callback(:perform, :after, callback.filter, raise: false)
-          end
-        end
+        skip_after_perform_callbacks
 
         method = fail_on_error ? :perform! : :perform
         options = self.perform_options.merge(perform_options)
@@ -98,10 +89,24 @@ module ActiveInteractor
         interactor = interactor_class.new(context)
         env = ActiveSupport::Callbacks::Filters::Environment.new(interactor, false, nil)
         after_perform_callbacks.compile.invoke_after(env)
-        return interactor.send(:context)
+        interactor.send(:context)
       end
 
       private
+
+      def init_after_perform_callbacks
+        after_callbacks_deferred = @interactor_class.present? 
+                                && @interactor_class.after_callbacks_deferred_when_organized
+        @after_perform_callbacks = after_callbacks_deferred ? @interactor_class._perform_callbacks : nil
+      end
+      
+      def skip_after_perform_callbacks
+        return unless after_perform_callbacks.present?
+
+        after_perform_callbacks.each do |callback|
+          interactor_class.skip_callback(:perform, :after, callback.filter, raise: false)
+        end
+      end
 
       def check_conditionals(target, filter)
         resolve_option(target, filters[filter])
