@@ -70,8 +70,6 @@ module ActiveInteractor
         return if check_conditionals(target, :if) == false
         return if check_conditionals(target, :unless) == true
 
-        options = self.perform_options.merge(perform_options)
-
         skip_after_perform_callbacks
 
         method = fail_on_error ? :perform! : :perform
