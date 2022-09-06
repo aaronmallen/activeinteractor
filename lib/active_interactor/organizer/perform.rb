@@ -53,7 +53,7 @@ module ActiveInteractor
             perform_in_order
           end
         end
-        run_after_perform_callbacks_on_interactors
+        run_after_perform_callbacks_on_interactors if context.success?
       end
 
       private
