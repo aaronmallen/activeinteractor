@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'pry'
 require 'spec_helper'
 
 RSpec.describe 'An organizer with around all callbacks', type: :integration do
