@@ -93,9 +93,9 @@ module ActiveInteractor
       private
 
       def init_deferred_after_perform_callbacks
-        after_callbacks_deferred = @interactor_class.present? &&
-                                   @interactor_class.after_callbacks_deferred_when_organized
-        @deferred_after_perform_callbacks = after_callbacks_deferred ? @interactor_class._perform_callbacks : nil
+        after_callbacks_deferred = interactor_class.present? &&
+                                   interactor_class.after_callbacks_deferred_when_organized
+        @deferred_after_perform_callbacks = after_callbacks_deferred ? interactor_class._perform_callbacks : nil
       end
 
       def skip_deferred_after_perform_callbacks
