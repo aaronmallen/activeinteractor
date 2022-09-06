@@ -105,7 +105,7 @@ module ActiveInteractor
         self.class.organized.each do |interface|
           next unless interface.interactor_class.after_callbacks_deferred_when_organized
 
-          context.merge!(interface.execute_after_perform_callbacks(context))
+          context.merge!(interface.execute_deferred_after_perform_callbacks(context))
         end
       end
     end
