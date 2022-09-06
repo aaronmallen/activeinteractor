@@ -47,7 +47,7 @@ module ActiveInteractor
       # {Interactor::Perform#perform #perform} method in favor of this default implementation.
       def perform
         run_callbacks :all_perform do
-          result = if self.class.parallel
+          if self.class.parallel
             perform_in_parallel
           else
             perform_in_order
