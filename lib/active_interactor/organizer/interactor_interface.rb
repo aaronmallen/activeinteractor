@@ -95,11 +95,11 @@ module ActiveInteractor
       private
 
       def init_after_perform_callbacks
-        after_callbacks_deferred = @interactor_class.present? && 
+        after_callbacks_deferred = @interactor_class.present? &&
                                    @interactor_class.after_callbacks_deferred_when_organized
         @after_perform_callbacks = after_callbacks_deferred ? @interactor_class._perform_callbacks : nil
       end
-      
+
       def skip_after_perform_callbacks
         return unless after_perform_callbacks.present?
 
