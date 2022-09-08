@@ -251,6 +251,8 @@ module ActiveInteractor
 
         # Set {.after_callbacks_deferred_when_organized} to `true`
         #
+        # @since v1.2.0
+        #
         # @example a basic {Base organizer} set to defer 'after' callbacks when organized
         #   class MyOrganizer < ActiveInteractor::Organizer::Base
         #     defer_after_callbacks_when_organized

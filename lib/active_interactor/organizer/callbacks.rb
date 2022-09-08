@@ -145,6 +145,8 @@ module ActiveInteractor
         # Define a callback to call after all {Organizer::Organize::ClassMethods#organized organized}
         # {ActiveInteractor::Base interactors'} {Interactor::Perform#perform #perform} methods have been called.
         #
+        # @since v1.2.0
+        #
         # @example
         #  class MyInteractor1 < ActiveInteractor::Base
         #    def perform
@@ -181,6 +183,8 @@ module ActiveInteractor
 
         # Define a callback to call around all {Organizer::Organize::ClassMethods#organized organized}
         # {ActiveInteractor::Base interactors'} {Interactor::Perform#perform #perform} method calls.
+        #
+        # @since v1.2.0
         #
         # @example
         #  class MyInteractor1 < ActiveInteractor::Base
@@ -223,6 +227,8 @@ module ActiveInteractor
 
         # Define a callback to call before all {Organizer::Organize::ClassMethods#organized organized}
         # {ActiveInteractor::Base interactors'} {Interactor::Perform#perform #perform} methods have been called.
+        #
+        # @since v1.2.0
         #
         # @example
         #  class MyInteractor1 < ActiveInteractor::Base

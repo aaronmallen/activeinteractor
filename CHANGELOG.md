@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [v1.2.0] - 2022-09-08
+
+### Added
+
+- `ActiveInteractor::Base.defer_after_callbacks_when_organized`
+- `ActiveInteractor::Organizer::Base.after_all_perform`
+- `ActiveInteractor::Organizer::Base.around_all_perform`
+- `ActiveInteractor::Organizer::Base.before_all_perform`
+
 ## [v1.1.6] - 2022-04-25
 
 ### Changed
@@ -249,7 +258,8 @@ and this project adheres to [Semantic Versioning].
 
 <!-- versions -->
 
-[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.1.6...HEAD
+[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.2.0...HEAD
+[v1.2.0]: https://github.com/aaronmallen/activeinteractor/compare/v1.1.6...v1.2.0
 [v1.1.6]: https://github.com/aaronmallen/activeinteractor/compare/v1.1.4...v1.1.6
 [v1.1.4]: https://github.com/aaronmallen/activeinteractor/compare/v1.1.3...v1.1.4
 [v1.1.3]: https://github.com/aaronmallen/activeinteractor/compare/v1.1.2...v1.1.3
