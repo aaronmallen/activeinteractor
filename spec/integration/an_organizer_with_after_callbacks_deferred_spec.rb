@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe 'An organizer with some interactor after callbacks deferred', type: :integration do
+RSpec.describe 'An organizer with after callbacks deferred', type: :integration do
   let!(:test_interactor_1) do
     build_interactor('TestInteractor1') do
       defer_after_callbacks_when_organized
