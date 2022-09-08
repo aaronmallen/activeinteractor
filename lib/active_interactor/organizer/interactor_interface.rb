@@ -34,7 +34,7 @@ module ActiveInteractor
     #  @return [Hash{Symbol=>*}] {Interactor::Perform::Options} for the {ActiveInteractor::Base interactor}
     #   {Interactor::Perform#perform #perform}
     class InteractorInterface
-      attr_reader :filters, :callbacks, :interactor_class, :perform_options
+      attr_reader :filters, :callbacks, :interactor_class, :perform_options, :deferred_after_perform_callbacks
 
       # Keywords for conditional filters
       # @return [Array<Symbol>]
@@ -52,6 +52,7 @@ module ActiveInteractor
         @filters = options.select { |key, _value| CONDITIONAL_FILTERS.include?(key) }
         @callbacks = options.select { |key, _value| CALLBACKS.include?(key) }
         @perform_options = options.reject { |key, _value| CONDITIONAL_FILTERS.include?(key) || CALLBACKS.include?(key) }
+        init_deferred_after_perform_callbacks
       end
 
       # Call the {#interactor_class} {Interactor::Perform::ClassMethods#perform .perform} or
@@ -69,6 +70,8 @@ module ActiveInteractor
         return if check_conditionals(target, :if) == false
         return if check_conditionals(target, :unless) == true
 
+        skip_deferred_after_perform_callbacks
+
         method = fail_on_error ? :perform! : :perform
         options = self.perform_options.merge(perform_options)
         interactor_class.send(method, context, options)
@@ -78,7 +81,30 @@ module ActiveInteractor
         resolve_option(target, callbacks[callback])
       end
 
+      def execute_deferred_after_perform_callbacks(context)
+        return unless deferred_after_perform_callbacks.present?
+
+        interactor = interactor_class.new(context)
+        env = ActiveSupport::Callbacks::Filters::Environment.new(interactor, false, nil)
+        deferred_after_perform_callbacks.compile.invoke_after(env)
+        interactor.send(:context)
+      end
+
       private
+
+      def init_deferred_after_perform_callbacks
+        after_callbacks_deferred = interactor_class.present? &&
+                                   interactor_class.after_callbacks_deferred_when_organized
+        @deferred_after_perform_callbacks = after_callbacks_deferred ? interactor_class._perform_callbacks : nil
+      end
+
+      def skip_deferred_after_perform_callbacks
+        return unless deferred_after_perform_callbacks.present?
+
+        deferred_after_perform_callbacks.each do |callback|
+          interactor_class.skip_callback(:perform, :after, callback.filter, raise: false)
+        end
+      end
 
       def check_conditionals(target, filter)
         resolve_option(target, filters[filter])
