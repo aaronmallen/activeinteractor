@@ -33,6 +33,12 @@ module ActiveInteractor
     #
     #  @return [Hash{Symbol=>*}] {Interactor::Perform::Options} for the {ActiveInteractor::Base interactor}
     #   {Interactor::Perform#perform #perform}
+    #
+    # @!attribute [r] deferred_after_perform_callbacks
+    #   Deffered callbacks for the interactor_class
+    #   @since 1.2.0
+    #
+    #   @return [Hash{Symbol=>*}] the interactor callbacks
     class InteractorInterface
       attr_reader :filters, :callbacks, :interactor_class, :perform_options, :deferred_after_perform_callbacks
 
