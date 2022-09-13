@@ -13,6 +13,7 @@ updates:
     labels:
       - dependabot
       - github-actions
+      - dependancies
     reviewers:
       - aaronmallen
   - package-ecosystem: bundler
@@ -23,5 +24,6 @@ updates:
     labels:
       - dependabot
       - bundler
+      - dependancies
     reviewers:
       - aaronmallen
