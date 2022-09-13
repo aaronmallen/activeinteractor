@@ -8,6 +8,8 @@ group :development, :test do
   gem 'code-scanning-rubocop'
   gem 'mdl'
   gem 'rails'
+  gem 'rake', '~> 13.0'
+  gem 'rspec', '~> 3.11'
   gem 'rubocop', '0.92.0'
   gem 'rubocop-performance'
   gem 'rubocop-rspec'
