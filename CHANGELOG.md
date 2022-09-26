@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [v1.2.1] - 2022-09-26
+
+### Fixed
+
+- [\#358] Typo in generator template name
+
+## [v1.1.7] - 2022-09-26
+
+### Fixed
+
+- [\#358] Typo in generator template name
+
 ## [v1.2.0] - 2022-09-08
 
 ### Added
@@ -258,8 +270,10 @@ and this project adheres to [Semantic Versioning].
 
 <!-- versions -->
 
-[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.2.0...HEAD
-[v1.2.0]: https://github.com/aaronmallen/activeinteractor/compare/v1.1.6...v1.2.0
+[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.2.1...HEAD
+[v1.2.1]: https://github.com/aaronmallen/activeinteractor/compare/v1.2.0...v1.2.1
+[v1.2.0]: https://github.com/aaronmallen/activeinteractor/compare/v1.1.7...v1.2.0
+[v1.1.7]: https://github.com/aaronmallen/activeinteractor/compare/v1.1.6...v1.1.7
 [v1.1.6]: https://github.com/aaronmallen/activeinteractor/compare/v1.1.4...v1.1.6
 [v1.1.4]: https://github.com/aaronmallen/activeinteractor/compare/v1.1.3...v1.1.4
 [v1.1.3]: https://github.com/aaronmallen/activeinteractor/compare/v1.1.2...v1.1.3
