@@ -66,7 +66,7 @@ module ActiveInteractor
         end
 
         if context&.success? && interactor.respond_to?(:run_after_perform_callbacks_on_children)
-          interactor.run_after_perform_callbacks_on_children 
+          interactor.run_after_perform_callbacks_on_children
         end
 
         result
