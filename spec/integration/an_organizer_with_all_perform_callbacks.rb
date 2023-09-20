@@ -53,15 +53,15 @@ RSpec.describe 'An organizer with around all callbacks', type: :integration do
 
   let(:interactor_class) do
     build_organizer do
-      before_all_perform do
+      before_perform do
         context.before_all_perform = 1
       end
 
-      after_all_perform do
+      after_perform do
         context.after_all_perform = context.around_all_perform_end + 1
       end
 
-      around_all_perform :around_all
+      around_perform :around_all
       def around_all
         context.around_all_perform_start = context.before_all_perform + 1
         yield

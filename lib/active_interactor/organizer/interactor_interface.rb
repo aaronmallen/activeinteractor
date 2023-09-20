@@ -101,13 +101,18 @@ module ActiveInteractor
       def init_deferred_after_perform_callbacks
         after_callbacks_deferred = interactor_class.present? &&
                                    interactor_class.after_callbacks_deferred_when_organized
-        @deferred_after_perform_callbacks = after_callbacks_deferred ? interactor_class._perform_callbacks : nil
+        @deferred_after_perform_callbacks = if after_callbacks_deferred
+          interactor_class._perform_callbacks
+        else
+          nil
+        end
       end
 
       def skip_deferred_after_perform_callbacks
         return unless deferred_after_perform_callbacks.present?
 
         deferred_after_perform_callbacks.each do |callback|
+          next unless callback.kind == :after && callback.name == :perform
           interactor_class.skip_callback(:perform, :after, callback.filter, raise: false)
         end
       end
