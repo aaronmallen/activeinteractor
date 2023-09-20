@@ -6,22 +6,22 @@ RSpec.describe 'An organizer with around all callbacks', type: :integration do
   let!(:test_interactor_1) do
     build_interactor('TestInteractor1') do
       before_perform do
-        context.before_perform_1 = context.around_all_perform_start + 1
+        context.steps << 'before_perform_1'
       end
 
       after_perform do
-        context.after_perform_1 = context.around_perform_1_end + 1
+        context.steps << 'after_perform_1'
       end
 
       around_perform :around
       def around
-        context.around_perform_1_start = context.before_perform_1 + 1
+        context.steps << 'around_perform_1_start'
         yield
-        context.around_perform_1_end = context.perform_1 + 1
+        context.steps << 'around_perform_1_end'
       end
 
       def perform
-        context.perform_1 = context.around_perform_1_start + 1
+        context.steps << 'perform_1'
       end
     end
   end
@@ -31,22 +31,22 @@ RSpec.describe 'An organizer with around all callbacks', type: :integration do
       defer_after_callbacks_when_organized
 
       before_perform do
-        context.before_perform_2 = context.after_perform_1 + 1
+        context.steps << 'before_perform_2'
       end
 
       after_perform do
-        context.after_perform_2 = context.after_all_perform + 1
+        context.steps << 'after_perform_2'
       end
 
       around_perform :around
       def around
-        context.around_perform_2_start = context.before_perform_2 + 1
+        context.steps << 'around_perform_2_start'
         yield
-        context.around_perform_2_end = context.perform_2 + 1
+        context.steps << 'around_perform_2_end'
       end
 
       def perform
-        context.perform_2 = context.around_perform_2_start + 1
+        context.steps << 'perform_2'
       end
     end
   end
@@ -54,18 +54,19 @@ RSpec.describe 'An organizer with around all callbacks', type: :integration do
   let(:interactor_class) do
     build_organizer do
       before_perform do
-        context.before_all_perform = 1
+        context.steps = []
+        context.steps << 'before_all_perform'
       end
 
       after_perform do
-        context.after_all_perform = context.around_all_perform_end + 1
+        context.steps << 'after_all_perform'
       end
 
       around_perform :around_all
       def around_all
-        context.around_all_perform_start = context.before_all_perform + 1
+        context.steps << 'around_all_perform_start'
         yield
-        context.around_all_perform_end = context.around_perform_2_end + 1
+        context.steps << 'around_all_perform_end'
       end
 
       organize TestInteractor1, TestInteractor2

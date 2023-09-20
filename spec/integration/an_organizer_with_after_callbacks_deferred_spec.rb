@@ -8,15 +8,16 @@ RSpec.describe 'An organizer with after callbacks deferred', type: :integration 
       defer_after_callbacks_when_organized
 
       after_perform do
-        context.after_perform_1a = context.after_perform_1b + 1
+        context.steps << 'after_perform_1a'
       end
 
       after_perform do
-        context.after_perform_1b = context.after_perform_3a + 1 
+        context.steps << 'after_perform_1b'
       end
 
       def perform
-        context.perform_1 = 1
+        context.steps = []
+        context.steps << 'perform_1'
       end
     end
   end
@@ -26,11 +27,11 @@ RSpec.describe 'An organizer with after callbacks deferred', type: :integration 
       defer_after_callbacks_when_organized
 
       after_perform do
-        context.after_perform_2 = context.after_perform_1a + 1
+        context.steps << 'after_perform_2'
       end
 
       def perform
-        context.perform_2 = context.perform_1 + 1
+        context.steps << 'perform_2'
       end
     end
   end
@@ -38,15 +39,15 @@ RSpec.describe 'An organizer with after callbacks deferred', type: :integration 
   let!(:test_interactor_3) do
     build_interactor('TestInteractor3') do
       after_perform do
-        context.after_perform_3a = context.after_perform_3b + 1
+        context.steps << 'after_perform_3a'
       end
 
       after_perform do
-        context.after_perform_3b = context.perform_3 + 1
+        context.steps << 'after_perform_3b'
       end
 
       def perform
-        context.perform_3 = context.perform_2 + 1
+        context.steps << 'perform_3'
       end
     end
   end
@@ -75,14 +76,16 @@ RSpec.describe 'An organizer with after callbacks deferred', type: :integration 
     it { is_expected.to be_a interactor_class.context_class }
     it { is_expected.to be_successful }
     it { is_expected.to have_attributes(
-      perform_1: 1, 
-      perform_2: 2, 
-      perform_3: 3, 
-      after_perform_3b: 4,
-      after_perform_3a: 5,
-      after_perform_1b: 6,
-      after_perform_1a: 7,
-      after_perform_2: 8,
+      steps: [
+        'perform_1',
+        'perform_2',
+        'perform_3',
+        'after_perform_3b',
+        'after_perform_3a',
+        'after_perform_1b',
+        'after_perform_1a',
+        'after_perform_2',
+      ]
     ) }
 
     context 'when last interactor fails' do
@@ -103,13 +106,10 @@ RSpec.describe 'An organizer with after callbacks deferred', type: :integration 
       subject { interactor_class.perform}
 
       it { is_expected.to have_attributes(
-        perform_1: 1, 
-        perform_2: 2, 
-      )}
-
-      it { is_expected.to_not respond_to(
-        :after_perform_1a, 
-        :after_perform_1b, 
+        steps: [
+          'perform_1',
+          'perform_2'
+        ]
       )}
     end
 
@@ -123,7 +123,8 @@ RSpec.describe 'An organizer with after callbacks deferred', type: :integration 
           end
 
           def perform
-            context.perform_1 = 1
+            context.steps = []
+            context.steps << 'perform_1'
           end
         end
       end
@@ -137,17 +138,13 @@ RSpec.describe 'An organizer with after callbacks deferred', type: :integration 
       subject { interactor_class.perform}
 
       it { is_expected.to have_attributes(
-        perform_1: 1, 
-        perform_2: 2, 
-        perform_3: 3, 
-        after_perform_3b: 4,
-        after_perform_3a: 5,
-      )}
-
-      it { is_expected.to_not respond_to(
-        :after_perform_1a, 
-        :after_perform_1b, 
-        :after_perform_2,
+        steps: [
+          'perform_1',
+          'perform_2',
+          'perform_3',
+          'after_perform_3b',
+          'after_perform_3a',
+        ]
       )}
     end
   end
