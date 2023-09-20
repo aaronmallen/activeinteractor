@@ -46,13 +46,7 @@ module ActiveInteractor
       # {Interactor::Perform#perform #perform}. An {Base organizer} is expected not to define its own
       # {Interactor::Perform#perform #perform} method in favor of this default implementation.
       def perform
-        run_callbacks :all_perform do
-          if self.class.parallel
-            perform_in_parallel
-          else
-            perform_in_order
-          end
-        end
+        self.class.parallel ? perform_in_parallel : perform_in_order
       end
 
       def run_after_perform_callbacks_on_children
