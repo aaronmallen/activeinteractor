@@ -60,10 +60,16 @@ module ActiveInteractor
       end
 
       def execute_context_with_callbacks!
-        interactor.run_callbacks :perform do
+        result = interactor.run_callbacks :perform do
           execute_context_with_validation_check!
           @context = interactor.finalize_context!
         end
+
+        if context&.success? && interactor.respond_to?(:run_deferred_after_perform_callbacks_on_children)
+          interactor.run_deferred_after_perform_callbacks_on_children
+        end
+
+        result
       end
 
       def execute_context_with_validation!
