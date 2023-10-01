@@ -27,7 +27,7 @@ and this project adheres to [Semantic Versioning].
 
 ## [v1.2.0] - 2022-09-08
 
-### Added
+
 
 - `ActiveInteractor::Base.defer_after_callbacks_when_organized`
 - `ActiveInteractor::Organizer::Base.after_all_perform`
