@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [v1.2.2] - 2023-09-30
+
+### Fixed
+
+- [\#366] Fixes a minor timing issue for when deferred after_perform callbacks are run.
+
 ## [v1.2.1] - 2022-09-26
 
 ### Fixed
@@ -270,7 +276,8 @@ and this project adheres to [Semantic Versioning].
 
 <!-- versions -->
 
-[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.2.1...HEAD
+[Unreleased]: https://github.com/aaronmallen/activeinteractor/compare/v1.2.2...HEAD
+[v1.2.2]: https://github.com/aaronmallen/activeinteractor/compare/v1.2.1...v1.2.2
 [v1.2.1]: https://github.com/aaronmallen/activeinteractor/compare/v1.2.0...v1.2.1
 [v1.2.0]: https://github.com/aaronmallen/activeinteractor/compare/v1.1.7...v1.2.0
 [v1.1.7]: https://github.com/aaronmallen/activeinteractor/compare/v1.1.6...v1.1.7
