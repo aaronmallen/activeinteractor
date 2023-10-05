@@ -87,6 +87,7 @@ module ActiveInteractor
         resolve_option(target, callbacks[callback])
       end
 
+      # Executes after_perform callbacks that have been deferred on the interactor
       def execute_deferred_after_perform_callbacks(context)
         return unless deferred_after_perform_callbacks.present?
 
