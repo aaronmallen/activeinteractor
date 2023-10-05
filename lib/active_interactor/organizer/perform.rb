@@ -66,7 +66,7 @@ module ActiveInteractor
       private
 
       def execute_interactor(interface, fail_on_error = false, perform_options = {})
-        interface.perform(self, context, fail_on_error, perform_options)
+        interface.perform(self, context, fail_on_error, perform_options.merge({ organizer: self }))
       end
 
       def execute_interactor_with_callbacks(interface, fail_on_error = false, perform_options = {})
