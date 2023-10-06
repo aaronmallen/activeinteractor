@@ -102,7 +102,7 @@ module ActiveInteractor
       def init_deferred_after_perform_callbacks
         after_callbacks_deferred = interactor_class.present? &&
                                    interactor_class.after_callbacks_deferred_when_organized
-         @deferred_after_perform_callbacks = (after_perform_callbacks if after_callbacks_deferred)
+        @deferred_after_perform_callbacks = (after_perform_callbacks if after_callbacks_deferred)
       end
 
       def after_perform_callbacks
