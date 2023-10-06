@@ -59,6 +59,7 @@ module ActiveInteractor
         self.class.organized.each do |interface|
           # Only the top-level organizer should initiate the callbacks
           next if options.organizer.present?
+
           run_deferred_callbacks(interface)
         end
       end
