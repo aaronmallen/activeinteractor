@@ -87,12 +87,13 @@ module ActiveInteractor
         resolve_option(target, callbacks[callback])
       end
 
+      # Executes after_perform callbacks that have been deferred on the interactor
       def execute_deferred_after_perform_callbacks(context)
         return unless deferred_after_perform_callbacks.present?
 
         interactor = interactor_class.new(context)
         env = ActiveSupport::Callbacks::Filters::Environment.new(interactor, false, nil)
-        deferred_after_perform_callbacks.compile.invoke_after(env)
+        deferred_after_perform_callbacks.compile(nil).invoke_after(env)
         interactor.send(:context)
       end
 
@@ -101,7 +102,19 @@ module ActiveInteractor
       def init_deferred_after_perform_callbacks
         after_callbacks_deferred = interactor_class.present? &&
                                    interactor_class.after_callbacks_deferred_when_organized
-        @deferred_after_perform_callbacks = after_callbacks_deferred ? interactor_class._perform_callbacks : nil
+        @deferred_after_perform_callbacks = (after_perform_callbacks if after_callbacks_deferred)
+      end
+
+      def after_perform_callbacks
+        result = interactor_class._perform_callbacks.clone
+
+        interactor_class._perform_callbacks.each do |callback|
+          next if callback.kind == :after && callback.name == :perform
+
+          result.delete(callback)
+        end
+
+        result
       end
 
       def skip_deferred_after_perform_callbacks

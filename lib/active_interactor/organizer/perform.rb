@@ -57,16 +57,33 @@ module ActiveInteractor
 
       def run_deferred_after_perform_callbacks_on_children
         self.class.organized.each do |interface|
-          next unless interface.interactor_class.after_callbacks_deferred_when_organized
+          # Only the top-level organizer should initiate the callbacks
+          next if options.organizer.present?
 
-          context.merge!(interface.execute_deferred_after_perform_callbacks(context))
+          run_deferred_callbacks(interface)
         end
       end
 
       private
 
+      def run_deferred_callbacks(interface)
+        is_organizer = interface.interactor_class <= ActiveInteractor::Organizer::Base
+        run_deferred_callbacks_on_children(interface, context) if is_organizer
+
+        is_deferred = interface.interactor_class.after_callbacks_deferred_when_organized
+        run_deferred_callbacks_on_interactor(interface, context) if is_deferred
+      end
+
+      def run_deferred_callbacks_on_interactor(interface, context)
+        context.merge!(interface.execute_deferred_after_perform_callbacks(context))
+      end
+
+      def run_deferred_callbacks_on_children(organizer_interface, context)
+        context.merge!(organizer_interface.interactor_class.organized.execute_deferred_after_perform_callbacks(context))
+      end
+
       def execute_interactor(interface, fail_on_error = false, perform_options = {})
-        interface.perform(self, context, fail_on_error, perform_options)
+        interface.perform(self, context, fail_on_error, perform_options.merge({ organizer: self }))
       end
 
       def execute_interactor_with_callbacks(interface, fail_on_error = false, perform_options = {})

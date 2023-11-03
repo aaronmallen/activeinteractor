@@ -57,6 +57,17 @@ module ActiveInteractor
         collection.each(&block) if block
         self
       end
+
+      # Executes after_perform callbacks that have been deferred on each organized interactor
+      def execute_deferred_after_perform_callbacks(context)
+        each do |interface|
+          if interface.interactor_class <= ActiveInteractor::Organizer::Base
+            context.merge!(interface.interactor_class.organized.execute_deferred_after_perform_callbacks(context))
+          else
+            context.merge!(interface.execute_deferred_after_perform_callbacks(context))
+          end
+        end
+      end
     end
   end
 end

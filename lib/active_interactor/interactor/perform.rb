@@ -82,6 +82,15 @@ module ActiveInteractor
       # @author Aaron Allen <hello@aaronmallen.me>
       # @since 1.0.0
       #
+      # @!attribute [rw] organizer
+      #  if `nil` an interactor is not being used within an {Organizer::Base organizer}.
+      #
+      #  if not `nil` is the {Organizer::Base organizer} that is calling the Interactor
+      #
+      #  @since 1.2.3
+      #
+      #  @return [Boolean] whether or not to skip {Organizer::Callbacks::ClassMethods each_perform} callbacks
+      #
       # @!attribute [rw] skip_each_perform_callbacks
       #  if `true` an {Organizer::Base organizer} will be instructed to skip
       #  {Organizer::Callbacks::ClassMethods each_perform} callbacks.
@@ -143,6 +152,7 @@ module ActiveInteractor
       #  @param options [Hash{Symbol=>*}] the attributes to assign to {Options}
       #  @option options [Boolean] :skip_each_perform_callbacks (false) the {Options#skip_each_perform_callbacks}
       #   attribute
+      #  @option options [Boolean] :organizer (nil) the {Options#organizer} attribute
       #  @option options [Boolean] :skip_perform_callbacks (false) the {Options#skip_perform_callbacks} attribute
       #  @option options [Boolean] :skip_rollback (false) the {Options#skip_rollback} attribute
       #  @option options [Boolean] :skip_rollback_callbacks (false) the {Options#skip_rollback_callbacks} attribute
@@ -152,8 +162,9 @@ module ActiveInteractor
       #  @return [Options] a new instance of {Options}
       class Options
         include ActiveInteractor::Configurable
-        defaults skip_each_perform_callbacks: false, skip_perform_callbacks: false, skip_rollback: false,
-                 skip_rollback_callbacks: false, validate: true, validate_on_calling: true, validate_on_called: true
+        defaults organizer: nil, skip_each_perform_callbacks: false, skip_perform_callbacks: false,
+                 skip_rollback: false, skip_rollback_callbacks: false, validate: true, validate_on_calling: true,
+                 validate_on_called: true
       end
 
       # @!method execute_perform
