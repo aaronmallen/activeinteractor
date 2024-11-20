@@ -92,11 +92,21 @@ module ActiveInteractor
 
         interactor = interactor_class.new(context)
         env = ActiveSupport::Callbacks::Filters::Environment.new(interactor, false, nil)
-        deferred_after_perform_callbacks.compile.invoke_after(env)
+        invoke_after(env)
         interactor.send(:context)
       end
 
       private
+
+      if ActiveSupport.version >= '7.1'
+        def invoke_after(env)
+          deferred_after_perform_callbacks.compile(nil).invoke_after(env)
+        end
+      else
+        def invoke_after(env)
+          deferred_after_perform_callbacks.compile.invoke_after(env)
+        end
+      end
 
       def init_deferred_after_perform_callbacks
         after_callbacks_deferred = interactor_class.present? &&
