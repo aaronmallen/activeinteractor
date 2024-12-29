@@ -1,5 +1,9 @@
 # ActiveInteractor
 
+>[!WARNING]
+> This gem is no longer maintained. Please consider using
+> [domainic-command](https://github.com/domainic/domainic/tree/main/domainic-command) as an alternative.
+
 [![Version](https://img.shields.io/gem/v/activeinteractor.svg?logo=ruby)](https://rubygems.org/gems/activeinteractor)
 [![Build Status](https://github.com/aaronmallen/activeinteractor/workflows/Build/badge.svg)](https://github.com/aaronmallen/activeinteractor/actions)
 [![Maintainability](https://api.codeclimate.com/v1/badges/2f1cb318f681a1eebb27/maintainability)](https://codeclimate.com/github/aaronmallen/activeinteractor/maintainability)
