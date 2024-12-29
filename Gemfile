@@ -10,7 +10,7 @@ group :development, :test do
   gem 'rails'
   gem 'rake', '~> 13.0'
   gem 'rspec', '~> 3.11'
-  gem 'rubocop', '0.92.0'
+  gem 'rubocop', '1.7.0'
   gem 'rubocop-performance'
   gem 'rubocop-rspec'
   gem 'solargraph'
